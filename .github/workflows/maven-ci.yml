@@ -16,6 +16,8 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
+    - name: install netcdf package
+      run: sudo apt install netcdf-bin
     - name: Test with Maven
       run: mvn -B clean test --file CDL_to_NetCDF_converter/pom.xml -P dev
     - name: Integration Test with maven
