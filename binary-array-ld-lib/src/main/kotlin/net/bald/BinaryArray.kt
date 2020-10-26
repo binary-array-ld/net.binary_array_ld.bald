@@ -11,6 +11,11 @@ interface BinaryArray {
     val uri: String
 
     /**
+     * The prefix mapping to apply to the RDF graph.
+     */
+    val prefixMapping: PrefixMapping
+
+    /**
      * The root container.
      */
     val root: Container
