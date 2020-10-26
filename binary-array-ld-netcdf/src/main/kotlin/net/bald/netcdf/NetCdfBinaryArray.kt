@@ -22,9 +22,25 @@ class NetCdfBinaryArray(
     }
 
     companion object {
+        /**
+         * Instantiate a [BinaryArray] representation of the given NetCDF file and identifying URI.
+         * The resulting [NetCdfBinaryArray] should be closed after use.
+         * @param fileLoc The location of the NetCDF file on the local file system.
+         * @param uri The URI which identifies the dataset.
+         * @return A [BinaryArray] representation of the NetCDF file.
+         */
         @JvmStatic
         fun create(fileLoc: String, uri: String? = null): NetCdfBinaryArray {
-            TODO()
+            val requiredUri = uri ?: uri(fileLoc)
+            val file = NetcdfFiles.open(fileLoc)
+            return NetCdfBinaryArray(requiredUri, file)
+        }
+
+        private fun uri(fileLoc: String): String {
+            if (File.separatorChar != '/') {
+                fileLoc.replace(File.separatorChar, '/')
+            }
+            return File(fileLoc).toPath().toUri().toString()
         }
     }
 }
