@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+    <dimension name="dim0" length="1"/>
+    <dimension name="dim1" length="1"/>
+
+    <variable name="var0" type="int"/>
+    <variable name="var1" type="int"/>
+
+    <attribute name="bald__isPrefixedBy" value="not_prefix_list"/>
+
+    <group name="prefix_list">
+        <attribute name="bald__" value="https://www.opengis.net/def/binary-array-ld/"/>
+        <attribute name="skos__" value="http://www.w3.org/2004/02/skos/core#"/>
+    </group>
+</netcdf>
