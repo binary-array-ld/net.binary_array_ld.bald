@@ -55,6 +55,8 @@
                             <goal>single</goal>
                         </goals>
                         <configuration>
+                            <finalName>bald-cli</finalName>
+                            <appendAssemblyId>false</appendAssemblyId>
                             <archive>
                                 <manifest>
                                     <mainClass>net.bald.BinaryArrayConvertCliKt</mainClass>
