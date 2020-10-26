@@ -11,7 +11,7 @@ import org.apache.jena.rdf.model.ResourceFactory.createResource
  * See https://www.opengis.net/def/binary-array-ld/.
  */
 object BALD {
-    private const val prefix = "https://www.opengis.net/def/binary-array-ld/"
+    const val prefix = "https://www.opengis.net/def/binary-array-ld/"
 
     /**
      * Resources
