@@ -2,10 +2,13 @@ package net.bald.netcdf
 
 import net.bald.BinaryArray
 import net.bald.Container
+import net.bald.PrefixMapping
+import ucar.nc2.Group
 import ucar.nc2.NetcdfFile
 import ucar.nc2.NetcdfFiles
 import java.io.Closeable
 import java.io.File
+import java.lang.IllegalStateException
 
 /**
  * NetCDF implementation of [BinaryArray].
@@ -16,9 +19,26 @@ class NetCdfBinaryArray(
     private val file: NetcdfFile
 ): BinaryArray, Closeable {
     override val root: Container get() = NetCdfContainer(file.rootGroup)
+    override val prefixMapping: PrefixMapping get() = prefixMapping() ?: PrefixMapping.Empty
 
     override fun close() {
         file.close()
+    }
+
+    private fun prefixMapping(): PrefixMapping? {
+        return prefixGroup()?.attributes()?.let(::NetCdfPrefixMapping)
+    }
+
+    private fun prefixGroup(): Group? {
+        return file.findGlobalAttribute(Attribute.prefix)?.let { attr ->
+            attr.stringValue?.let { groupName ->
+                file.findGroup(groupName) ?: throw IllegalStateException("Prefix group $groupName not found.")
+            } ?: throw IllegalStateException("Global prefix attribute ${Attribute.prefix} has a non-string value.")
+        }
+    }
+
+    private object Attribute {
+        const val prefix = "bald__isPrefixedBy"
     }
 
     companion object {
