@@ -6,16 +6,28 @@ import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory.createDefaultModel
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
+import org.junit.Assume
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import ucar.nc2.jni.netcdf.Nc4Iosp
 import kotlin.test.assertEquals
 
 /**
  * Integration test for [BinaryArrayConvertCli].
+ *
+ * Test resources are stored in a user-friendly format (NCML) and converted to temporary NetCDF 4 files.
+ * In order to write the NetCDF 4 files, the Unidata NetCDF C library must be available.
+ * Therefore, these tests are ignored if the library is unavailable and writing is impossible.
  */
 class BinaryArrayConvertCliTest {
     private fun run(vararg args: String) {
         BinaryArrayConvertCli().run(*args)
+    }
+
+    @BeforeEach
+    fun before() {
+        Assume.assumeTrue(Nc4Iosp.isClibraryPresent())
     }
 
     @Test

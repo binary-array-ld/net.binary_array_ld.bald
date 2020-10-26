@@ -51,9 +51,17 @@ class NetCdfBinaryArray(
          */
         @JvmStatic
         fun create(fileLoc: String, uri: String? = null): NetCdfBinaryArray {
-            val requiredUri = uri ?: uri(fileLoc)
             val file = NetcdfFiles.open(fileLoc)
-            return NetCdfBinaryArray(requiredUri, file)
+            val requiredUri = uri ?: uri(fileLoc)
+            return create(file, requiredUri)
+        }
+
+        /**
+         * @see [create].
+         */
+        @JvmStatic
+        fun create(file: NetcdfFile, uri: String): NetCdfBinaryArray {
+            return NetCdfBinaryArray(uri, file)
         }
 
         private fun uri(fileLoc: String): String {

@@ -14,7 +14,8 @@ import java.io.File
  */
 object NcmlConverter {
     /**
-     * Convert a NCML resource into a temporary NetCDF file.
+     * Convert a NCML resource into a temporary NetCDF 4 file.
+     * In order to write NetCDF 4 successfully, the Unidata NetCDF C library must be available.
      * @param ncmlLoc The location of the NCML resource.
      * @return The NetCDF file.
      */
@@ -33,7 +34,7 @@ object NcmlConverter {
      * @param ncmlLoc The location of the NCML resource.
      * @return The NetCDF file representation.
      */
-    fun convertToNetCdf(ncmlLoc: String): NetcdfFile {
+    fun readAsNetCdf(ncmlLoc: String): NetcdfFile {
         return javaClass.getResourceAsStream(ncmlLoc).use { ncml ->
             NcMLReader.readNcML(ncml, null)
         }
