@@ -51,10 +51,10 @@ File("/path/to/output.ttl").outputStream.use { output ->
 ```
 Java:
 ```
-BinaryArray ba = NetCdfBinaryArray.create(inputLoc, "http://test.binary-array-ld.net/example");
+BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.ttl", "http://test.binary-array-ld.net/example");
 Model model = ModelBinaryArrayConverter.convert(ba);
 
-try (OutputStream output = new FileOutputStream(outputLoc)) {
+try (OutputStream output = new FileOutputStream("/path/to/output.ttl")) {
     model.write(output, "ttl");
 }
 ```

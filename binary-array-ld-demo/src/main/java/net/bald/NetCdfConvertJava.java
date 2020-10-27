@@ -21,6 +21,6 @@ public class NetCdfConvertJava {
     }
 
     public static void convert() throws Exception {
-        convert("/path/to/input.nc", "/path/to/input.ttl", "ttl");
+        convert("/path/to/input.nc", "/path/to/output.ttl", "ttl");
     }
 }
