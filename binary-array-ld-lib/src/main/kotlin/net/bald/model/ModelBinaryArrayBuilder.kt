@@ -2,6 +2,7 @@ package net.bald.model
 
 import net.bald.BinaryArray
 import net.bald.PrefixMapping
+import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Model
 
 class ModelBinaryArrayBuilder(
@@ -10,7 +11,8 @@ class ModelBinaryArrayBuilder(
 ) {
     fun addBinaryArray(ba: BinaryArray) {
         addPrefixMapping(ba.prefixMapping)
-        containerFct.forBinaryArray(model, ba.uri).addContainer(ba.root)
+        val baRes = model.createResource(ba.uri, BALD.Container)
+        containerFct.forBinaryArray(baRes).addContainer(ba.root)
     }
 
     private fun addPrefixMapping(prefix: PrefixMapping) {

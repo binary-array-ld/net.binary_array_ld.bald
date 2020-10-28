@@ -7,20 +7,15 @@ import org.apache.jena.rdf.model.Resource
 import org.apache.jena.vocabulary.RDF
 
 open class ModelContainerBuilder(
-    private val model: Model,
-    private val uri: String,
+    private val ba: Resource,
     private val varFct: ModelVarBuilder.Factory
 ) {
     open fun addContainer(container: Container) {
-        val rootUri = rootUri(uri)
-        val containerRes = model.createResource(rootUri)
-            .addProperty(RDF.type, BALD.Container)
-
+        val rootUri = ba.uri + '/'
+        val containerRes = ba.model.createResource(rootUri, BALD.Container)
         buildVars(container, containerRes)
-    }
 
-    private fun rootUri(uri: String): String {
-        return if (uri.endsWith('/')) uri else "$uri/"
+        ba.addProperty(BALD.contains, containerRes)
     }
 
     private fun buildVars(container: Container, containerRes: Resource) {
@@ -32,8 +27,8 @@ open class ModelContainerBuilder(
     open class Factory(
         private val varFct: ModelVarBuilder.Factory
     ) {
-        open fun forBinaryArray(model: Model, uri: String): ModelContainerBuilder {
-            return ModelContainerBuilder(model, uri, varFct)
+        open fun forBinaryArray(ba: Resource): ModelContainerBuilder {
+            return ModelContainerBuilder(ba, varFct)
         }
     }
 }

@@ -10,17 +10,17 @@ import net.bald.Container
 import net.bald.PrefixMapping
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory
+import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
 import org.junit.jupiter.api.Test
 
 class ModelBinaryArrayBuilderTest {
     private val containerBuilder = mock<ModelContainerBuilder>()
     private val containerFct = mock<ModelContainerBuilder.Factory> {
-        on { forBinaryArray(any(), any()) } doReturn containerBuilder
+        on { forBinaryArray(any()) } doReturn containerBuilder
     }
     private val model = ModelFactory.createDefaultModel()
     private val builder = ModelBinaryArrayBuilder.Factory(containerFct).forModel(model)
-
     private val root = mock<Container>()
     private val prefix = mock<PrefixMapping> {
         on { toMap() } doReturn mapOf(
@@ -35,9 +35,17 @@ class ModelBinaryArrayBuilderTest {
     }
 
     @Test
+    fun addBinaryArray_addsFileContainer() {
+        builder.addBinaryArray(ba)
+        ModelVerifier(model).resource("http://test.binary-array-ld.net/example") {
+            statement(RDF.type, BALD.Container)
+        }
+    }
+
+    @Test
     fun addBinaryArray_addsRootContainer() {
         builder.addBinaryArray(ba)
-        verify(containerFct).forBinaryArray(model, "http://test.binary-array-ld.net/example")
+        verify(containerFct).forBinaryArray(model.getResource("http://test.binary-array-ld.net/example"))
         verify(containerBuilder).addContainer(root)
     }
 
