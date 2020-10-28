@@ -33,7 +33,7 @@ class NetCdfBinaryArray(
         return file.findGlobalAttribute(Attribute.prefix)?.let { attr ->
             attr.stringValue?.let { groupName ->
                 file.findGroup(groupName) ?: throw IllegalStateException("Prefix group $groupName not found.")
-            } ?: throw IllegalStateException("Global prefix attribute ${Attribute.prefix} has a non-string value.")
+            } ?: throw IllegalStateException("Global prefix attribute ${Attribute.prefix} must have a string value.")
         }
     }
 

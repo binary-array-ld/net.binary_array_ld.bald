@@ -81,7 +81,7 @@ class NetCdfBinaryArrayTest {
         val ise = assertThrows<java.lang.IllegalStateException> {
             ba.prefixMapping
         }
-        assertEquals("Global prefix attribute bald__isPrefixedBy has a non-string value.", ise.message)
+        assertEquals("Global prefix attribute bald__isPrefixedBy must have a string value.", ise.message)
     }
 
     @Test
@@ -91,6 +91,6 @@ class NetCdfBinaryArrayTest {
         val ise = assertThrows<java.lang.IllegalStateException> {
             ba.prefixMapping.toMap()
         }
-        assertEquals("Prefix attribute skos__ has a non-string value.", ise.message)
+        assertEquals("Prefix attribute skos__ must have a string value.", ise.message)
     }
 }
