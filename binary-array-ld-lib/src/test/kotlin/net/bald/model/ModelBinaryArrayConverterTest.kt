@@ -9,6 +9,7 @@ import net.bald.PrefixMapping
 import net.bald.Var
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Model
+import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
 import org.junit.jupiter.api.*
@@ -18,8 +19,8 @@ import org.junit.jupiter.api.*
  */
 class ModelBinaryArrayConverterTest {
 
-    private fun convert(ba: BinaryArray): Model {
-        return ModelBinaryArrayConverter.convert(ba)
+    private fun convert(ba: BinaryArray, prefix: org.apache.jena.shared.PrefixMapping): Model {
+        return ModelBinaryArrayConverter.convert(ba, prefix)
     }
 
     private fun newVar(name: String): Var {
@@ -45,11 +46,16 @@ class ModelBinaryArrayConverterTest {
             on { this.root } doReturn root
             on { prefixMapping } doReturn prefix
         }
-        val model = convert(ba)
+        val externalPrefix = org.apache.jena.shared.PrefixMapping.Factory.create().setNsPrefixes(mapOf(
+            "skos" to "http://example.org/skos/",
+            "dct" to DCTerms.NS
+        ))
+        val model = convert(ba, externalPrefix)
 
         ModelVerifier(model).apply {
             prefix("bald", BALD.prefix)
             prefix("skos", SKOS.uri)
+            prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/bar")) {
