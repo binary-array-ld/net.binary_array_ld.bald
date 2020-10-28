@@ -11,15 +11,11 @@ open class ModelContainerBuilder(
     private val varFct: ModelVarBuilder.Factory
 ) {
     open fun addContainer(container: Container) {
-        val rootUri = rootUri(ba.uri)
+        val rootUri = ba.uri + '/'
         val containerRes = ba.model.createResource(rootUri, BALD.Container)
         buildVars(container, containerRes)
 
         ba.addProperty(BALD.contains, containerRes)
-    }
-
-    private fun rootUri(uri: String): String {
-        return if (uri.endsWith('/')) uri else "$uri/"
     }
 
     private fun buildVars(container: Container, containerRes: Resource) {

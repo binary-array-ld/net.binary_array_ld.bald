@@ -19,7 +19,6 @@ class ModelContainerBuilderTest {
     private val varFct = mock<ModelVarBuilder.Factory> {
         on { forContainer(any()) } doReturn varBuilder
     }
-    private val uri = "http://test.binary-array-ld.net/example"
     private val builderFct = ModelContainerBuilder.Factory(varFct)
 
     private val vars = listOf<Var>(mock(), mock(), mock())
@@ -31,23 +30,16 @@ class ModelContainerBuilderTest {
     fun addContainer_addsContainerToModel() {
         builderFct.forBinaryArray(ba).addContainer(container)
         ResourceVerifier(ba).statements {
-            statement(RDF.type, BALD.Container)
-        }
-    }
-
-    @Test
-    fun addContainer_uriWithTrailingSlash_addsContainerToModel() {
-        val ba = model.createResource("${ba.uri}/")
-        builderFct.forBinaryArray(ba).addContainer(container)
-        ResourceVerifier(ba).statements {
-            statement(RDF.type, BALD.Container)
+            statement(BALD.contains, model.createResource("${ba.uri}/")) {
+                statement(RDF.type, BALD.Container)
+            }
         }
     }
 
     @Test
     fun addContainer_addsVars() {
         builderFct.forBinaryArray(ba).addContainer(container)
-        verify(varFct).forContainer(model.createResource("$uri/"))
+        verify(varFct).forContainer(model.createResource("${ba.uri}/"))
         verify(varBuilder).addVar(vars[0])
         verify(varBuilder).addVar(vars[1])
         verify(varBuilder).addVar(vars[2])
