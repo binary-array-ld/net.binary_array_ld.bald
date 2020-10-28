@@ -1,6 +1,6 @@
 package net.bald.model
 
-import bald.model.ModelVerifier
+import bald.model.ResourceVerifier
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test
 
 class ModelContainerBuilderTest {
     private val model = ModelFactory.createDefaultModel()
+    private val ba = model.createResource("http://test.binary-array-ld.net/example")
     private val varBuilder = mock<ModelVarBuilder>()
     private val varFct = mock<ModelVarBuilder.Factory> {
         on { forContainer(any()) } doReturn varBuilder
@@ -28,27 +29,24 @@ class ModelContainerBuilderTest {
 
     @Test
     fun addContainer_addsContainerToModel() {
-        builderFct.forBinaryArray(model, uri).addContainer(container)
-        ModelVerifier(model).apply {
-            resource("$uri/") {
-                statement(RDF.type, BALD.Container)
-            }
+        builderFct.forBinaryArray(ba).addContainer(container)
+        ResourceVerifier(ba).statements {
+            statement(RDF.type, BALD.Container)
         }
     }
 
     @Test
     fun addContainer_uriWithTrailingSlash_addsContainerToModel() {
-        builderFct.forBinaryArray(model, "$uri/").addContainer(container)
-        ModelVerifier(model).apply {
-            resource("$uri/") {
-                statement(RDF.type, BALD.Container)
-            }
+        val ba = model.createResource("${ba.uri}/")
+        builderFct.forBinaryArray(ba).addContainer(container)
+        ResourceVerifier(ba).statements {
+            statement(RDF.type, BALD.Container)
         }
     }
 
     @Test
     fun addContainer_addsVars() {
-        builderFct.forBinaryArray(model, uri).addContainer(container)
+        builderFct.forBinaryArray(ba).addContainer(container)
         verify(varFct).forContainer(model.createResource("$uri/"))
         verify(varBuilder).addVar(vars[0])
         verify(varBuilder).addVar(vars[1])

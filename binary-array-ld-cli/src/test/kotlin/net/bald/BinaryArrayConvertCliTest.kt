@@ -33,19 +33,22 @@ class BinaryArrayConvertCliTest {
     @Test
     fun run_withoutUri_outputsToFileWithInputFileUri() {
         val inputFile = convertToNetCdf("/netcdf/identity.xml")
-        val inputFileUri = inputFile.toPath().toUri()
+        val inputFileUri = inputFile.toPath().toUri().toString()
         val outputFile = createTempFile()
         run(inputFile.absolutePath, outputFile.absolutePath)
 
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
-            resource("$inputFileUri/") {
+            resource(inputFileUri) {
                 statement(RDF.type, BALD.Container)
-                statement(BALD.contains, model.createResource("$inputFileUri/var0")) {
-                    statement(RDF.type, BALD.Resource)
-                }
-                statement(BALD.contains, model.createResource("$inputFileUri/var1")) {
-                    statement(RDF.type, BALD.Resource)
+                statement(BALD.contains, model.createResource("$inputFileUri/")) {
+                    statement(RDF.type, BALD.Container)
+                    statement(BALD.contains, model.createResource("$inputFileUri/var0")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
+                    statement(BALD.contains, model.createResource("$inputFileUri/var1")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
                 }
             }
         }
@@ -59,13 +62,16 @@ class BinaryArrayConvertCliTest {
 
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
-            resource("http://test.binary-array-ld.net/example/") {
+            resource("http://test.binary-array-ld.net/example") {
                 statement(RDF.type, BALD.Container)
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
-                    statement(RDF.type, BALD.Resource)
-                }
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
-                    statement(RDF.type, BALD.Resource)
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
+                    statement(RDF.type, BALD.Container)
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
                 }
             }
         }
