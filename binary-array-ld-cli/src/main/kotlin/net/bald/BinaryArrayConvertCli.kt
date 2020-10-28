@@ -5,6 +5,8 @@ import net.bald.netcdf.NetCdfBinaryArray
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
+import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.ModelFactory
 import java.io.File
 import java.io.OutputStream
 import kotlin.system.exitProcess
@@ -15,6 +17,7 @@ import kotlin.system.exitProcess
 class BinaryArrayConvertCli {
     private val opts = Options().apply {
         this.addOption("u", "uri", true, "The URI which identifies the dataset.")
+        this.addOption("c", "context", true, "Comma-delimited list of JSON-LD context files.")
         this.addOption("h", "help", false, "Show help.")
     }
 
@@ -35,10 +38,21 @@ class BinaryArrayConvertCli {
     private fun doRun(opts: CommandLineOptions) {
         val inputLoc = opts.inputLoc ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
         val ba = NetCdfBinaryArray.create(inputLoc, opts.uri)
-        val model = ba.use(ModelBinaryArrayConverter::convert)
+        val context = context(opts.contexts)
+        val model = ba.use {
+            ModelBinaryArrayConverter.convert(ba, context)
+        }
 
         modelOutput(opts.outputLoc).use { output ->
             model.write(output, "ttl")
+        }
+    }
+
+    private fun context(contextLocs: List<String>): Model {
+        return ModelFactory.createDefaultModel().apply {
+            contextLocs.forEach { contextLoc ->
+                read(contextLoc, "json-ld")
+            }
         }
     }
 

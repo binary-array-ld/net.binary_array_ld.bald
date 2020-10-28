@@ -1,16 +1,20 @@
 package net.bald
 
+import bald.jsonld.ContextReader
 import bald.model.ModelVerifier
 import bald.netcdf.NcmlConverter.writeToNetCdf
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory.createDefaultModel
+import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
+import org.apache.jena.vocabulary.XSD
 import org.junit.Assume
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import ucar.nc2.jni.netcdf.Nc4Iosp
+import java.io.File
 import kotlin.test.assertEquals
 
 /**
@@ -94,6 +98,37 @@ class BinaryArrayConvertCliTest {
         ModelVerifier(model).apply {
             prefix("bald", BALD.prefix)
             prefix("skos", SKOS.uri)
+            resource("http://test.binary-array-ld.net/example/") {
+                statement(RDF.type, BALD.Container)
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
+                    statement(RDF.type, BALD.Resource)
+                }
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
+                    statement(RDF.type, BALD.Resource)
+                }
+            }
+        }
+    }
+
+    @Test
+    fun run_withExternalPrefixMapping_outputsPrefixMapping() {
+        val inputFile = writeToNetCdf("/netcdf/prefix.xml")
+        val outputFile = createTempFile()
+        val contextFiles = listOf(ContextReader.toFile("/jsonld/context.json"), ContextReader.toFile("/jsonld/context2.json"))
+
+        run(
+            "--uri", "http://test.binary-array-ld.net/example",
+            "--context", contextFiles.joinToString(",", transform = File::getAbsolutePath),
+            inputFile.absolutePath,
+            outputFile.absolutePath
+        )
+
+        val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
+        ModelVerifier(model).apply {
+            prefix("bald", BALD.prefix)
+            prefix("skos", SKOS.uri)
+            prefix("dct", DCTerms.NS)
+            prefix("xsd", XSD.NS)
             resource("http://test.binary-array-ld.net/example/") {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
