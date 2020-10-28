@@ -50,16 +50,19 @@ class ModelBinaryArrayConverterTest {
         ModelVerifier(model).apply {
             prefix("bald", BALD.prefix)
             prefix("skos", SKOS.uri)
-            resource("http://test.binary-array-ld.net/example/") {
+            resource("http://test.binary-array-ld.net/example") {
                 statement(RDF.type, BALD.Container)
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/bar")) {
-                    statement(RDF.type, BALD.Resource)
-                }
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/baz")) {
-                    statement(RDF.type, BALD.Resource)
-                }
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/foo")) {
-                    statement(RDF.type, BALD.Resource)
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
+                    statement(RDF.type, BALD.Container)
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/bar")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/baz")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/foo")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
                 }
             }
         }

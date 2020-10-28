@@ -9,9 +9,7 @@ open class ModelVarBuilder(
     private val container: Resource
 ) {
     open fun addVar(v: Var) {
-        val vRes = container.model
-            .createResource("${container.uri}${v.name}")
-            .addProperty(RDF.type, BALD.Resource)
+        val vRes = container.model.createResource("${container.uri}${v.name}", BALD.Resource)
         container.addProperty(BALD.contains, vRes)
     }
 
