@@ -1,6 +1,7 @@
 package net.bald.model
 
 import net.bald.BinaryArray
+import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Model
 
 class ModelBinaryArrayBuilder(
@@ -8,7 +9,8 @@ class ModelBinaryArrayBuilder(
     private val containerFct: ModelContainerBuilder.Factory
 ) {
     fun addBinaryArray(ba: BinaryArray) {
-        containerFct.forBinaryArray(model, ba.uri).addContainer(ba.root)
+        val baRes = model.createResource(ba.uri, BALD.Container)
+        containerFct.forBinaryArray(baRes).addContainer(ba.root)
     }
 
     class Factory(
