@@ -1,8 +1,6 @@
 package bald.model
 
-import org.apache.jena.rdf.model.Property
-import org.apache.jena.rdf.model.Resource
-import org.apache.jena.rdf.model.Statement
+import org.apache.jena.rdf.model.*
 import org.junit.jupiter.api.fail
 import kotlin.test.assertEquals
 
@@ -17,7 +15,7 @@ class StatementsVerifier(
      * Verify that the next statement in the sequence has the given predicate and object.
      * Then, begin verifying statements about the object resource.
      * @param prop The expected predicate.
-     * @param value The expected object.
+     * @param value The expected resource object.
      * @param verifyResource A function to perform against the [StatementsVerifier] for the object resource.
      */
     fun statement(
@@ -25,10 +23,8 @@ class StatementsVerifier(
         value: Resource,
         verifyResource: StatementsVerifier.() -> Unit = {}
     ) {
-        return if (statementIt.hasNext()) {
-            val statement = statementIt.next()
+        nextStatement(prop) { statement ->
             assertEquals(prop, statement.predicate, "Wrong predicate on statement $statement.")
-
             val obj = statement.`object`
             if (obj.isResource) {
                 val resource = obj.asResource()
@@ -37,6 +33,28 @@ class StatementsVerifier(
             } else {
                 fail("Expected statement with resource value $value, but got $statement.")
             }
+        }
+    }
+
+    /**
+     * Verify that the next statement in the sequence has the given predicate and object.
+     * @param prop The expected predicate.
+     * @param value The expected literal object.
+     */
+    fun statement(
+        prop: Property,
+        value: Literal
+    ) {
+        nextStatement(prop) { statement ->
+            assertEquals(prop, statement.predicate, "Wrong predicate on statement $statement.")
+            assertEquals(value, statement.`object`, "Wrong value on statement $statement.")
+        }
+    }
+
+    private fun nextStatement(prop: Property, verify: (Statement) -> Unit = {}) {
+        return if (statementIt.hasNext()) {
+            val statement = statementIt.next()
+            verify(statement)
         } else {
             fail("Expected statement with property $prop, but no more statements were found.")
         }

@@ -10,8 +10,9 @@ import org.apache.jena.shared.PrefixMapping
  */
 object ModelBinaryArrayConverter {
     private val modelFct = run {
-        val varFct = ModelVarBuilder.Factory()
-        val containerFct = ModelContainerBuilder.Factory(varFct)
+        val attrFct = ModelAttributeBuilder.Factory()
+        val varFct = ModelVarBuilder.Factory(attrFct)
+        val containerFct = ModelContainerBuilder.Factory(varFct, attrFct)
         ModelBinaryArrayBuilder.Factory(containerFct)
     }
 

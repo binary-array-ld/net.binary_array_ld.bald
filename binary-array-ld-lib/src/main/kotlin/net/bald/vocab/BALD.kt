@@ -23,4 +23,5 @@ object BALD {
      * Properties
      */
     val contains: Property = createProperty("${prefix}contains")
+    val isPrefixedBy: Property = createProperty("${prefix}isPrefixedBy")
 }
