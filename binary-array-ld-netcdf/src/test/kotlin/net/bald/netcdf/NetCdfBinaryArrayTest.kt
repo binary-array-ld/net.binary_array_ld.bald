@@ -4,6 +4,10 @@ import bald.netcdf.NcmlConverter.readAsNetCdf
 import bald.netcdf.NcmlConverter.writeToNetCdf
 import net.bald.BinaryArray
 import net.bald.vocab.BALD
+import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
+import org.apache.jena.rdf.model.ResourceFactory.createResource
+import org.apache.jena.vocabulary.DCTerms
+import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
 import org.junit.Assume
 import org.junit.jupiter.api.Test
@@ -91,5 +95,56 @@ class NetCdfBinaryArrayTest {
             ba.prefixMapping
         }
         assertEquals("Prefix attribute skos__ must have a string value.", ise.message)
+    }
+
+    @Test
+    fun attributes_withAttributes_returnsRootGroupAttributes() {
+        val netCdf = readAsNetCdf("/netcdf/attributes.xml")
+        val ba = NetCdfBinaryArray("http://test.binary-array-ld.net/attributes.nc", netCdf)
+        val root = ba.root
+        val prefix = org.apache.jena.shared.PrefixMapping.Factory.create()
+            .setNsPrefix("bald", BALD.prefix)
+            .setNsPrefix("skos", SKOS.uri)
+            .setNsPrefix("dct", DCTerms.NS)
+
+        AttributeSourceVerifier(root).attributes(prefix) {
+            attribute(BALD.isPrefixedBy.uri, "bald__isPrefixedBy") {
+                value(createPlainLiteral("prefix_list"))
+            }
+            attribute(SKOS.prefLabel.uri, "skos__prefLabel") {
+                value(createPlainLiteral("Attributes metadata example"))
+            }
+            attribute(DCTerms.publisher.uri, "dct__publisher") {
+                value(createResource("${BALD.prefix}Organisation"))
+            }
+            attribute(null, "date") {
+                value(createPlainLiteral("2020-10-29"))
+            }
+        }
+    }
+
+    @Test
+    fun attributes_withAttributes_returnsVarAttributes() {
+        val netCdf = readAsNetCdf("/netcdf/attributes.xml")
+        val ba = NetCdfBinaryArray("http://test.binary-array-ld.net/attributes.nc", netCdf)
+        val vars = ba.root.vars().toList()
+        val prefix = org.apache.jena.shared.PrefixMapping.Factory.create()
+            .setNsPrefix("bald", BALD.prefix)
+            .setNsPrefix("skos", SKOS.uri)
+            .setNsPrefix("dct", DCTerms.NS)
+            .setNsPrefix("rdf", RDF.uri)
+
+        assertEquals(2, vars.size)
+        AttributeSourceVerifier(vars[0]).attributes(prefix) {
+            attribute(RDF.type.uri, "rdf__type") {
+                value(BALD.Array)
+            }
+            attribute(SKOS.prefLabel.uri, "skos__prefLabel") {
+                value(createPlainLiteral("Variable 0"))
+            }
+        }
+        AttributeSourceVerifier(vars[1]).attributes(prefix) {
+            // none
+        }
     }
 }

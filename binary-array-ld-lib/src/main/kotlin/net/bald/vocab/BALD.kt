@@ -18,6 +18,7 @@ object BALD {
      */
     val Container: Resource = createResource("${prefix}Container")
     val Resource: Resource = createResource("${prefix}Resource")
+    val Array: Resource = createResource("${prefix}Array")
 
     /**
      * Properties

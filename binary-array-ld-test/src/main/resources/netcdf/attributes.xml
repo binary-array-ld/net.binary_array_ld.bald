@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<netcdf xmlns="http://www.unidata.ucar.edu/namespaces/netcdf/ncml-2.2">
+    <dimension name="dim0" length="1"/>
+    <dimension name="dim1" length="1"/>
+
+    <variable name="var0" type="int">
+        <attribute name="rdf__type" value="bald__Array"/>
+        <attribute name="skos__prefLabel" value="Variable 0"/>
+    </variable>
+    <variable name="var1" type="int"/>
+
+    <attribute name="bald__isPrefixedBy" value="prefix_list"/>
+    <attribute name="skos__prefLabel" value="Attributes metadata example"/>
+    <attribute name="dct__publisher" value="bald__Organisation"/>
+    <attribute name="date" value="2020-10-29"/>
+
+    <group name="prefix_list">
+        <attribute name="bald__" value="https://www.opengis.net/def/binary-array-ld/"/>
+        <attribute name="skos__" value="http://www.w3.org/2004/02/skos/core#"/>
+    </group>
+</netcdf>
