@@ -5,6 +5,7 @@ import bald.model.ModelVerifier
 import bald.netcdf.NcmlConverter.writeToNetCdf
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory.createDefaultModel
+import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
@@ -111,6 +112,7 @@ class BinaryArrayConvertCliTest {
                     statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                         statement(RDF.type, BALD.Resource)
                     }
+                    statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
                 }
             }
         }
@@ -143,6 +145,7 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                     statement(RDF.type, BALD.Resource)
                 }
+                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
