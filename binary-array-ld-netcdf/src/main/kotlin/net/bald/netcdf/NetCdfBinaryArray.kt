@@ -2,7 +2,7 @@ package net.bald.netcdf
 
 import net.bald.BinaryArray
 import net.bald.Container
-import net.bald.PrefixMapping
+import org.apache.jena.shared.PrefixMapping
 import ucar.nc2.Group
 import ucar.nc2.NetcdfFile
 import ucar.nc2.NetcdfFiles
@@ -19,14 +19,14 @@ class NetCdfBinaryArray(
     private val file: NetcdfFile
 ): BinaryArray, Closeable {
     override val root: Container get() = NetCdfContainer(file.rootGroup)
-    override val prefixMapping: PrefixMapping get() = prefixMapping() ?: PrefixMapping.Empty
+    override val prefixMapping: PrefixMapping get() = prefixMapping() ?: PrefixMapping.Factory.create()
 
     override fun close() {
         file.close()
     }
 
     private fun prefixMapping(): PrefixMapping? {
-        return prefixGroup()?.attributes()?.let(::NetCdfPrefixMapping)
+        return prefixGroup()?.attributes()?.let(::NetCdfPrefixMappingBuilder)?.build()
     }
 
     private fun prefixGroup(): Group? {

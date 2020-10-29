@@ -5,10 +5,10 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import net.bald.BinaryArray
 import net.bald.Container
-import net.bald.PrefixMapping
 import net.bald.Var
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Model
+import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
@@ -35,12 +35,9 @@ class ModelBinaryArrayConverterTest {
         val root = mock<Container> {
             on { vars() } doReturn vars.asSequence()
         }
-        val prefix = mock<PrefixMapping> {
-            on { toMap() } doReturn mapOf(
-                "bald" to BALD.prefix,
-                "skos" to SKOS.uri
-            )
-        }
+        val prefix = PrefixMapping.Factory.create()
+            .setNsPrefix("bald", BALD.prefix)
+            .setNsPrefix("skos", SKOS.uri)
         val ba = mock<BinaryArray> {
             on { uri } doReturn "http://test.binary-array-ld.net/example"
             on { this.root } doReturn root
