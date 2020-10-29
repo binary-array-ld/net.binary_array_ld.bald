@@ -17,5 +17,6 @@
     <group name="prefix_list">
         <attribute name="bald__" value="https://www.opengis.net/def/binary-array-ld/"/>
         <attribute name="skos__" value="http://www.w3.org/2004/02/skos/core#"/>
+        <attribute name="rdf__" value="http://www.w3.org/1999/02/22-rdf-syntax-ns#"/>
     </group>
 </netcdf>

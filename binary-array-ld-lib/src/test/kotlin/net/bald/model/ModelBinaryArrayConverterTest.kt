@@ -19,7 +19,7 @@ import org.junit.jupiter.api.*
  */
 class ModelBinaryArrayConverterTest {
 
-    private fun convert(ba: BinaryArray, prefix: org.apache.jena.shared.PrefixMapping): Model {
+    private fun convert(ba: BinaryArray, prefix: PrefixMapping): Model {
         return ModelBinaryArrayConverter.convert(ba, prefix)
     }
 
@@ -43,7 +43,7 @@ class ModelBinaryArrayConverterTest {
             on { this.root } doReturn root
             on { prefixMapping } doReturn prefix
         }
-        val externalPrefix = org.apache.jena.shared.PrefixMapping.Factory.create().setNsPrefixes(mapOf(
+        val externalPrefix = PrefixMapping.Factory.create().setNsPrefixes(mapOf(
             "skos" to "http://example.org/skos/",
             "dct" to DCTerms.NS
         ))
