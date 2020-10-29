@@ -14,9 +14,7 @@ class NetCdfVar(
     override val name: String get() = v.shortName
 
     override fun attributes(prefixMapping: PrefixMapping): List<Attribute> {
-        val uriParser = UriParser(prefixMapping)
-        return v.attributes().map { attr ->
-            NetCdfAttribute(attr, uriParser)
-        }
+        val source = v.attributes().let(::NetCdfAttributeSource)
+        return source.attributes(prefixMapping)
     }
 }

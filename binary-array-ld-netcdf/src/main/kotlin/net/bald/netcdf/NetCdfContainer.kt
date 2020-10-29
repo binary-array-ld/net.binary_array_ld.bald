@@ -17,9 +17,8 @@ class NetCdfContainer(
     }
 
     override fun attributes(prefixMapping: PrefixMapping): List<Attribute> {
-        val uriParser = UriParser(prefixMapping)
-        return group.attributes().map { attr ->
-            NetCdfAttribute(attr, uriParser)
-        }
+        val source = group.attributes().let(::NetCdfAttributeSource)
+        return source.attributes(prefixMapping)
     }
 }
+
