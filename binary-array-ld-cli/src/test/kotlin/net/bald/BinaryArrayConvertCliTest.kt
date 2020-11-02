@@ -118,7 +118,7 @@ class BinaryArrayConvertCliTest {
 
     @Test
     fun run_withExternalPrefixMapping_outputsPrefixMapping() {
-        val inputFile = writeToNetCdf("/netcdf/prefix.xml")
+        val inputFile = writeToNetCdf("/netcdf/prefix.cdl")
         val outputFile = createTempFile()
         val contextFiles = listOf(ContextReader.toFile("/jsonld/context.json"), ContextReader.toFile("/jsonld/context2.json"))
 
