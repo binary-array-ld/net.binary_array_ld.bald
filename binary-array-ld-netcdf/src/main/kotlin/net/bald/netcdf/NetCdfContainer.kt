@@ -10,7 +10,13 @@ import ucar.nc2.Group
 class NetCdfContainer(
     private val group: Group
 ): Container {
+    override val name: String? get() = group.shortName
+
     override fun vars(): Sequence<Var> {
         return group.variables.asSequence().map(::NetCdfVar)
+    }
+
+    override fun subContainers(): Sequence<Container> {
+        return group.groups.asSequence().map(::NetCdfContainer)
     }
 }

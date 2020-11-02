@@ -1,0 +1,18 @@
+netcdf identity {
+    dimensions:
+        d0 = 1 ;
+        d1 = 1 ;
+    variables:
+        int var0 ;
+        int var1 ;
+    group: group0 {
+        variables:
+            int var2 ;
+            int var3 ;
+    }
+    group: group1 {
+        variables:
+            int var4 ;
+            int var5 ;
+    }
+}
