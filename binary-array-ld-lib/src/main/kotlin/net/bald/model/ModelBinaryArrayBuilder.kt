@@ -10,7 +10,7 @@ class ModelBinaryArrayBuilder(
 ) {
     fun addBinaryArray(ba: BinaryArray) {
         val baRes = model.createResource(ba.uri, BALD.Container)
-        containerFct.forBinaryArray(baRes).addContainer(ba.root)
+        containerFct.forParent(baRes).addContainer(ba.root)
     }
 
     class Factory(

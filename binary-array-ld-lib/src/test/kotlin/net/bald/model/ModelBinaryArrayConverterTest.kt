@@ -31,6 +31,7 @@ class ModelBinaryArrayConverterTest {
         val vars = listOf(newVar("foo"), newVar("bar"), newVar("baz"))
         val root = mock<Container> {
             on { vars() } doReturn vars.asSequence()
+            on { subContainers() } doReturn emptySequence()
         }
         val ba = mock<BinaryArray> {
             on { uri } doReturn "http://test.binary-array-ld.net/example"

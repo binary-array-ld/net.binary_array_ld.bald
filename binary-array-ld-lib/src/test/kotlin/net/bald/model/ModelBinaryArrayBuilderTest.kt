@@ -1,7 +1,6 @@
 package net.bald.model
 
 import bald.model.ModelVerifier
-import bald.model.ResourceVerifier
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
@@ -16,7 +15,7 @@ import org.junit.jupiter.api.*
 class ModelBinaryArrayBuilderTest {
     private val containerBuilder = mock<ModelContainerBuilder>()
     private val containerFct = mock<ModelContainerBuilder.Factory> {
-        on { forBinaryArray(any()) } doReturn containerBuilder
+        on { forParent(any()) } doReturn containerBuilder
     }
     private val model = ModelFactory.createDefaultModel()
     private val builder = ModelBinaryArrayBuilder.Factory(containerFct).forModel(model)
@@ -37,7 +36,7 @@ class ModelBinaryArrayBuilderTest {
     @Test
     fun addBinaryArray_addsRootContainer() {
         builder.addBinaryArray(ba)
-        verify(containerFct).forBinaryArray(model.getResource("http://test.binary-array-ld.net/example"))
+        verify(containerFct).forParent(model.getResource("http://test.binary-array-ld.net/example"))
         verify(containerBuilder).addContainer(root)
     }
 }
