@@ -16,18 +16,12 @@ import kotlin.test.assertEquals
 /**
  * Integration test for [BinaryArrayConvertCli].
  *
- * Test resources are stored in a user-friendly format (NCML) and converted to temporary NetCDF 4 files.
- * In order to write the NetCDF 4 files, the Unidata NetCDF C library must be available.
- * Therefore, these tests are ignored if the library is unavailable and writing is impossible.
+ * Test resources are stored in CDL format and converted to temporary NetCDF 4 files.
+ * In order to write the NetCDF 4 files, the ncgen command line utility must be available.
  */
 class BinaryArrayConvertCliTest {
     private fun run(vararg args: String) {
         BinaryArrayConvertCli().run(*args)
-    }
-
-    @BeforeEach
-    fun before() {
-        Assume.assumeTrue(Nc4Iosp.isClibraryPresent())
     }
 
     @Test

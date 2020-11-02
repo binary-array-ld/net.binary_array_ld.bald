@@ -2,8 +2,6 @@ package bald.netcdf
 
 import ucar.nc2.NetcdfFile
 import ucar.nc2.NetcdfFileWriter
-import ucar.nc2.NetcdfFiles
-import ucar.nc2.dataset.NetcdfDataset
 import ucar.nc2.ncml.NcMLReader
 import java.io.File
 

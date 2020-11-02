@@ -1,7 +1,5 @@
 package bald.netcdf
 
-import ucar.nc2.NetcdfFile
-import ucar.nc2.ncml.NcMLReader
 import java.io.File
 import kotlin.test.fail
 
