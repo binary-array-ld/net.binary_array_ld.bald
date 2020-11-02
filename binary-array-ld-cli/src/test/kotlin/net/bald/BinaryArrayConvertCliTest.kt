@@ -2,7 +2,7 @@ package net.bald
 
 import bald.jsonld.ContextReader
 import bald.model.ModelVerifier
-import bald.netcdf.NcmlConverter.writeToNetCdf
+import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory.createDefaultModel
 import org.apache.jena.rdf.model.ResourceFactory.*
@@ -21,18 +21,12 @@ import kotlin.test.assertEquals
 /**
  * Integration test for [BinaryArrayConvertCli].
  *
- * Test resources are stored in a user-friendly format (NCML) and converted to temporary NetCDF 4 files.
- * In order to write the NetCDF 4 files, the Unidata NetCDF C library must be available.
- * Therefore, these tests are ignored if the library is unavailable and writing is impossible.
+ * Test resources are stored in CDL format and converted to temporary NetCDF 4 files.
+ * In order to write the NetCDF 4 files, the ncgen command line utility must be available.
  */
 class BinaryArrayConvertCliTest {
     private fun run(vararg args: String) {
         BinaryArrayConvertCli().run(*args)
-    }
-
-    @BeforeEach
-    fun before() {
-        Assume.assumeTrue(Nc4Iosp.isClibraryPresent())
     }
 
     @Test
@@ -50,7 +44,7 @@ class BinaryArrayConvertCliTest {
 
     @Test
     fun run_withoutUri_outputsToFileWithInputFileUri() {
-        val inputFile = writeToNetCdf("/netcdf/identity.xml")
+        val inputFile = writeToNetCdf("/netcdf/identity.cdl")
         val inputFileUri = inputFile.toPath().toUri().toString()
         val outputFile = createTempFile()
         run(inputFile.absolutePath, outputFile.absolutePath)
@@ -74,7 +68,7 @@ class BinaryArrayConvertCliTest {
 
     @Test
     fun run_withUri_withOutputFile_outputsToFile() {
-        val inputFile = writeToNetCdf("/netcdf/identity.xml")
+        val inputFile = writeToNetCdf("/netcdf/identity.cdl")
         val outputFile = createTempFile()
         run("--uri", "http://test.binary-array-ld.net/example", inputFile.absolutePath, outputFile.absolutePath)
 
@@ -94,7 +88,7 @@ class BinaryArrayConvertCliTest {
 
     @Test
     fun run_withPrefixMapping_outputsPrefixMapping() {
-        val inputFile = writeToNetCdf("/netcdf/prefix.xml")
+        val inputFile = writeToNetCdf("/netcdf/prefix.cdl")
         val outputFile = createTempFile()
         run("--uri", "http://test.binary-array-ld.net/example", inputFile.absolutePath, outputFile.absolutePath)
 
@@ -120,7 +114,7 @@ class BinaryArrayConvertCliTest {
 
     @Test
     fun run_withExternalPrefixMapping_outputsPrefixMapping() {
-        val inputFile = writeToNetCdf("/netcdf/prefix.xml")
+        val inputFile = writeToNetCdf("/netcdf/prefix.cdl")
         val outputFile = createTempFile()
         val contextFiles = listOf(ContextReader.toFile("/jsonld/context.json"), ContextReader.toFile("/jsonld/context2.json"))
 
@@ -152,7 +146,7 @@ class BinaryArrayConvertCliTest {
 
     @Test
     fun run_withAttributes_outputsAttributes() {
-        val inputFile = writeToNetCdf("/netcdf/attributes.xml")
+        val inputFile = writeToNetCdf("/netcdf/attributes.cdl")
         val outputFile = createTempFile()
         val contextFile = ContextReader.toFile("/jsonld/context.json")
 

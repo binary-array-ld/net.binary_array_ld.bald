@@ -17,4 +17,8 @@ class NetCdfVar(
         val source = v.attributes().let(::NetCdfAttributeSource)
         return source.attributes(prefixMapping)
     }
+
+    override fun toString(): String {
+        return v.toString()
+    }
 }

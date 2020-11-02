@@ -11,6 +11,11 @@ RDF representations are provided by [Apache Jena](https://jena.apache.org/).
 * **binary-array-ld-test** Common test utilities used by other modules.
 * **binary-array-ld-demo** Demonstrations of BALD API usage.
 
+## Development
+
+Note that, in order to run the automated tests for this project,
+the `ncgen` command line tool must be available on your system.
+
 ## Usage
 
 This project can be used either as a library or as a command line application.
