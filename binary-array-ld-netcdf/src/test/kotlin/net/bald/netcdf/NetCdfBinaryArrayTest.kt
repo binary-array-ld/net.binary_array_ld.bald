@@ -27,7 +27,6 @@ class NetCdfBinaryArrayTest {
 
     @Test
     fun uri_withoutUri_returnsFileUri() {
-        Assume.assumeTrue(Nc4Iosp.isClibraryPresent())
         val netCdfFile = writeToNetCdf("/netcdf/identity.cdl")
         val ba = NetCdfBinaryArray.create(netCdfFile.absolutePath)
         val expectedUri = netCdfFile.toPath().toUri().toString()
