@@ -1,0 +1,13 @@
+netcdf identity {
+    dimensions:
+        d0 = 1 ;
+        d1 = 1 ;
+    variables:
+        int var0 ;
+        int var1 ;
+    :bald__isPrefixedBy = "prefix_list";
+    group: prefix_list {
+        :bald__ = "https://www.opengis.net/def/binary-array-ld/";
+        :skos__ = "http://www.w3.org/2004/02/skos/core#";
+    }
+}

@@ -1,0 +1,9 @@
+netcdf identity {
+    dimensions:
+        d0 = 1 ;
+        d1 = 1 ;
+    variables:
+        int var0 ;
+        int var1 ;
+    data:
+}
