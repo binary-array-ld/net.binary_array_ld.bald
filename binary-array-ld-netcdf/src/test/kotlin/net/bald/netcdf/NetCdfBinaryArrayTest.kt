@@ -2,6 +2,7 @@ package net.bald.netcdf
 
 import bald.netcdf.CdlConverter.convertToNetCdf
 import net.bald.BinaryArray
+import net.bald.Container
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -43,7 +44,7 @@ class NetCdfBinaryArrayTest {
         val ba = fromCdl("/netcdf/identity-subgroups.cdl", uri)
         val root = ba.root
         assertEquals("", root.name)
-        val groups = root.subContainers().toList()
+        val groups = root.subContainers().sortedBy(Container::name).toList()
         assertEquals(2, groups.size)
 
         val group0 = groups[0]
