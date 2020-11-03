@@ -7,7 +7,6 @@ import ucar.nc2.AttributeContainer
 import ucar.nc2.Group
 import ucar.nc2.NetcdfFile
 import ucar.nc2.NetcdfFiles
-import java.io.Closeable
 import java.io.File
 
 /**
@@ -17,7 +16,7 @@ import java.io.File
 class NetCdfBinaryArray(
     override val uri: String,
     private val file: NetcdfFile
-): BinaryArray, Closeable {
+): BinaryArray {
     override val root: Container get() = container(file.rootGroup)
     override val prefixMapping: PrefixMapping get() = prefixMapping() ?: PrefixMapping.Factory.create()
 
@@ -62,7 +61,7 @@ class NetCdfBinaryArray(
          * @return A [BinaryArray] representation of the NetCDF file.
          */
         @JvmStatic
-        fun create(fileLoc: String, uri: String? = null): NetCdfBinaryArray {
+        fun create(fileLoc: String, uri: String? = null): BinaryArray {
             val file = NetcdfFiles.open(fileLoc)
             val requiredUri = uri ?: uri(fileLoc)
             return create(file, requiredUri)
@@ -72,7 +71,7 @@ class NetCdfBinaryArray(
          * @see [create].
          */
         @JvmStatic
-        fun create(file: NetcdfFile, uri: String): NetCdfBinaryArray {
+        fun create(file: NetcdfFile, uri: String): BinaryArray {
             return NetCdfBinaryArray(uri, file)
         }
 

@@ -1,12 +1,14 @@
 package net.bald
 
 import org.apache.jena.shared.PrefixMapping
+import java.io.Closeable
 
 /**
  * Represents the metadata of a binary array dataset.
  * See https://www.opengis.net/def/binary-array-ld/Array
+ * Should be closed after use.
  */
-interface BinaryArray {
+interface BinaryArray: Closeable {
     /**
      * The URI which identifies the dataset.
      */
