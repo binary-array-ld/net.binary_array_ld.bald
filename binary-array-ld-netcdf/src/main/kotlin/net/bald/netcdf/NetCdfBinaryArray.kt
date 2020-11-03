@@ -4,6 +4,7 @@ import net.bald.BinaryArray
 import net.bald.Container
 import org.apache.jena.shared.PrefixMapping
 import ucar.nc2.AttributeContainer
+import ucar.nc2.Group
 import ucar.nc2.NetcdfFile
 import ucar.nc2.NetcdfFiles
 import java.io.Closeable
@@ -17,11 +18,16 @@ class NetCdfBinaryArray(
     override val uri: String,
     private val file: NetcdfFile
 ): BinaryArray, Closeable {
-    override val root: Container get() = NetCdfContainer(file.rootGroup)
+    override val root: Container get() = container(file.rootGroup)
     override val prefixMapping: PrefixMapping get() = prefixMapping() ?: PrefixMapping.Factory.create()
 
     override fun close() {
         file.close()
+    }
+
+    private fun container(group: Group): Container {
+        val prefixSrc = prefixSourceName()
+        return NetCdfContainer(group, prefixSrc)
     }
 
     private fun prefixMapping(): PrefixMapping? {
@@ -29,12 +35,17 @@ class NetCdfBinaryArray(
     }
 
     private fun prefixSource(): AttributeContainer? {
+        return prefixSourceName()?.let { name ->
+            file.findGroup(name)
+                ?: file.findVariable(name)
+                ?: throw IllegalStateException("Prefix group or variable $name not found.")
+        }
+    }
+
+    private fun prefixSourceName(): String? {
         return file.findGlobalAttribute(Attribute.prefix)?.let { attr ->
-            attr.stringValue?.let { name ->
-                file.findGroup(name)
-                    ?: file.findVariable(name)
-                    ?: throw IllegalStateException("Prefix group or variable $name not found.")
-            } ?: throw IllegalStateException("Global prefix attribute ${Attribute.prefix} must have a string value.")
+            attr.stringValue
+                ?: throw IllegalStateException("Global prefix attribute ${Attribute.prefix} must have a string value.")
         }
     }
 

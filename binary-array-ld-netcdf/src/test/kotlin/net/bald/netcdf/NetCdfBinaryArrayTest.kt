@@ -72,6 +72,21 @@ class NetCdfBinaryArrayTest {
     }
 
     @Test
+    fun root_subContainers_withInternalPrefixMappingGroup_excludesPrefixMapping() {
+        val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix.nc")
+        assertEquals(emptyList(), ba.root.subContainers().toList())
+    }
+
+    @Test
+    fun root_subContainers_withInternalPrefixMappingVar_excludesPrefixMapping() {
+        val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix-var.nc")
+        val vars = ba.root.vars().toList()
+        assertEquals(2, vars.size)
+        assertEquals("var0", vars[0].name)
+        assertEquals("var1", vars[1].name)
+    }
+
+    @Test
     fun prefixMapping_withoutPrefixMapping_returnsEmptyPrefixMapping() {
         val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix.nc")
         assertEquals(emptyMap(), ba.prefixMapping.nsPrefixMap)

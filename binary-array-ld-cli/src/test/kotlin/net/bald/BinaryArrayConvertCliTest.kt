@@ -10,11 +10,8 @@ import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
 import org.apache.jena.vocabulary.XSD
-import org.junit.Assume
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ucar.nc2.jni.netcdf.Nc4Iosp
 import java.io.File
 import kotlin.test.assertEquals
 
@@ -100,11 +97,6 @@ class BinaryArrayConvertCliTest {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
                     statement(RDF.type, BALD.Container)
-                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/prefix_list")) {
-                        statement(RDF.type, BALD.Container)
-                        statement(createProperty(SKOS.uri), createPlainLiteral(SKOS.uri))
-                        statement(createProperty(BALD.prefix), createPlainLiteral(BALD.prefix))
-                    }
                     statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                         statement(RDF.type, BALD.Resource)
                     }
@@ -131,11 +123,6 @@ class BinaryArrayConvertCliTest {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
                     statement(RDF.type, BALD.Container)
-                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/prefix_list")) {
-                        statement(RDF.type, BALD.Resource)
-                        statement(createProperty(SKOS.uri), createPlainLiteral(SKOS.uri))
-                        statement(createProperty(BALD.prefix), createPlainLiteral(BALD.prefix))
-                    }
                     statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                         statement(RDF.type, BALD.Resource)
                     }
@@ -210,11 +197,6 @@ class BinaryArrayConvertCliTest {
             prefix("xsd", XSD.NS)
             resource("http://test.binary-array-ld.net/example/") {
                 statement(RDF.type, BALD.Container)
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/prefix_list")) {
-                    statement(RDF.type, BALD.Container)
-                    statement(createProperty(SKOS.uri), createPlainLiteral(SKOS.uri))
-                    statement(createProperty(BALD.prefix), createPlainLiteral(BALD.prefix))
-                }
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Resource)
                 }
@@ -249,12 +231,6 @@ class BinaryArrayConvertCliTest {
                 statement(createProperty("http://test.binary-array-ld.net/example//date"), createPlainLiteral("2020-10-29"))
                 statement(RDF.type, BALD.Container)
                 statement(SKOS.prefLabel, createPlainLiteral("Attributes metadata example"))
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/prefix_list")) {
-                    statement(createProperty(RDF.uri), createPlainLiteral(RDF.uri))
-                    statement(RDF.type, BALD.Container)
-                    statement(createProperty(SKOS.uri), createPlainLiteral(SKOS.uri))
-                    statement(createProperty(BALD.prefix), createPlainLiteral(BALD.prefix))
-                }
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Array)
                     statement(RDF.type, BALD.Resource)
