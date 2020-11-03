@@ -10,6 +10,7 @@ class CommandLineOptions(
     }
     val outputLoc: String? get() = cmd.args.getOrNull(1)
     val uri: String? get() = cmd.getOptionValue("uri")
+    val aliasLoc: String? get() = cmd.getOptionValue("alias")
     val contextLocs: List<String> get() = cmd.getOptionValue("context")?.split(",") ?: emptyList()
     val help: Boolean get() = cmd.hasOption("help")
 }

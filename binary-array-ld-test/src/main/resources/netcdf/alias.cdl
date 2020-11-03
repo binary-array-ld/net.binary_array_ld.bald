@@ -1,0 +1,22 @@
+netcdf attributes {
+    dimensions:
+        d0 = 1 ;
+        d1 = 1 ;
+    variables:
+        int var0 ;
+            var0:rdf__type = "bald__Array";
+            var0:skos__prefLabel = "Variable 0";
+            var0:name = "var-0";
+        int var1 ;
+
+    :bald__isPrefixedBy = "prefix_list";
+    :prefLabel = "Alias metadata example";
+    :dct_publisher = "binary-array-ld-org";
+    :date = "2020-10-29";
+
+    group: prefix_list {
+        :bald__ = "https://www.opengis.net/def/binary-array-ld/";
+        :skos__ = "http://www.w3.org/2004/02/skos/core#";
+        :rdf__ = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    }
+}
