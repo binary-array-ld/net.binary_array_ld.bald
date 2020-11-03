@@ -10,7 +10,8 @@ open class ModelVarBuilder(
     private val attrFct: ModelAttributeBuilder.Factory
 ) {
     open fun addVar(v: Var) {
-        val vRes = container.model.createResource("${container.uri}${v.name}", BALD.Resource)
+        val varUri = varUri(v)
+        val vRes = container.model.createResource(varUri, BALD.Resource)
         container.addProperty(BALD.contains, vRes)
         addAttributes(v, vRes)
     }
@@ -20,6 +21,12 @@ open class ModelVarBuilder(
         source.attributes(resource.model).forEach { attr ->
             builder.addAttribute(attr)
         }
+    }
+
+    private fun varUri(v: Var): String {
+        val containerUri = container.uri
+        val prefix = if (containerUri.endsWith('/')) containerUri else "$containerUri/"
+        return prefix + v.name
     }
 
     open class Factory(

@@ -34,6 +34,7 @@ class ModelBinaryArrayConverterTest {
         val vars = listOf(newVar("foo"), newVar("bar"), newVar("baz"))
         val root = mock<Container> {
             on { vars() } doReturn vars.asSequence()
+            on { subContainers() } doReturn emptySequence()
         }
         val prefix = PrefixMapping.Factory.create()
             .setNsPrefix("bald", BALD.prefix)

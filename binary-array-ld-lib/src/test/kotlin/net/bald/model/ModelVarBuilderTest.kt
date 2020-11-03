@@ -23,7 +23,7 @@ class ModelVarBuilderTest {
     private val builder = ModelVarBuilder.Factory(attrFct).forContainer(container)
 
     private fun newVar(name: String, attrs: List<Attribute> = emptyList()): Var {
-        return mock<Var> {
+        return mock {
             on { this.name } doReturn name
             on { attributes(any()) } doReturn attrs
         }
@@ -58,6 +58,20 @@ class ModelVarBuilderTest {
             statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/baz")) {
                 statement(RDF.type, BALD.Resource)
             }
+            statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
+                statement(RDF.type, BALD.Resource)
+            }
+        }
+    }
+
+    @Test
+    fun addVar_containerWithoutTrailingSlash_addsResourceToContainer() {
+        val container = model.createResource("http://test.binary-array-ld.net/example")
+
+        val v = mock<Var> { on { name } doReturn "foo" }
+        ModelVarBuilder.Factory(attrFct).forContainer(container).addVar(v)
+
+        ResourceVerifier(container).statements {
             statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
                 statement(RDF.type, BALD.Resource)
             }
