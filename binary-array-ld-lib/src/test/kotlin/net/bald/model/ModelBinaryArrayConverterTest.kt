@@ -44,10 +44,9 @@ class ModelBinaryArrayConverterTest {
             on { this.root } doReturn root
             on { prefixMapping } doReturn prefix
         }
-        val externalPrefix = PrefixMapping.Factory.create().setNsPrefixes(mapOf(
-            "skos" to "http://example.org/skos/",
-            "dct" to DCTerms.NS
-        ))
+        val externalPrefix = PrefixMapping.Factory.create()
+            .setNsPrefix("skos", "http://example.org/skos/")
+            .setNsPrefix("dct", DCTerms.NS)
         val model = convert(ba, externalPrefix)
 
         ModelVerifier(model).apply {
