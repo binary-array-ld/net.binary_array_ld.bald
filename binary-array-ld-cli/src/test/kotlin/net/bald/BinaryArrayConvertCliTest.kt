@@ -82,7 +82,7 @@ class BinaryArrayConvertCliTest {
     }
 
     @Test
-    fun run_withPrefixMapping_outputsPrefixMapping() {
+    fun run_withPrefixMappingGroup_outputsPrefixMapping() {
         val inputFile = writeToNetCdf("/netcdf/prefix.cdl")
         val outputFile = createTempFile()
         run("--uri", "http://test.binary-array-ld.net/example", inputFile.absolutePath, outputFile.absolutePath)
@@ -97,6 +97,34 @@ class BinaryArrayConvertCliTest {
                     statement(RDF.type, BALD.Container)
                     statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/prefix_list")) {
                         statement(RDF.type, BALD.Container)
+                    }
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    fun run_withPrefixMappingVar_outputsPrefixMapping() {
+        val inputFile = writeToNetCdf("/netcdf/prefix-var.cdl")
+        val outputFile = createTempFile()
+        run("--uri", "http://test.binary-array-ld.net/example", inputFile.absolutePath, outputFile.absolutePath)
+
+        val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
+        ModelVerifier(model).apply {
+            prefix("bald", BALD.prefix)
+            prefix("skos", SKOS.uri)
+            resource("http://test.binary-array-ld.net/example") {
+                statement(RDF.type, BALD.Container)
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
+                    statement(RDF.type, BALD.Container)
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/prefix_list")) {
+                        statement(RDF.type, BALD.Resource)
                     }
                     statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                         statement(RDF.type, BALD.Resource)

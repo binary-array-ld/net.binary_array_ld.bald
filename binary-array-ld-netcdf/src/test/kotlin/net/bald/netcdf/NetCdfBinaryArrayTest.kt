@@ -74,8 +74,19 @@ class NetCdfBinaryArrayTest {
     }
 
     @Test
-    fun prefixMapping_withInternalPrefixMapping_returnsPrefixMapping() {
+    fun prefixMapping_withInternalPrefixMappingGroup_returnsPrefixMapping() {
         val ba = fromCdl("/netcdf/prefix.cdl", "http://test.binary-array-ld.net/prefix.nc")
+        val prefix = ba.prefixMapping.toMap()
+        val expected = mapOf(
+            "bald" to BALD.prefix,
+            "skos" to SKOS.uri
+        )
+        assertEquals(expected, prefix)
+    }
+
+    @Test
+    fun prefixMapping_withInternalPrefixMappingVar_returnsPrefixMapping() {
+        val ba = fromCdl("/netcdf/prefix-var.cdl", "http://test.binary-array-ld.net/prefix.nc")
         val prefix = ba.prefixMapping.toMap()
         val expected = mapOf(
             "bald" to BALD.prefix,
@@ -90,7 +101,7 @@ class NetCdfBinaryArrayTest {
         val ise = assertThrows<java.lang.IllegalStateException> {
             ba.prefixMapping
         }
-        assertEquals("Prefix group not_prefix_list not found.", ise.message)
+        assertEquals("Prefix group or variable not_prefix_list not found.", ise.message)
     }
 
     @Test

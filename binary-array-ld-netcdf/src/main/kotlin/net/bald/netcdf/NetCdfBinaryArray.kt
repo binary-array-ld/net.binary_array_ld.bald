@@ -3,9 +3,7 @@ package net.bald.netcdf
 import net.bald.BinaryArray
 import net.bald.Container
 import net.bald.PrefixMapping
-import ucar.nc2.Group
-import ucar.nc2.NetcdfFile
-import ucar.nc2.NetcdfFiles
+import ucar.nc2.*
 import java.io.Closeable
 import java.io.File
 import java.lang.IllegalStateException
@@ -26,13 +24,15 @@ class NetCdfBinaryArray(
     }
 
     private fun prefixMapping(): PrefixMapping? {
-        return prefixGroup()?.attributes()?.let(::NetCdfPrefixMapping)
+        return prefixSource()?.let(::NetCdfPrefixMapping)
     }
 
-    private fun prefixGroup(): Group? {
+    private fun prefixSource(): AttributeContainer? {
         return file.findGlobalAttribute(Attribute.prefix)?.let { attr ->
-            attr.stringValue?.let { groupName ->
-                file.findGroup(groupName) ?: throw IllegalStateException("Prefix group $groupName not found.")
+            attr.stringValue?.let { name ->
+                file.findGroup(name)
+                    ?: file.findVariable(name)
+                    ?: throw IllegalStateException("Prefix group or variable $name not found.")
             } ?: throw IllegalStateException("Global prefix attribute ${Attribute.prefix} has a non-string value.")
         }
     }
