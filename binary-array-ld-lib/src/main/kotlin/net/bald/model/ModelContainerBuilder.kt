@@ -2,20 +2,29 @@ package net.bald.model
 
 import net.bald.vocab.BALD
 import net.bald.Container
-import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.Resource
-import org.apache.jena.vocabulary.RDF
 
 open class ModelContainerBuilder(
-    private val ba: Resource,
+    private val parent: Resource,
     private val varFct: ModelVarBuilder.Factory
 ) {
     open fun addContainer(container: Container) {
-        val rootUri = ba.uri + '/'
-        val containerRes = ba.model.createResource(rootUri, BALD.Container)
+        val containerUri = containerUri(container)
+        val containerRes = parent.model.createResource(containerUri, BALD.Container)
+        buildSubgroups(container, containerRes)
         buildVars(container, containerRes)
+        parent.addProperty(BALD.contains, containerRes)
+    }
 
-        ba.addProperty(BALD.contains, containerRes)
+    private fun containerUri(container: Container): String {
+        val parentUri = parent.uri
+        val prefix = if (parentUri.endsWith('/')) parentUri else "$parentUri/"
+        return prefix + (container.name ?: "")
+    }
+
+    private fun buildSubgroups(container: Container, containerRes: Resource) {
+        val builder = ModelContainerBuilder(containerRes, varFct)
+        container.subContainers().forEach(builder::addContainer)
     }
 
     private fun buildVars(container: Container, containerRes: Resource) {
@@ -27,8 +36,8 @@ open class ModelContainerBuilder(
     open class Factory(
         private val varFct: ModelVarBuilder.Factory
     ) {
-        open fun forBinaryArray(ba: Resource): ModelContainerBuilder {
-            return ModelContainerBuilder(ba, varFct)
+        open fun forParent(parent: Resource): ModelContainerBuilder {
+            return ModelContainerBuilder(parent, varFct)
         }
     }
 }

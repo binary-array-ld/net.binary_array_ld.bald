@@ -5,5 +5,4 @@ netcdf identity {
     variables:
         int var0 ;
         int var1 ;
-    data:
 }
