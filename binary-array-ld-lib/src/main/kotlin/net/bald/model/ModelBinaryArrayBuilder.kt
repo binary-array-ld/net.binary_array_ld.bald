@@ -1,9 +1,9 @@
 package net.bald.model
 
 import net.bald.BinaryArray
-import net.bald.PrefixMapping
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Model
+import org.apache.jena.shared.PrefixMapping
 
 class ModelBinaryArrayBuilder(
     private val model: Model,
@@ -16,7 +16,7 @@ class ModelBinaryArrayBuilder(
     }
 
     private fun addPrefixMapping(prefix: PrefixMapping) {
-        prefix.toMap().let(model::setNsPrefixes)
+        prefix.nsPrefixMap.let(model::setNsPrefixes)
     }
 
     class Factory(

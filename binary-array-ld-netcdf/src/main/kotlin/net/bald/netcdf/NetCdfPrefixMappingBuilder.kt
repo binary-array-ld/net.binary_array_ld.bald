@@ -1,19 +1,21 @@
 package net.bald.netcdf
 
-import net.bald.PrefixMapping
+import org.apache.jena.shared.PrefixMapping
 import ucar.nc2.Attribute
 import ucar.nc2.AttributeContainer
 
 /**
+ * Class for building a
  * NetCDF implementation of [PrefixMapping].
  */
-class NetCdfPrefixMapping(
+class NetCdfPrefixMappingBuilder(
     private val attrs: AttributeContainer
-): PrefixMapping {
-    override fun toMap(): Map<String, String> {
-        return attrs.asSequence()
+) {
+    fun build(): PrefixMapping {
+        val prefixMap = attrs.asSequence()
             .filter(::isPrefixAttr)
             .associateBy(::prefix, ::uri)
+        return PrefixMapping.Factory.create().setNsPrefixes(prefixMap)
     }
 
     private fun isPrefixAttr(attr: Attribute): Boolean {

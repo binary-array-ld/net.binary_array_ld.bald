@@ -3,7 +3,6 @@ package net.bald.netcdf
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
 import net.bald.Container
-import net.bald.PrefixMapping
 import net.bald.vocab.BALD
 import org.apache.jena.vocabulary.SKOS
 import org.junit.jupiter.api.Test
@@ -85,13 +84,13 @@ class NetCdfBinaryArrayTest {
     @Test
     fun prefixMapping_withoutPrefixMapping_returnsEmptyPrefixMapping() {
         val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix.nc")
-        assertEquals(PrefixMapping.Empty, ba.prefixMapping)
+        assertEquals(emptyMap(), ba.prefixMapping.nsPrefixMap)
     }
 
     @Test
     fun prefixMapping_withInternalPrefixMappingGroup_returnsPrefixMapping() {
         val ba = fromCdl("/netcdf/prefix.cdl", "http://test.binary-array-ld.net/prefix.nc")
-        val prefix = ba.prefixMapping.toMap()
+        val prefix = ba.prefixMapping.nsPrefixMap
         val expected = mapOf(
             "bald" to BALD.prefix,
             "skos" to SKOS.uri
@@ -102,7 +101,7 @@ class NetCdfBinaryArrayTest {
     @Test
     fun prefixMapping_withInternalPrefixMappingVar_returnsPrefixMapping() {
         val ba = fromCdl("/netcdf/prefix-var.cdl", "http://test.binary-array-ld.net/prefix.nc")
-        val prefix = ba.prefixMapping.toMap()
+        val prefix = ba.prefixMapping.nsPrefixMap
         val expected = mapOf(
             "bald" to BALD.prefix,
             "skos" to SKOS.uri
@@ -132,7 +131,7 @@ class NetCdfBinaryArrayTest {
     fun prefixMapping_prefixUriNonString_throwsException() {
         val ba = fromCdl("/netcdf/prefix-uri-error.cdl", "http://test.binary-array-ld.net/prefix.nc")
         val ise = assertThrows<java.lang.IllegalStateException> {
-            ba.prefixMapping.toMap()
+            ba.prefixMapping
         }
         assertEquals("Prefix attribute skos__ must have a string value.", ise.message)
     }
