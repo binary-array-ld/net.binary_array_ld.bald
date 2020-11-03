@@ -11,18 +11,12 @@ open class ModelContainerBuilder(
     private val attrFct: ModelAttributeBuilder.Factory
 ) {
     open fun addContainer(container: Container) {
-        val containerUri = containerUri(container)
+        val containerUri = parent.withTrailingSlash() + container.name
         val containerRes = parent.model.createResource(containerUri, BALD.Container)
         addSubContainers(container, containerRes)
         addVars(container, containerRes)
         addAttributes(container, containerRes)
         parent.addProperty(BALD.contains, containerRes)
-    }
-
-    private fun containerUri(container: Container): String {
-        val parentUri = parent.uri
-        val prefix = if (parentUri.endsWith('/')) parentUri else "$parentUri/"
-        return prefix + (container.name ?: "")
     }
 
     private fun addSubContainers(container: Container, containerRes: Resource) {
