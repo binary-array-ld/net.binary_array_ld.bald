@@ -228,13 +228,12 @@ class BinaryArrayConvertCliTest {
             prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
                 statement(DCTerms.publisher, createResource("${BALD.prefix}Organisation"))
-                statement(createProperty("http://test.binary-array-ld.net/example//date"), createPlainLiteral("2020-10-29"))
+                statement(createProperty("http://test.binary-array-ld.net/example/date"), createPlainLiteral("2020-10-29"))
                 statement(RDF.type, BALD.Container)
-                statement(SKOS.prefLabel, createPlainLiteral("Alias metadata example"))
+                statement(SKOS.prefLabel, createPlainLiteral("Attributes metadata example"))
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Array)
                     statement(RDF.type, BALD.Resource)
-                    statement(RDFS.label, createPlainLiteral("var-0"))
                     statement(SKOS.prefLabel, createPlainLiteral("Variable 0"))
                 }
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
@@ -267,12 +266,13 @@ class BinaryArrayConvertCliTest {
             prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
                 statement(DCTerms.publisher, createResource("${BALD.prefix}Organisation"))
-                statement(createProperty("http://test.binary-array-ld.net/example//date"), createPlainLiteral("2020-10-29"))
+                statement(createProperty("http://test.binary-array-ld.net/example/date"), createPlainLiteral("2020-10-29"))
                 statement(RDF.type, BALD.Container)
-                statement(SKOS.prefLabel, createPlainLiteral("Attributes metadata example"))
+                statement(SKOS.prefLabel, createPlainLiteral("Alias metadata example"))
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Array)
                     statement(RDF.type, BALD.Resource)
+                    statement(RDFS.label, createPlainLiteral("var-0"))
                     statement(SKOS.prefLabel, createPlainLiteral("Variable 0"))
                 }
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {

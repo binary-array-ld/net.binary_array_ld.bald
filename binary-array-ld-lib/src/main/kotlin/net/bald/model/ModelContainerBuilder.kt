@@ -11,7 +11,7 @@ open class ModelContainerBuilder(
     private val attrFct: ModelAttributeBuilder.Factory
 ) {
     open fun addContainer(container: Container) {
-        val containerUri = parent.withTrailingSlash() + container.name
+        val containerUri = parent.withTrailingSlash() + (container.name ?: "")
         val containerRes = parent.model.createResource(containerUri, BALD.Container)
         addSubContainers(container, containerRes)
         addVars(container, containerRes)
