@@ -12,7 +12,7 @@ class ModelBinaryArrayBuilder(
     fun addBinaryArray(ba: BinaryArray) {
         addPrefixMapping(ba.prefixMapping)
         val baRes = model.createResource(ba.uri, BALD.Container)
-        containerFct.forBinaryArray(baRes).addContainer(ba.root)
+        containerFct.forParent(baRes).addContainer(ba.root)
     }
 
     private fun addPrefixMapping(prefix: PrefixMapping) {
