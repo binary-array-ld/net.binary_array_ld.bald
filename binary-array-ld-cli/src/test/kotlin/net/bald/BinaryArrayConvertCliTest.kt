@@ -95,9 +95,6 @@ class BinaryArrayConvertCliTest {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
                     statement(RDF.type, BALD.Container)
-                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/prefix_list")) {
-                        statement(RDF.type, BALD.Container)
-                    }
                     statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                         statement(RDF.type, BALD.Resource)
                     }
@@ -123,9 +120,6 @@ class BinaryArrayConvertCliTest {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
                     statement(RDF.type, BALD.Container)
-                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/prefix_list")) {
-                        statement(RDF.type, BALD.Resource)
-                    }
                     statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                         statement(RDF.type, BALD.Resource)
                     }

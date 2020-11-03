@@ -68,6 +68,21 @@ class NetCdfBinaryArrayTest {
     }
 
     @Test
+    fun root_subContainers_withInternalPrefixMappingGroup_excludesPrefixMapping() {
+        val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix.nc")
+        assertEquals(emptyList(), ba.root.subContainers().toList())
+    }
+
+    @Test
+    fun root_subContainers_withInternalPrefixMappingVar_excludesPrefixMapping() {
+        val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix-var.nc")
+        val vars = ba.root.vars().toList()
+        assertEquals(2, vars.size)
+        assertEquals("var0", vars[0].name)
+        assertEquals("var1", vars[1].name)
+    }
+
+    @Test
     fun prefixMapping_withoutPrefixMapping_returnsEmptyPrefixMapping() {
         val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix.nc")
         assertEquals(PrefixMapping.Empty, ba.prefixMapping)
@@ -114,7 +129,7 @@ class NetCdfBinaryArrayTest {
     }
 
     @Test
-    fun prefixMapping_toMap_prefixUriNonString_throwsException() {
+    fun prefixMapping_prefixUriNonString_throwsException() {
         val ba = fromCdl("/netcdf/prefix-uri-error.cdl", "http://test.binary-array-ld.net/prefix.nc")
         val ise = assertThrows<java.lang.IllegalStateException> {
             ba.prefixMapping.toMap()
