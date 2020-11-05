@@ -29,8 +29,4 @@ class NetCdfContainer(
     private fun acceptGroup(group: Group): Boolean {
         return prefixSrc != group.shortName
     }
-
-    override fun subContainers(): Sequence<Container> {
-        return group.groups.asSequence().map(::NetCdfContainer)
-    }
 }
