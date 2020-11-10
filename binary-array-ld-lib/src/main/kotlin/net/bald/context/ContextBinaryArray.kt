@@ -26,10 +26,33 @@ class ContextBinaryArray(
 
     companion object {
         /**
-         * Decorate the given [BinaryArray] with the given [PrefixMapping] to contextualise the binary array.
+         * Decorate the given [BinaryArray] with the given [PrefixMapping]s to contextualise the binary array.
+         * @throws IllegalArgumentException If there are conflicting definitions in the contexts.
          * @param ba The original binary array.
-         * @param context The contextual prefix mappings.
+         * @param contexts The contextual prefix mappings.
          * @return A contextualised [BinaryArray].
+         */
+        @JvmStatic
+        fun create(ba: BinaryArray, contexts: List<PrefixMapping>): BinaryArray {
+            val context = contexts.reduce { acc, context ->
+                val accKeys = acc.nsPrefixMap.keys
+                val contextKeys = context.nsPrefixMap.keys
+                val conflicts = accKeys.intersect(contextKeys).filterNot { prefix ->
+                    acc.getNsPrefixURI(prefix) == context.getNsPrefixURI(prefix)
+                }
+
+                if (conflicts.isEmpty()) {
+                    acc.setNsPrefixes(context)
+                } else {
+                    throw IllegalArgumentException("The namespace prefixes $conflicts have conflicting definitions in contexts.")
+                }
+            }
+
+            return create(ba, context)
+        }
+
+        /**
+         * @see create
          */
         @JvmStatic
         fun create(ba: BinaryArray, context: PrefixMapping): BinaryArray {

@@ -49,12 +49,10 @@ class BinaryArrayConvertCli {
     }
 
     private fun BinaryArray.withContext(contextLocs: List<String>): BinaryArray {
-        val context = ModelFactory.createDefaultModel().apply {
-            contextLocs.forEach { contextLoc ->
-                read(contextLoc, "json-ld")
-            }
+        val contexts = contextLocs.map { contextLoc ->
+            ModelFactory.createDefaultModel().read(contextLoc, "json-ld")
         }
-        return ContextBinaryArray(this, context)
+        return ContextBinaryArray.create(this, contexts)
     }
 
     private fun options(opts: Options, vararg args: String): CommandLineOptions {
