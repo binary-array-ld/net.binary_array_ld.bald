@@ -83,9 +83,8 @@ class BinaryArrayConvertCliTest {
         }
     }
 
-    @Test
-    fun run_withPrefixMappingGroup_outputsPrefixMapping() {
-        val inputFile = writeToNetCdf("/netcdf/prefix.cdl")
+    private fun run_withPrefixMapping_outputsPrefixMapping(cdlLoc: String) {
+        val inputFile = writeToNetCdf(cdlLoc)
         val outputFile = createTempFile()
         run("--uri", "http://test.binary-array-ld.net/example", inputFile.absolutePath, outputFile.absolutePath)
 
@@ -110,29 +109,13 @@ class BinaryArrayConvertCliTest {
     }
 
     @Test
-    fun run_withPrefixMappingVar_outputsPrefixMapping() {
-        val inputFile = writeToNetCdf("/netcdf/prefix-var.cdl")
-        val outputFile = createTempFile()
-        run("--uri", "http://test.binary-array-ld.net/example", inputFile.absolutePath, outputFile.absolutePath)
+    fun run_withPrefixMappingGroup_outputsPrefixMapping() {
+        run_withPrefixMapping_outputsPrefixMapping("/netcdf/prefix.cdl")
+    }
 
-        val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
-        ModelVerifier(model).apply {
-            prefix("bald", BALD.prefix)
-            prefix("skos", SKOS.uri)
-            resource("http://test.binary-array-ld.net/example") {
-                statement(RDF.type, BALD.Container)
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
-                    statement(RDF.type, BALD.Container)
-                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
-                        statement(RDF.type, BALD.Resource)
-                    }
-                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
-                        statement(RDF.type, BALD.Resource)
-                    }
-                    statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
-                }
-            }
-        }
+    @Test
+    fun run_withPrefixMappingVar_outputsPrefixMapping() {
+        run_withPrefixMapping_outputsPrefixMapping("/netcdf/prefix-var.cdl")
     }
 
     @Test
