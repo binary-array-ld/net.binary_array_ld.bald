@@ -1,14 +1,13 @@
 package net.bald
 
 import net.bald.alias.AliasBinaryArray
-import net.bald.alias.AliasDefinition
+import net.bald.context.ContextBinaryArray
 import net.bald.model.ModelAliasDefinition
 import net.bald.model.ModelBinaryArrayConverter
 import net.bald.netcdf.NetCdfBinaryArray
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
-import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
 import java.io.File
 import java.io.OutputStream
@@ -40,10 +39,12 @@ class BinaryArrayConvertCli {
     }
 
     private fun doRun(opts: CommandLineOptions) {
-        val ba = binaryArray(opts)
-        val context = context(opts.contextLocs)
+        val inputLoc = opts.inputLoc ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
+        val ba = NetCdfBinaryArray.create(inputLoc, opts.uri)
+            .withContext(opts.contextLocs)
+            .withAlias(opts.aliasLoc)
         val model = ba.use {
-            ModelBinaryArrayConverter.convert(ba, context)
+            ModelBinaryArrayConverter.convert(ba)
         }
 
         modelOutput(opts.outputLoc).use { output ->
@@ -51,28 +52,21 @@ class BinaryArrayConvertCli {
         }
     }
 
-    private fun binaryArray(opts: CommandLineOptions): BinaryArray {
-        val inputLoc = opts.inputLoc ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
-        val ba = NetCdfBinaryArray.create(inputLoc, opts.uri)
-
-        val alias = opts.aliasLoc?.let(::alias)
-        return if (alias != null) {
-            AliasBinaryArray.create(ba, alias)
-        } else {
-            ba
+    private fun BinaryArray.withContext(contextLocs: List<String>): BinaryArray {
+        val contexts = contextLocs.map { contextLoc ->
+            ModelFactory.createDefaultModel().read(contextLoc, "json-ld")
         }
+        return ContextBinaryArray.create(this, contexts)
     }
 
-    private fun alias(aliasLoc: String): AliasDefinition {
-        val model = ModelFactory.createDefaultModel().read(aliasLoc)
-        return ModelAliasDefinition.create(model)
-    }
+    private fun BinaryArray.withAlias(aliasLoc: String?): BinaryArray {
+        return if (aliasLoc == null) {
+            this
+        } else {
+            val model = ModelFactory.createDefaultModel().read(aliasLoc)
+            val alias =  ModelAliasDefinition.create(model)
 
-    private fun context(contextLocs: List<String>): Model {
-        return ModelFactory.createDefaultModel().apply {
-            contextLocs.forEach { contextLoc ->
-                read(contextLoc, "json-ld")
-            }
+            AliasBinaryArray.create(this, alias)
         }
     }
 
