@@ -1,5 +1,6 @@
 package net.bald
 
+import net.bald.context.ContextBinaryArray
 import net.bald.model.ModelBinaryArrayConverter
 import net.bald.netcdf.NetCdfBinaryArray
 import org.apache.commons.cli.DefaultParser
@@ -37,10 +38,9 @@ class BinaryArrayConvertCli {
 
     private fun doRun(opts: CommandLineOptions) {
         val inputLoc = opts.inputLoc ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
-        val ba = NetCdfBinaryArray.create(inputLoc, opts.uri)
-        val context = context(opts.contextLocs)
+        val ba = NetCdfBinaryArray.create(inputLoc, opts.uri).withContext(opts.contextLocs)
         val model = ba.use {
-            ModelBinaryArrayConverter.convert(ba, context)
+            ModelBinaryArrayConverter.convert(ba)
         }
 
         modelOutput(opts.outputLoc).use { output ->
@@ -48,12 +48,13 @@ class BinaryArrayConvertCli {
         }
     }
 
-    private fun context(contextLocs: List<String>): Model {
-        return ModelFactory.createDefaultModel().apply {
+    private fun BinaryArray.withContext(contextLocs: List<String>): BinaryArray {
+        val context = ModelFactory.createDefaultModel().apply {
             contextLocs.forEach { contextLoc ->
                 read(contextLoc, "json-ld")
             }
         }
+        return ContextBinaryArray(this, context)
     }
 
     private fun options(opts: Options, vararg args: String): CommandLineOptions {

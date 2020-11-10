@@ -19,8 +19,8 @@ import org.junit.jupiter.api.*
  */
 class ModelBinaryArrayConverterTest {
 
-    private fun convert(ba: BinaryArray, prefix: org.apache.jena.shared.PrefixMapping): Model {
-        return ModelBinaryArrayConverter.convert(ba, prefix)
+    private fun convert(ba: BinaryArray): Model {
+        return ModelBinaryArrayConverter.convert(ba)
     }
 
     private fun newVar(name: String): Var {
@@ -39,15 +39,14 @@ class ModelBinaryArrayConverterTest {
         val prefix = PrefixMapping.Factory.create()
             .setNsPrefix("bald", BALD.prefix)
             .setNsPrefix("skos", SKOS.uri)
+            .setNsPrefix("dct", DCTerms.NS)
         val ba = mock<BinaryArray> {
             on { uri } doReturn "http://test.binary-array-ld.net/example"
             on { this.root } doReturn root
             on { prefixMapping } doReturn prefix
         }
-        val externalPrefix = PrefixMapping.Factory.create()
-            .setNsPrefix("skos", "http://example.org/skos/")
-            .setNsPrefix("dct", DCTerms.NS)
-        val model = convert(ba, externalPrefix)
+
+        val model = convert(ba)
 
         ModelVerifier(model).apply {
             prefix("bald", BALD.prefix)
