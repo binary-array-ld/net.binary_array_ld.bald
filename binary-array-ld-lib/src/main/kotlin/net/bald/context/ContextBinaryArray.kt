@@ -34,21 +34,24 @@ class ContextBinaryArray(
          */
         @JvmStatic
         fun create(ba: BinaryArray, contexts: List<PrefixMapping>): BinaryArray {
-            val context = contexts.reduce { acc, context ->
-                val accKeys = acc.nsPrefixMap.keys
-                val contextKeys = context.nsPrefixMap.keys
-                val conflicts = accKeys.intersect(contextKeys).filterNot { prefix ->
-                    acc.getNsPrefixURI(prefix) == context.getNsPrefixURI(prefix)
-                }
+            return if (contexts.isEmpty()) {
+                ba
+            } else {
+                val context = contexts.reduce { acc, context ->
+                    val accKeys = acc.nsPrefixMap.keys
+                    val contextKeys = context.nsPrefixMap.keys
+                    val conflicts = accKeys.intersect(contextKeys).filterNot { prefix ->
+                        acc.getNsPrefixURI(prefix) == context.getNsPrefixURI(prefix)
+                    }
 
-                if (conflicts.isEmpty()) {
-                    acc.setNsPrefixes(context)
-                } else {
-                    throw IllegalArgumentException("The namespace prefixes $conflicts have conflicting definitions in contexts.")
+                    if (conflicts.isEmpty()) {
+                        acc.setNsPrefixes(context)
+                    } else {
+                        throw IllegalArgumentException("The namespace prefixes $conflicts have conflicting definitions in contexts.")
+                    }
                 }
+                create(ba, context)
             }
-
-            return create(ba, context)
         }
 
         /**
