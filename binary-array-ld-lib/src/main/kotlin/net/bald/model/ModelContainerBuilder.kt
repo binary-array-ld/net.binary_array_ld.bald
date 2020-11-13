@@ -25,16 +25,13 @@ open class ModelContainerBuilder(
     }
 
     private fun addVars(container: Container, containerRes: Resource) {
-        varFct.forContainer(containerRes).apply {
-            container.vars().forEach(::addVar)
-        }
+        val builder = varFct.forContainer(containerRes)
+        container.vars().forEach(builder::addVar)
     }
 
     private fun addAttributes(source: AttributeSource, resource: Resource) {
         val builder = attrFct.forResource(resource)
-        source.attributes(resource.model).forEach { attr ->
-            builder.addAttribute(attr)
-        }
+        source.attributes(resource.model).forEach(builder::addAttribute)
     }
 
     open class Factory(
