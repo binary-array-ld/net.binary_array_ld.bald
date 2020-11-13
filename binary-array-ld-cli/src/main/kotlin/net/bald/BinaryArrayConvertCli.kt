@@ -39,9 +39,7 @@ class BinaryArrayConvertCli {
     private fun doRun(opts: CommandLineOptions) {
         val inputLoc = opts.inputLoc ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
         val ba = NetCdfBinaryArray.create(inputLoc, opts.uri).withContext(opts.contextLocs)
-        val model = ba.use {
-            ModelBinaryArrayConverter.convert(ba)
-        }
+        val model = ba.use(ModelBinaryArrayConverter::convert)
 
         modelOutput(opts.outputLoc).use { output ->
             model.write(output, "ttl")
