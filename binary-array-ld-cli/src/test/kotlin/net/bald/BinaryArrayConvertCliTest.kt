@@ -6,10 +6,7 @@ import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory.createDefaultModel
 import org.apache.jena.rdf.model.ResourceFactory.*
-import org.apache.jena.vocabulary.DCTerms
-import org.apache.jena.vocabulary.RDF
-import org.apache.jena.vocabulary.SKOS
-import org.apache.jena.vocabulary.XSD
+import org.apache.jena.vocabulary.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.io.File
@@ -211,7 +208,7 @@ class BinaryArrayConvertCliTest {
             prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
                 statement(DCTerms.publisher, createResource("${BALD.prefix}Organisation"))
-                statement(createProperty("http://test.binary-array-ld.net/example//date"), createPlainLiteral("2020-10-29"))
+                statement(createProperty("http://test.binary-array-ld.net/example/date"), createPlainLiteral("2020-10-29"))
                 statement(RDF.type, BALD.Container)
                 statement(SKOS.prefLabel, createPlainLiteral("Attributes metadata example"))
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
