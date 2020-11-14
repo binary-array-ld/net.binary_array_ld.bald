@@ -43,9 +43,7 @@ class BinaryArrayConvertCli {
         val ba = NetCdfBinaryArray.create(inputLoc, opts.uri)
             .withContext(opts.contextLocs)
             .withAlias(opts.aliasLoc)
-        val model = ba.use {
-            ModelBinaryArrayConverter.convert(ba)
-        }
+        val model = ba.use(ModelBinaryArrayConverter::convert)
 
         modelOutput(opts.outputLoc).use { output ->
             model.write(output, "ttl")
