@@ -18,49 +18,49 @@ class ModelAliasDefinitionTest {
 
     @Test
     fun propertyUri_aliasNotDefined_returnsNull() {
-        val result = alias.propertyUri("undefined")
+        val result = alias.property("undefined")
         assertNull(result)
     }
 
     @Test
     fun propertyUri_resourceAliasDefined_returnsNull() {
-        val result = alias.propertyUri("binary-array-ld-org")
+        val result = alias.property("binary-array-ld-org")
         assertNull(result)
     }
 
     @Test
     fun propertyUri_propertyAliasDefined_returnsUri() {
-        val result = alias.propertyUri("name")
-        assertEquals(RDFS.label.uri, result)
+        val result = alias.property("name")
+        assertEquals(RDFS.label, result)
     }
 
     @Test
     fun propertyUri_objectPropertyAliasDefined_returnsUri() {
-        val result = alias.propertyUri("dct_publisher")
-        assertEquals(DCTerms.publisher.uri, result)
+        val result = alias.property("dct_publisher")
+        assertEquals(DCTerms.publisher, result)
     }
 
     @Test
     fun resourceUri_aliasNotDefined_returnsNull() {
-        val result = alias.resourceUri("undefined")
+        val result = alias.resource("undefined")
         assertNull(result)
     }
 
     @Test
     fun resourceUri_resourceAliasDefined_returnsUri() {
-        val result = alias.resourceUri("binary-array-ld-org")
-        assertEquals(BALD.prefix + "Organisation", result)
+        val result = alias.resource("binary-array-ld-org")
+        assertEquals(BALD.prefix + "Organisation", result?.uri)
     }
 
     @Test
     fun resourceUri_propertyAliasDefined_returnsUri() {
-        val result = alias.resourceUri("name")
-        assertEquals(RDFS.label.uri, result)
+        val result = alias.resource("name")
+        assertEquals(RDFS.label, result)
     }
 
     @Test
     fun resourceUri_objectPropertyAliasDefined_returnsUri() {
-        val result = alias.resourceUri("dct_publisher")
-        assertEquals(DCTerms.publisher.uri, result)
+        val result = alias.resource("dct_publisher")
+        assertEquals(DCTerms.publisher, result)
     }
 }

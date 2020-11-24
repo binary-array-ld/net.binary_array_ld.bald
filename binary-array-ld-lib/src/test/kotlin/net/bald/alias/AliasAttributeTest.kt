@@ -3,21 +3,23 @@ package net.bald.alias
 import com.nhaarman.mockitokotlin2.*
 import net.bald.Attribute
 import org.apache.jena.rdf.model.RDFNode
-import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
-import org.apache.jena.rdf.model.ResourceFactory.createResource
+import org.apache.jena.rdf.model.ResourceFactory
+import org.apache.jena.rdf.model.ResourceFactory.*
 import org.junit.jupiter.api.*
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
 class AliasAttributeTest {
     private val propertyUri = "http://test.binary-array-ld.net/example/alias/property"
+    private val property = createProperty(propertyUri)
     private val resourceUri = "http://test.binary-array-ld.net/example/alias/resource"
+    private val resource = createResource(resourceUri)
     private val attr = mock<Attribute> {
         on { name } doReturn "foo"
     }
     private val alias = mock<AliasDefinition> {
-        on { propertyUri(any()) } doReturn propertyUri
-        on { resourceUri(any()) } doReturn resourceUri
+        on { property(any()) } doReturn property
+        on { resource(any()) } doReturn resource
     }
     private val aliasAttr = AliasAttribute(attr, alias)
 
@@ -33,16 +35,16 @@ class AliasAttributeTest {
     @Test
     fun uri_attributeWithoutUri_nameWithAlias_returnsAlias() {
         assertEquals(propertyUri, aliasAttr.uri)
-        verify(alias).propertyUri("foo")
+        verify(alias).property("foo")
     }
 
     @Test
     fun uri_attributeWithoutUri_nameWithoutAlias_returnsNull() {
         alias.stub {
-            on { propertyUri(any()) } doReturn null
+            on { property(any()) } doReturn null
         }
         assertNull(aliasAttr.uri)
-        verify(alias).propertyUri("foo")
+        verify(alias).property("foo")
     }
 
     @Test
@@ -59,7 +61,7 @@ class AliasAttributeTest {
         val results = aliasAttr.values
         assertEquals(1, results.size)
         assertEquals(resource, results[0])
-        verify(alias, never()).resourceUri(any())
+        verify(alias, never()).resource(any())
     }
 
     @Test
@@ -71,13 +73,13 @@ class AliasAttributeTest {
         val results = aliasAttr.values
         assertEquals(1, results.size)
         assertEquals(createResource(resourceUri), results[0])
-        verify(alias).resourceUri("foo")
+        verify(alias).resource("foo")
     }
 
     @Test
     fun values_literalValue_withoutAlias_returnsValue() {
         alias.stub {
-            on { resourceUri(any()) } doReturn null
+            on { resource(any()) } doReturn null
         }
         val literal = createPlainLiteral("foo")
         attr.stub {
@@ -86,14 +88,14 @@ class AliasAttributeTest {
         val results = aliasAttr.values
         assertEquals(1, results.size)
         assertEquals(literal, results[0])
-        verify(alias).resourceUri("foo")
+        verify(alias).resource("foo")
     }
 
     @Test
     fun values_multipleValues_returnsAliases() {
         alias.stub {
-            on { resourceUri(any()) } doReturn null
-            on { resourceUri("foo") } doReturn "http://test.binary-array-ld.net/example/foo"
+            on { resource(any()) } doReturn null
+            on { resource("foo") } doReturn createResource("http://test.binary-array-ld.net/example/foo")
         }
         val values = listOf<RDFNode>(
             createPlainLiteral("foo"),

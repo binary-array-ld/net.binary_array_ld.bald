@@ -11,14 +11,14 @@ class AliasAttribute(
     private val attr: Attribute,
     private val alias: AliasDefinition
 ): Attribute {
-    override val uri: String? get() = attr.uri ?: alias.propertyUri(attr.name)
+    override val uri: String? get() = attr.uri ?: alias.property(attr.name)?.uri
     override val name: String get() = attr.name
 
     override val values: List<RDFNode> get() {
         return attr.values.map { value ->
             if (value.isLiteral) {
                 val raw = value.asLiteral().lexicalForm
-                alias.resourceUri(raw)?.let(ResourceFactory::createResource) ?: value
+                alias.resource(raw) ?: value
             } else {
                 value
             }
