@@ -19,7 +19,7 @@ import kotlin.system.exitProcess
 class BinaryArrayConvertCli {
     private val opts = Options().apply {
         addOption("u", "uri", true, "The URI which identifies the dataset.")
-        addOption("a", "alias", true, "RDF alias file.")
+        addOption("a", "alias", true, "Comma-delimited list of RDF alias files.")
         addOption("c", "context", true, "Comma-delimited list of JSON-LD context files.")
         addOption("h", "help", false, "Show help.")
     }
@@ -42,7 +42,7 @@ class BinaryArrayConvertCli {
         val inputLoc = opts.inputLoc ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
         val ba = NetCdfBinaryArray.create(inputLoc, opts.uri)
             .withContext(opts.contextLocs)
-            .withAlias(opts.aliasLoc)
+            .withAlias(opts.aliasLocs)
         val model = ba.use(ModelBinaryArrayConverter::convert)
 
         modelOutput(opts.outputLoc).use { output ->
@@ -57,13 +57,13 @@ class BinaryArrayConvertCli {
         return ContextBinaryArray.create(this, contexts)
     }
 
-    private fun BinaryArray.withAlias(aliasLoc: String?): BinaryArray {
-        return if (aliasLoc == null) {
+    private fun BinaryArray.withAlias(aliasLocs: List<String>): BinaryArray {
+        return if (aliasLocs.isEmpty()) {
             this
         } else {
-            val model = ModelFactory.createDefaultModel().read(aliasLoc)
-            val alias =  ModelAliasDefinition.create(model)
-
+            val alias = ModelFactory.createDefaultModel().apply {
+                aliasLocs.forEach(::read)
+            }.let(ModelAliasDefinition::create)
             AliasBinaryArray.create(this, alias)
         }
     }
