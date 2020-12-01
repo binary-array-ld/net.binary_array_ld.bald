@@ -200,6 +200,7 @@ class BinaryArrayConvertCliTest {
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
             prefix("bald", BALD.prefix)
+            // B-8
             prefix("skos", SKOS.uri)
             prefix("dct", DCTerms.NS)
             prefix("xsd", XSD.NS)

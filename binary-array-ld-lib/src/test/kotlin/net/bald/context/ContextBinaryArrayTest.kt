@@ -44,6 +44,9 @@ class ContextBinaryArrayTest {
         verify(ba).close()
     }
 
+    /**
+     * Requirements class B-4
+     */
     @Test
     fun prefixMapping_returnsCombinedPrefixMapping() {
         val result = contextBa.prefixMapping.nsPrefixMap
@@ -55,6 +58,9 @@ class ContextBinaryArrayTest {
         assertEquals(expected, result)
     }
 
+    /**
+     * Requirements class B-4
+     */
     @Test
     fun prefixMapping_multipleContexts_returnsCombinedPrefixMapping() {
         val contexts = listOf(
@@ -76,6 +82,9 @@ class ContextBinaryArrayTest {
         assertEquals(expected, result)
     }
 
+    /**
+     * Requirements class B-7
+     */
     @Test
     fun create_multipleContexts_withConflicts_throwsException() {
         val contexts = listOf(

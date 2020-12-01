@@ -21,6 +21,9 @@ class NetCdfBinaryArrayTest {
         return NetCdfBinaryArray.create(file.absolutePath, uri)
     }
 
+    /**
+     * Requirements class A-1
+     */
     @Test
     fun uri_withUri_returnsValue() {
         val uri = "http://test.binary-array-ld.net/identity.nc"
@@ -28,6 +31,9 @@ class NetCdfBinaryArrayTest {
         assertEquals(uri, ba.uri)
     }
 
+    /**
+     * Requirements class A-1
+     */
     @Test
     fun uri_withoutUri_returnsFileUri() {
         val netCdfFile = writeToNetCdf("/netcdf/identity.cdl")
@@ -36,6 +42,9 @@ class NetCdfBinaryArrayTest {
         assertEquals(expectedUri, ba.uri)
     }
 
+    /**
+     * Requirements class A-2
+     */
     @Test
     fun root_vars_withVars_returnsVariables() {
         val uri = "http://test.binary-array-ld.net/identity.nc"
@@ -47,6 +56,9 @@ class NetCdfBinaryArrayTest {
         assertEquals("var1", vars[1].name)
     }
 
+    /**
+     * Requirements class A-2
+     */
     @Test
     fun root_subContainers_withSubgroups_returnsSubgroups() {
         val uri = "http://test.binary-array-ld.net/identity-subgroups.nc"
@@ -92,6 +104,9 @@ class NetCdfBinaryArrayTest {
         assertEquals(emptyMap(), ba.prefixMapping.nsPrefixMap)
     }
 
+    /**
+     * Requirements class B-1
+     */
     @Test
     fun prefixMapping_withInternalPrefixMappingGroup_returnsPrefixMapping() {
         val ba = fromCdl("/netcdf/prefix.cdl", "http://test.binary-array-ld.net/prefix.nc")
@@ -103,6 +118,9 @@ class NetCdfBinaryArrayTest {
         assertEquals(expected, prefix)
     }
 
+    /**
+     * Requirements class B-1
+     */
     @Test
     fun prefixMapping_withInternalPrefixMappingVar_returnsPrefixMapping() {
         val ba = fromCdl("/netcdf/prefix-var.cdl", "http://test.binary-array-ld.net/prefix.nc")
@@ -114,6 +132,9 @@ class NetCdfBinaryArrayTest {
         assertEquals(expected, prefix)
     }
 
+    /**
+     * Requirements class B-1
+     */
     @Test
     fun prefixMapping_prefixGroupDoesNotExist_throwsException() {
         val ba = fromCdl("/netcdf/prefix-group-error.cdl", "http://test.binary-array-ld.net/prefix.nc")
@@ -141,6 +162,9 @@ class NetCdfBinaryArrayTest {
         assertEquals("Prefix attribute skos__ must have a string value.", ise.message)
     }
 
+    /**
+     * Requirements class D
+     */
     @Test
     fun attributes_withAttributes_returnsRootGroupAttributes() {
         val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc")
@@ -166,6 +190,9 @@ class NetCdfBinaryArrayTest {
         }
     }
 
+    /**
+     * Requirements class D
+     */
     @Test
     fun attributes_withAttributes_returnsVarAttributes() {
         val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc")
