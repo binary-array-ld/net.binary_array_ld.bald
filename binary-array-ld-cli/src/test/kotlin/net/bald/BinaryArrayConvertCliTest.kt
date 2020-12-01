@@ -36,6 +36,9 @@ class BinaryArrayConvertCliTest {
         run("-h")
     }
 
+    /**
+     * Requirements class A
+     */
     @Test
     fun run_withoutUri_outputsToFileWithInputFileUri() {
         val inputFile = writeToNetCdf("/netcdf/identity.cdl")
@@ -47,8 +50,10 @@ class BinaryArrayConvertCliTest {
         ModelVerifier(model).apply {
             resource(inputFileUri) {
                 statement(RDF.type, BALD.Container)
+                // A-1
                 statement(BALD.contains, model.createResource("$inputFileUri/")) {
                     statement(RDF.type, BALD.Container)
+                    // A-2
                     statement(BALD.contains, model.createResource("$inputFileUri/var0")) {
                         statement(RDF.type, BALD.Resource)
                     }
@@ -60,6 +65,9 @@ class BinaryArrayConvertCliTest {
         }
     }
 
+    /**
+     * Requirements class A
+     */
     @Test
     fun run_withUri_withOutputFile_outputsToFile() {
         val inputFile = writeToNetCdf("/netcdf/identity.cdl")
@@ -68,13 +76,18 @@ class BinaryArrayConvertCliTest {
 
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
-            resource("http://test.binary-array-ld.net/example/") {
+            // A-1
+            resource("http://test.binary-array-ld.net/example") {
                 statement(RDF.type, BALD.Container)
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
-                    statement(RDF.type, BALD.Resource)
-                }
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
-                    statement(RDF.type, BALD.Resource)
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
+                    statement(RDF.type, BALD.Container)
+                    // A-2
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
+                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
                 }
             }
         }
@@ -105,16 +118,25 @@ class BinaryArrayConvertCliTest {
         }
     }
 
+    /**
+     * Requirements class B-1
+     */
     @Test
     fun run_withPrefixMappingGroup_outputsPrefixMapping() {
         run_withPrefixMapping_outputsPrefixMapping("/netcdf/prefix.cdl")
     }
 
+    /**
+     * Requirements class B-1
+     */
     @Test
     fun run_withPrefixMappingVar_outputsPrefixMapping() {
         run_withPrefixMapping_outputsPrefixMapping("/netcdf/prefix-var.cdl")
     }
 
+    /**
+     * Requirements class A-2
+     */
     @Test
     fun run_withSubgroups_outputsWithSubgroups() {
         val inputFile = writeToNetCdf("/netcdf/identity-subgroups.cdl")
@@ -156,6 +178,9 @@ class BinaryArrayConvertCliTest {
         }
     }
 
+    /**
+     * Requirements class B-4
+     */
     @Test
     fun run_withExternalPrefixMapping_outputsPrefixMapping() {
         val inputFile = writeToNetCdf("/netcdf/prefix.cdl")
@@ -191,6 +216,9 @@ class BinaryArrayConvertCliTest {
         }
     }
 
+    /**
+     * Requirements class D
+     */
     @Test
     fun run_withAttributes_outputsAttributes() {
         val inputFile = writeToNetCdf("/netcdf/attributes.cdl")
@@ -211,8 +239,10 @@ class BinaryArrayConvertCliTest {
             prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
                 statement(DCTerms.publisher, createResource("${BALD.prefix}Organisation"))
+                // D-4
                 statement(createProperty("http://test.binary-array-ld.net/example/date"), createPlainLiteral("2020-10-29"))
                 statement(RDF.type, BALD.Container)
+                // D-2
                 statement(SKOS.prefLabel, createPlainLiteral("Attributes metadata example"))
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Array)
@@ -227,6 +257,9 @@ class BinaryArrayConvertCliTest {
         }
     }
 
+    /**
+     * Requirements class C, D
+     */
     @Test
     fun run_withAliases_outputsAliasedAttributes() {
         val inputFile = writeToNetCdf("/netcdf/alias.cdl")
@@ -248,6 +281,7 @@ class BinaryArrayConvertCliTest {
             prefix("skos", SKOS.uri)
             prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
+                // D-3
                 statement(DCTerms.publisher, createResource("${BALD.prefix}Organisation"))
                 statement(createProperty("http://test.binary-array-ld.net/example/date"), createPlainLiteral("2020-10-29"))
                 statement(RDF.type, BALD.Container)
