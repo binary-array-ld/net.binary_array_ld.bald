@@ -5,11 +5,18 @@ import net.bald.Var
 import kotlin.test.fail
 
 /**
- * TODO
+ * Test utility for verifying the characteristics of a [Container].
+ * @param container The container to verify.
  */
 class ContainerVerifier(
     private val container: Container
 ): AttributeSourceVerifier(container) {
+    /**
+     * Begin verifying the variables in the container.
+     * Variables are supplied in alphabetical order of their URIs.
+     * Also verify that the number of variables verified is equal to the total number of variables available.
+     * @param verify A function to perform against the [VarsVerifier] for the container.
+     */
     fun vars(verify: VarsVerifier.() -> Unit) {
         val vars = container.vars().sortedBy(Var::uri)
         val varIt = vars.iterator()
@@ -19,6 +26,12 @@ class ContainerVerifier(
         }
     }
 
+    /**
+     * Begin verifying the sub-containers in the container.
+     * Sub-containers are supplied in the order they are declared.
+     * Also verify that the number of sub-containers verified is equal to the total number of sub-containers available.
+     * @param verify A function to perform against the [ContainersVerifier] for the container.
+     */
     fun subContainers(verify: ContainersVerifier.() -> Unit) {
         val containers = container.subContainers()
         val containerIt = containers.iterator()

@@ -170,7 +170,7 @@ class NetCdfBinaryArrayTest {
     }
 
     /**
-     * TODO - requirement
+     * Requirements class B-8
      */
     @Test
     fun prefixMapping_withExternalPrefixMapping_returnsCombinedPrefixMapping() {
@@ -234,7 +234,7 @@ class NetCdfBinaryArrayTest {
     }
 
     /**
-     * TODO - requirement
+     * Requirements class C
      */
     @Test
     fun attributes_withAliases_returnsAliasedValues() {
@@ -269,7 +269,7 @@ class NetCdfBinaryArrayTest {
     }
 
     /**
-     * TODO - requirement
+     * Requirements class E-1, E-2
      */
     @Test
     fun attributes_withVariableReferences_returnsVariableValues() {

@@ -11,10 +11,9 @@ class AttributesVerifier(
     private val attrIt: Iterator<Attribute>
 ) {
     /**
-     * Verify that the next attribute has the given properties.
+     * Verify that the next attribute has the given URI.
      * Begin verifying values on the attribute.
      * @param uri The expected attribute URI.
-     * @param name The expected attribute name.
      * @param verify A function to perform against the [AttributeValuesVerifier] for the attribute.
      */
     fun attribute(uri: String, verify: AttributeValuesVerifier.() -> Unit = {}) {
@@ -33,7 +32,9 @@ class AttributesVerifier(
     }
 
     /**
-     * TODO
+     * Verify that the next attribute has the given URI,
+     * and that the given value is its single value.
+     * @see attribute
      */
     fun attribute(uri: String, value: RDFNode) {
         attribute(uri) {

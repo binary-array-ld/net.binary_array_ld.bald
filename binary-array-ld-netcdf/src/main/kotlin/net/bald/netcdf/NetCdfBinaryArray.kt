@@ -66,7 +66,7 @@ class NetCdfBinaryArray(
          * The resulting [NetCdfBinaryArray] should be closed after use.
          * @param fileLoc The location of the NetCDF file on the local file system.
          * @param uri The URI which identifies the dataset.
-         * @param context TODO
+         * @param context The external context in which to resolve the binary array.
          * @return A [BinaryArray] representation of the NetCDF file.
          */
         @JvmStatic

@@ -303,7 +303,7 @@ class BinaryArrayConvertCliTest {
     }
 
     /**
-     * TODO requirement
+     * Requirements class E-1, E-2
      */
     @Test
     fun run_withVariableReferenceAttributes_outputsVariableReferences() {
