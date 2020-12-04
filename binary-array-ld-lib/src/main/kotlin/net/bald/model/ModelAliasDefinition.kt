@@ -49,17 +49,25 @@ class ModelAliasDefinition(
         }
     }
 
-    private fun containsReferenceCls(stmts: StmtIterator): Boolean {
+    private fun containsReferenceCls(stmts: StmtIterator, clsUris: Set<String> = emptySet()): Boolean {
         return stmts.asSequence()
             .map(Statement::getObject)
             .filter(RDFNode::isResource)
             .map(RDFNode::asResource)
-            .any(::isReferenceCls)
+            .any { cls -> isReferenceCls(cls, clsUris) }
     }
 
-    private fun isReferenceCls(cls: Resource): Boolean {
-        return cls.hasProperty(RDFS.subClassOf, BALD.Subject) // TODO circular reference
-                || cls.listProperties(RDFS.subClassOf).let(::containsReferenceCls)
+    private fun isReferenceCls(cls: Resource, clsUris: Set<String>): Boolean {
+        return when {
+            cls.hasProperty(RDFS.subClassOf, BALD.Subject) -> true
+            clsUris.contains(cls.uri) -> false
+            else -> {
+                val nextClsUris = cls.uri?.let(clsUris::plus) ?: clsUris
+                cls.listProperties(RDFS.subClassOf).let { parents ->
+                    containsReferenceCls(parents, nextClsUris)
+                }
+            }
+        }
     }
 
     companion object {

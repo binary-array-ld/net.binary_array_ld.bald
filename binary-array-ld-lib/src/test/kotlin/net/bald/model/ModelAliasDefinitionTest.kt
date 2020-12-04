@@ -84,6 +84,17 @@ class ModelAliasDefinitionTest {
         assertTrue(result)
     }
 
+    @Test
+    fun isReferenceProperty_circularClassHierarchy_returnsFalse() {
+        val model = ModelFactory.createDefaultModel().apply {
+            javaClass.getResourceAsStream("/alias/circular.ttl").use { ttl ->
+                read(ttl, null, "ttl")
+            }
+        }
+        val alias = ModelAliasDefinition.create(model)
+        assertEquals(false, alias.isReferenceProperty(createProperty("http://test.binary-array-ld.net/vocab/direct")))
+    }
+
     /**
      * Requirements class C-2
      */
