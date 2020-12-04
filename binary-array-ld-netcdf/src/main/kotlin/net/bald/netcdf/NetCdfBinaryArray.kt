@@ -19,14 +19,14 @@ class NetCdfBinaryArray(
 ): BinaryArray {
     override val root: Container get() = container(file.rootGroup)
     override val prefixMapping: PrefixMapping get() = prefixMapping() ?: PrefixMapping.Factory.create()
+    val prefixSrc: String? get() = prefixSourceName()
 
     override fun close() {
         file.close()
     }
 
     private fun container(group: Group): Container {
-        val prefixSrc = prefixSourceName()
-        return NetCdfContainer(group, prefixSrc)
+        return NetCdfRootContainer(this, group)
     }
 
     private fun prefixMapping(): PrefixMapping? {

@@ -9,9 +9,10 @@ import ucar.nc2.Variable
  * NetCDF implementation of [Var].
  */
 class NetCdfVar(
+    private val parent: NetCdfContainer,
     private val v: Variable
 ): Var {
-    override val name: String get() = v.shortName
+    override val uri: String get() = parent.childUri(v.shortName)
 
     override fun attributes(prefixMapping: PrefixMapping): List<Attribute> {
         val source = v.attributes().let(::NetCdfAttributeSource)

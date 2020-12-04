@@ -52,8 +52,8 @@ class NetCdfBinaryArrayTest {
 
         val vars = ba.root.vars().toList()
         assertEquals(2, vars.size)
-        assertEquals("var0", vars[0].name)
-        assertEquals("var1", vars[1].name)
+        assertEquals("$uri/var0", vars[0].uri)
+        assertEquals("$uri/var1", vars[1].uri)
     }
 
     /**
@@ -64,23 +64,23 @@ class NetCdfBinaryArrayTest {
         val uri = "http://test.binary-array-ld.net/identity-subgroups.nc"
         val ba = fromCdl("/netcdf/identity-subgroups.cdl", uri)
         val root = ba.root
-        assertEquals("", root.name)
-        val groups = root.subContainers().sortedBy(Container::name).toList()
+        assertEquals("$uri/", root.uri)
+        val groups = root.subContainers().sortedBy(Container::uri).toList()
         assertEquals(2, groups.size)
 
         val group0 = groups[0]
         val group0Vars = group0.vars().toList()
-        assertEquals("group0", group0.name)
+        assertEquals("$uri/group0", group0.uri)
         assertEquals(2, group0Vars.size)
-        assertEquals("var2", group0Vars[0].name)
-        assertEquals("var3", group0Vars[1].name)
+        assertEquals("$uri/group0/var2", group0Vars[0].uri)
+        assertEquals("$uri/group0/var3", group0Vars[1].uri)
 
         val group1 = groups[1]
         val group1Vars = group1.vars().toList()
-        assertEquals("group1", group1.name)
+        assertEquals("$uri/group1", group1.uri)
         assertEquals(2, group1Vars.size)
-        assertEquals("var4", group1Vars[0].name)
-        assertEquals("var5", group1Vars[1].name)
+        assertEquals("$uri/group1/var4", group1Vars[0].uri)
+        assertEquals("$uri/group1/var5", group1Vars[1].uri)
     }
 
     @Test
@@ -90,12 +90,12 @@ class NetCdfBinaryArrayTest {
     }
 
     @Test
-    fun root_subContainers_withInternalPrefixMappingVar_excludesPrefixMapping() {
+    fun root_vars_withInternalPrefixMappingVar_excludesPrefixMapping() {
         val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix-var.nc")
         val vars = ba.root.vars().toList()
         assertEquals(2, vars.size)
-        assertEquals("var0", vars[0].name)
-        assertEquals("var1", vars[1].name)
+        assertEquals("http://test.binary-array-ld.net/prefix-var.nc/var0", vars[0].uri)
+        assertEquals("http://test.binary-array-ld.net/prefix-var.nc/var1", vars[1].uri)
     }
 
     @Test

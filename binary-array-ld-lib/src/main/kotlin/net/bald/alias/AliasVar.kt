@@ -9,5 +9,5 @@ class AliasVar(
     private val v: Var,
     alias: AliasDefinition
 ): AliasAttributeSource(v, alias), Var {
-    override val name: String get() = v.name
+    override val uri: String get() = v.uri
 }

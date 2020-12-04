@@ -10,7 +10,7 @@ class AliasContainer(
     private val container: Container,
     private val alias: AliasDefinition
 ): AliasAttributeSource(container, alias), Container {
-    override val name: String? get() = container.name
+    override val uri: String get() = container.uri
 
     override fun vars(): Sequence<Var> {
         return container.vars().map { v ->

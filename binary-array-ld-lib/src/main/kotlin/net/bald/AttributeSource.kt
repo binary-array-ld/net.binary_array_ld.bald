@@ -1,5 +1,7 @@
 package net.bald
 
+import org.apache.jena.shared.PrefixMapping
+
 /**
  * An entity which is described by its [Attribute]s.
  */
@@ -9,5 +11,5 @@ interface AttributeSource {
      * @param prefixMapping The prefix mapping to use to expand compact URIs.
      * @return The list of attributes.
      */
-    fun attributes(prefixMapping: org.apache.jena.shared.PrefixMapping): List<Attribute>
+    fun attributes(prefixMapping: PrefixMapping): List<Attribute>
 }

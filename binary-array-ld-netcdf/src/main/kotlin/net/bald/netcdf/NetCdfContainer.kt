@@ -9,31 +9,41 @@ import ucar.nc2.Variable
 
 /**
  * NetCDF implementation of [Container].
+ * See [NetCdfRootContainer] for the root group representation,
+ * and [NetCdfSubContainer] for sub-groups.
  */
-class NetCdfContainer(
-    private val group: Group,
-    private val prefixSrc: String? = null
+abstract class NetCdfContainer(
+    private val group: Group
 ): Container {
-    override val name: String? get() = group.shortName
 
     override fun vars(): Sequence<Var> {
-        return group.variables.asSequence().filter(::acceptVar).map(::NetCdfVar)
+        return group.variables.asSequence().filter(::acceptVar).map(::toVar)
     }
 
     override fun subContainers(): Sequence<Container> {
-        return group.groups.asSequence().filter(::acceptGroup).map(::NetCdfContainer)
+        return group.groups.asSequence().filter(::acceptGroup).map(::subContainer)
     }
 
-    private fun acceptVar(v: Variable): Boolean {
-        return prefixSrc != v.shortName
+    private fun toVar(v: Variable): Var {
+        return NetCdfVar(this, v)
     }
 
-    private fun acceptGroup(group: Group): Boolean {
-        return prefixSrc != group.shortName
+    private fun subContainer(group: Group): Container {
+        return NetCdfSubContainer(this, group)
+    }
+
+    open fun acceptVar(v: Variable): Boolean {
+        return true
+    }
+
+    open fun acceptGroup(group: Group): Boolean {
+        return true
     }
 
     override fun attributes(prefixMapping: PrefixMapping): List<Attribute> {
         val source = group.attributes().let(::NetCdfAttributeSource)
         return source.attributes(prefixMapping)
     }
+
+    abstract fun childUri(name: String): String
 }

@@ -5,7 +5,7 @@ package net.bald
  */
 interface Var: AttributeSource {
     /**
-     * The local name of the variable.
+     * The URI of the variable.
      */
-    val name: String
+    val uri: String
 }
