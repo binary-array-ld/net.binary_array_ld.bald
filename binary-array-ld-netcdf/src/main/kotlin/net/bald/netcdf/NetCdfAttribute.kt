@@ -1,41 +1,39 @@
 package net.bald.netcdf
 
+import org.apache.jena.rdf.model.Property
 import org.apache.jena.rdf.model.RDFNode
-import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
-import org.apache.jena.rdf.model.ResourceFactory.createResource
 import ucar.nc2.Attribute
 
 /**
  * NetCDF implementation of [net.bald.Attribute].
  */
 class NetCdfAttribute(
-    private val attr: Attribute,
-    private val uriParser: UriParser
+    private val parent: NetCdfContainer,
+    private val attr: Attribute
 ): net.bald.Attribute {
-    override val name: String get() = attr.shortName
+    private val name: String get() = attr.shortName
+    private val prop: Property get() = parent.parseProperty(name)
 
-    override val uri: String? get() {
-        return uriParser.parse(name)
-    }
+    override val uri: String get() = prop.uri
 
     override val values: List<RDFNode> get() {
-        return if (attr.isArray) {
-            attr.values?.let { values ->
-                ArrayIterator(values).asSequence().map(::node).toList()
-            }
-        } else {
-            attr.getValue(0)?.let(::node)?.let(::listOf)
-        } ?: emptyList()
+        return rawValues()?.map(::node)?.toList() ?: emptyList()
     }
 
-    private fun node(value: Any): RDFNode {
-        val str = value.toString()
-        val uri = uriParser.parse(str)
-        return if (uri != null) {
-            createResource(uri)
+    private fun rawValues(): Sequence<String>? {
+        return if (attr.isArray) {
+            attr.values?.let { values ->
+                ArrayIterator(values).asSequence().map(Any::toString)
+            }
         } else {
-            createPlainLiteral(str)
+            attr.getValue(0)?.toString()?.let { value ->
+                sequenceOf(value)
+            }
         }
+    }
+
+    private fun node(value: String): RDFNode {
+        return parent.parseRdfNode(prop, value)
     }
 
     override fun toString(): String {

@@ -7,8 +7,7 @@ open class ModelAttributeBuilder(
     private val resource: Resource
 ) {
     open fun addAttribute(attr: Attribute) {
-        val propUri = attr.uri ?: resource.withTrailingSlash() + attr.name
-        val prop = resource.model.createProperty(propUri)
+        val prop = resource.model.createProperty(attr.uri)
         attr.values.forEach { value ->
             resource.addProperty(prop, value)
         }

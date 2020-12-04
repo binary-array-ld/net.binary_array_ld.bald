@@ -2,7 +2,7 @@ package net.bald.netcdf
 
 import net.bald.Attribute
 import net.bald.Var
-import org.apache.jena.shared.PrefixMapping
+import ucar.nc2.AttributeContainer
 import ucar.nc2.Variable
 
 /**
@@ -14,9 +14,14 @@ class NetCdfVar(
 ): Var {
     override val uri: String get() = parent.childUri(v.shortName)
 
-    override fun attributes(prefixMapping: PrefixMapping): List<Attribute> {
-        val source = v.attributes().let(::NetCdfAttributeSource)
-        return source.attributes(prefixMapping)
+    override fun attributes(): List<Attribute> {
+        return v.attributes()
+            .let(::source)
+            .attributes()
+    }
+
+    private fun source(attrs: AttributeContainer): NetCdfAttributeSource {
+        return NetCdfAttributeSource(parent, attrs)
     }
 
     override fun toString(): String {

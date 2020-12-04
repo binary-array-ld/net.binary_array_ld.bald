@@ -4,9 +4,11 @@ import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
 import net.bald.Var
 import net.bald.Container
+import net.bald.context.ModelContext
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
 import org.apache.jena.rdf.model.ResourceFactory.createResource
+import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
@@ -16,9 +18,9 @@ import kotlin.test.assertEquals
 
 class NetCdfBinaryArrayTest {
 
-    private fun fromCdl(cdlLoc: String, uri: String? = null): BinaryArray {
+    private fun fromCdl(cdlLoc: String, uri: String? = null, context: ModelContext? = null): BinaryArray {
         val file = writeToNetCdf(cdlLoc)
-        return NetCdfBinaryArray.create(file.absolutePath, uri)
+        return NetCdfBinaryArray.create(file.absolutePath, uri, context)
     }
 
     /**
@@ -167,24 +169,25 @@ class NetCdfBinaryArrayTest {
      */
     @Test
     fun attributes_withAttributes_returnsRootGroupAttributes() {
-        val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc")
-        val root = ba.root
-        val prefix = org.apache.jena.shared.PrefixMapping.Factory.create()
+        val prefix = PrefixMapping.Factory.create()
             .setNsPrefix("bald", BALD.prefix)
             .setNsPrefix("skos", SKOS.uri)
             .setNsPrefix("dct", DCTerms.NS)
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc", ctx)
+        val root = ba.root
 
-        AttributeSourceVerifier(root).attributes(prefix) {
-            attribute(BALD.isPrefixedBy.uri, "bald__isPrefixedBy") {
+        AttributeSourceVerifier(root).attributes {
+            attribute(BALD.isPrefixedBy.uri) {
                 value(createPlainLiteral("prefix_list"))
             }
-            attribute(SKOS.prefLabel.uri, "skos__prefLabel") {
+            attribute(SKOS.prefLabel.uri) {
                 value(createPlainLiteral("Attributes metadata example"))
             }
-            attribute(DCTerms.publisher.uri, "dct__publisher") {
+            attribute(DCTerms.publisher.uri) {
                 value(createResource("${BALD.prefix}Organisation"))
             }
-            attribute(null, "date") {
+            attribute("http://test.binary-array-ld.net/attributes.nc/date") {
                 value(createPlainLiteral("2020-10-29"))
             }
         }
@@ -195,24 +198,25 @@ class NetCdfBinaryArrayTest {
      */
     @Test
     fun attributes_withAttributes_returnsVarAttributes() {
-        val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc")
-        val vars = ba.root.vars().sortedBy(Var::toString).toList()
-        val prefix = org.apache.jena.shared.PrefixMapping.Factory.create()
+        val prefix = PrefixMapping.Factory.create()
             .setNsPrefix("bald", BALD.prefix)
             .setNsPrefix("skos", SKOS.uri)
             .setNsPrefix("dct", DCTerms.NS)
             .setNsPrefix("rdf", RDF.uri)
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc", ctx)
+        val vars = ba.root.vars().sortedBy(Var::toString).toList()
 
         assertEquals(2, vars.size)
-        AttributeSourceVerifier(vars[0]).attributes(prefix) {
-            attribute(RDF.type.uri, "rdf__type") {
+        AttributeSourceVerifier(vars[0]).attributes() {
+            attribute(RDF.type.uri) {
                 value(BALD.Array)
             }
-            attribute(SKOS.prefLabel.uri, "skos__prefLabel") {
+            attribute(SKOS.prefLabel.uri) {
                 value(createPlainLiteral("Variable 0"))
             }
         }
-        AttributeSourceVerifier(vars[1]).attributes(prefix) {
+        AttributeSourceVerifier(vars[1]).attributes {
             // none
         }
     }

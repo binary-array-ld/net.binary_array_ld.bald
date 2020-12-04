@@ -17,7 +17,7 @@ open class ModelVarBuilder(
 
     private fun addAttributes(source: AttributeSource, resource: Resource) {
         val builder = attrFct.forResource(resource)
-        source.attributes(resource.model).forEach(builder::addAttribute)
+        source.attributes().forEach(builder::addAttribute)
     }
 
     open class Factory(

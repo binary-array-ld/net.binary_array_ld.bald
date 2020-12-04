@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import net.bald.Attribute
-import com.nhaarman.mockitokotlin2.*
 import net.bald.Container
 import net.bald.Var
 import net.bald.vocab.BALD
@@ -32,7 +31,7 @@ class ModelContainerBuilderTest {
     private val container = mock<Container> {
         on { uri } doReturn "http://test.binary-array-ld.net/example/foo"
         on { vars() } doReturn vars.asSequence()
-        on { attributes(any()) } doReturn attrs
+        on { attributes() } doReturn attrs
         on { subContainers() } doReturn emptySequence()
     }
 
@@ -58,7 +57,7 @@ class ModelContainerBuilderTest {
     @Test
     fun addContainer_addsAttributes() {
         builder.addContainer(container)
-        verify(container).attributes(model)
+        verify(container).attributes()
         verify(attrFct).forResource(model.createResource("${parent.uri}/foo"))
         verify(attrBuilder).addAttribute(attrs[0])
         verify(attrBuilder).addAttribute(attrs[1])

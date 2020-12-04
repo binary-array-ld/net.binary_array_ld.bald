@@ -15,7 +15,6 @@ class ModelAttributeBuilderTest {
     private val resource = ModelFactory.createDefaultModel().createResource(uri)
     private val attr = mock<Attribute> {
         on { uri } doReturn RDFS.label.uri
-        on { name } doReturn "label"
     }
     private val builder = ModelAttributeBuilder.Factory().forResource(resource)
 
@@ -58,18 +57,6 @@ class ModelAttributeBuilderTest {
         }
     }
 
-    @Test
-    fun addAttribute_withoutUri_addsStatementWithDefaultProperty() {
-        val value = createPlainLiteral("Variable 0")
-        attr.stub {
-            on { uri } doReturn null
-            on { values } doReturn listOf(value)
-        }
-        builder.addAttribute(attr)
-        ResourceVerifier(resource).statements {
-            statement(createProperty("$uri/label"), value)
-        }
-    }
 
     @Test
     fun addAttribute_resourceValue_addsStatement() {
