@@ -15,20 +15,23 @@ import ucar.nc2.Variable
 abstract class NetCdfContainer(
     private val group: Group
 ): Container {
+    abstract val parent: NetCdfContainer?
+    abstract val root: NetCdfContainer
+    abstract fun childUri(name: String): String
 
     override fun vars(): Sequence<Var> {
-        return group.variables.asSequence().filter(::acceptVar).map(::toVar)
+        return group.variables.asSequence().filter(::acceptVar).map(::variable)
     }
 
     override fun subContainers(): Sequence<Container> {
         return group.groups.asSequence().filter(::acceptGroup).map(::subContainer)
     }
 
-    private fun toVar(v: Variable): Var {
+    private fun variable(v: Variable): NetCdfVar {
         return NetCdfVar(this, v)
     }
 
-    private fun subContainer(group: Group): Container {
+    private fun subContainer(group: Group): NetCdfContainer {
         return NetCdfSubContainer(this, group)
     }
 
@@ -45,5 +48,11 @@ abstract class NetCdfContainer(
         return source.attributes(prefixMapping)
     }
 
-    abstract fun childUri(name: String): String
+    fun subContainer(name: String): NetCdfContainer? {
+        return group.findGroup(name)?.let(::subContainer)
+    }
+
+    fun variable(name: String): NetCdfVar? {
+        return group.findVariable(name)?.let(::variable)
+    }
 }
