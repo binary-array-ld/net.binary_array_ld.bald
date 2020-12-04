@@ -4,13 +4,17 @@ import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
 import net.bald.Var
 import net.bald.Container
+import net.bald.context.AliasDefinition
 import net.bald.context.ModelContext
+import net.bald.model.ModelAliasDefinition
 import net.bald.vocab.BALD
+import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
 import org.apache.jena.rdf.model.ResourceFactory.createResource
 import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
+import org.apache.jena.vocabulary.RDFS
 import org.apache.jena.vocabulary.SKOS
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -164,6 +168,21 @@ class NetCdfBinaryArrayTest {
         assertEquals("Prefix attribute skos__ must have a string value.", ise.message)
     }
 
+    @Test
+    fun prefixMapping_withExternalPrefixMapping_returnsCombinedPrefixMapping() {
+        val prefix = PrefixMapping.Factory.create()
+            .setNsPrefix("skos", "http://example.org/skos/")
+            .setNsPrefix("dct", DCTerms.NS)
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/prefix.cdl", "http://test.binary-array-ld.net/prefix.nc", ctx)
+        val expected = mapOf(
+            "bald" to BALD.prefix,
+            "skos" to SKOS.uri,
+            "dct" to DCTerms.NS
+        )
+        assertEquals(expected, ba.prefixMapping.nsPrefixMap)
+    }
+
     /**
      * Requirements class D
      */
@@ -208,7 +227,7 @@ class NetCdfBinaryArrayTest {
         val vars = ba.root.vars().sortedBy(Var::toString).toList()
 
         assertEquals(2, vars.size)
-        AttributeSourceVerifier(vars[0]).attributes() {
+        AttributeSourceVerifier(vars[0]).attributes {
             attribute(RDF.type.uri) {
                 value(BALD.Array)
             }
@@ -218,6 +237,49 @@ class NetCdfBinaryArrayTest {
         }
         AttributeSourceVerifier(vars[1]).attributes {
             // none
+        }
+    }
+
+    @Test
+    fun attributes_withAliases_returnsAliasedValues() {
+        val prefix = PrefixMapping.Factory.create()
+            .setNsPrefix("bald", BALD.prefix)
+            .setNsPrefix("skos", SKOS.uri)
+            .setNsPrefix("dct", DCTerms.NS)
+            .setNsPrefix("rdf", RDF.uri)
+        val alias = javaClass.getResourceAsStream("/turtle/alias.ttl").use { input ->
+            ModelFactory.createDefaultModel().read(input, null, "ttl")
+        }.let(ModelAliasDefinition::create)
+        val ctx = ModelContext.create(prefix, alias)
+        val ba = fromCdl("/netcdf/alias.cdl", "http://test.binary-array-ld.net/alias.nc", ctx)
+        val root = ba.root
+        AttributeSourceVerifier(root).attributes {
+            attribute(BALD.isPrefixedBy.uri) {
+                value(createPlainLiteral("prefix_list"))
+            }
+            attribute(SKOS.prefLabel.uri) {
+                value(createPlainLiteral("Alias metadata example"))
+            }
+            attribute(DCTerms.publisher.uri) {
+                value(createResource("${BALD.prefix}Organisation"))
+            }
+            attribute("http://test.binary-array-ld.net/alias.nc/date") {
+                value(createPlainLiteral("2020-10-29"))
+            }
+        }
+
+        val vars = root.vars().sortedBy(Var::toString).toList()
+        assertEquals(2, vars.size)
+        AttributeSourceVerifier(vars[0]).attributes {
+            attribute(RDFS.label.uri) {
+                value(createPlainLiteral("var-0"))
+            }
+            attribute(RDF.type.uri) {
+                value(BALD.Array)
+            }
+            attribute(SKOS.prefLabel.uri) {
+                value(createPlainLiteral("Variable 0"))
+            }
         }
     }
 }
