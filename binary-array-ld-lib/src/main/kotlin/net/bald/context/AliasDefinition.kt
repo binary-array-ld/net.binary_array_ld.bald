@@ -1,4 +1,4 @@
-package net.bald.alias
+package net.bald.context
 
 import org.apache.jena.rdf.model.Property
 import org.apache.jena.rdf.model.Resource
