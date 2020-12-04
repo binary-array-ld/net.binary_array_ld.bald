@@ -20,4 +20,26 @@ interface AliasDefinition {
      * @return The corresponding alias, if it exists. Otherwise, null.
      */
     fun resource(identifier: String): Resource?
+
+    /**
+     * Determine whether the given property represents a reference to another variable.
+     * The property may be obtained from [property] or from another model (or no model).
+     * @param prop The property to check.
+     * @return True if the property is a reference to another variable. Otherwise, false.
+     */
+    fun isReferenceProperty(prop: Property): Boolean
+
+    object Empty: AliasDefinition {
+        override fun property(identifier: String): Property? {
+            return null
+        }
+
+        override fun resource(identifier: String): Resource? {
+            return null
+        }
+
+        override fun isReferenceProperty(prop: Property): Boolean {
+            return false
+        }
+    }
 }
