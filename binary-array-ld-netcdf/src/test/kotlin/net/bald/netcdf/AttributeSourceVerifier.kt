@@ -2,14 +2,13 @@ package net.bald.netcdf
 
 import net.bald.Attribute
 import net.bald.AttributeSource
-import org.apache.jena.shared.PrefixMapping
 import kotlin.test.fail
 
 /**
  * Test utility for verifying the [Attribute]s of an [AttributeSource].
  * @param source The attribute source to verify.
  */
-class AttributeSourceVerifier(
+open class AttributeSourceVerifier(
     private val source: AttributeSource
 ) {
     /**

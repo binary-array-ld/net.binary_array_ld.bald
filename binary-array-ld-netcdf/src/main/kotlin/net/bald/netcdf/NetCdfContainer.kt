@@ -81,4 +81,8 @@ abstract class NetCdfContainer(
             }
             ?: createPlainLiteral(value)
     }
+
+    override fun toString(): String {
+        return group.toString()
+    }
 }

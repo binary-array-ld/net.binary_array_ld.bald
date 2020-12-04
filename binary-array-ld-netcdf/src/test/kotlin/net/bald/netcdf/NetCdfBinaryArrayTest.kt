@@ -1,5 +1,6 @@
 package net.bald.netcdf
 
+import bald.TestVocab
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
 import net.bald.Var
@@ -279,6 +280,79 @@ class NetCdfBinaryArrayTest {
             }
             attribute(SKOS.prefLabel.uri) {
                 value(createPlainLiteral("Variable 0"))
+            }
+        }
+    }
+
+    @Test
+    fun attributes_withVariableReferences_returnsVariableValues() {
+        val prefix = PrefixMapping.Factory.create()
+            .setNsPrefix("bald", BALD.prefix)
+            .setNsPrefix("skos", SKOS.uri)
+            .setNsPrefix("dct", DCTerms.NS)
+            .setNsPrefix("rdf", RDF.uri)
+        val alias = javaClass.getResourceAsStream("/turtle/var-alias.ttl").use { input ->
+            ModelFactory.createDefaultModel().read(input, null, "ttl")
+        }.let(ModelAliasDefinition::create)
+        val ctx = ModelContext.create(prefix, alias)
+        val ba = fromCdl("/netcdf/var-ref.cdl", "http://test.binary-array-ld.net/var-ref.nc", ctx)
+        val root = ba.root
+
+        ContainerVerifier(root).apply {
+            attributes {
+                attribute(BALD.isPrefixedBy.uri) {
+                    value(createPlainLiteral("prefix_list"))
+                }
+                attribute(SKOS.prefLabel.uri) {
+                    value(createPlainLiteral("Variable reference metadata example"))
+                }
+                attribute(TestVocab.rootVar.uri) {
+                    value(createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
+                }
+            }
+            vars {
+                variable("http://test.binary-array-ld.net/var-ref.nc/var0")
+            }
+            subContainers {
+                container("http://test.binary-array-ld.net/var-ref.nc/foo") {
+                    attributes {
+                        attribute(TestVocab.rootVar.uri) {
+                            value(createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
+                        }
+                        attribute(TestVocab.siblingVar.uri) {
+                            value(createResource("http://test.binary-array-ld.net/var-ref.nc/baz/var3"))
+                        }
+                    }
+                    vars {
+                        variable("http://test.binary-array-ld.net/var-ref.nc/foo/var1") {
+                            attributes {
+                                attribute(BALD.references.uri) {
+                                    value(createPlainLiteral("var9"))
+                                }
+                                attribute(TestVocab.siblingVar.uri) {
+                                    value(createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"))
+                                }
+                            }
+                        }
+                    }
+                    subContainers {
+                        container("http://test.binary-array-ld.net/var-ref.nc/foo/bar") {
+                            vars {
+                                variable("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2") {
+                                    attributes {
+                                        attribute(TestVocab.parentVar.uri) {
+                                            value(createResource("http://test.binary-array-ld.net/var-ref.nc/foo/var1"))
+                                        }
+                                        attribute(SKOS.prefLabel.uri) {
+                                            value(createPlainLiteral("var2"))
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                container("http://test.binary-array-ld.net/var-ref.nc/baz")
             }
         }
     }
