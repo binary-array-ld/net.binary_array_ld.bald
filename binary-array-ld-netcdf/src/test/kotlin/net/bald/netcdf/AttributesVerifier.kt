@@ -16,11 +16,10 @@ class AttributesVerifier(
      * @param name The expected attribute name.
      * @param verify A function to perform against the [AttributeValuesVerifier] for the attribute.
      */
-    fun attribute(uri: String?, name: String, verify: AttributeValuesVerifier.() -> Unit = {}) {
+    fun attribute(uri: String, verify: AttributeValuesVerifier.() -> Unit = {}) {
         if (attrIt.hasNext()) {
             val attr = attrIt.next()
             assertEquals(uri, attr.uri, "Wrong URI on attribute $attr.")
-            assertEquals(name, attr.name, "Wrong name on attribute $attr.")
 
             val valueIt = attr.values.iterator()
             AttributeValuesVerifier(attr, valueIt).verify()
@@ -28,7 +27,7 @@ class AttributesVerifier(
                 fail("Unexpected value on attribute $attr: ${valueIt.next()}")
             }
         } else {
-            fail("Expected attribute with name $name on $source, but no more attributes were found.")
+            fail("Expected attribute with URI $uri on $source, but no more attributes were found.")
         }
     }
 }
