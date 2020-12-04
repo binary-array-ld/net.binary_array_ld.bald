@@ -1,6 +1,7 @@
 package net.bald.netcdf
 
 import net.bald.Container
+import net.bald.Var
 import kotlin.test.fail
 
 /**
@@ -10,7 +11,7 @@ class ContainerVerifier(
     private val container: Container
 ): AttributeSourceVerifier(container) {
     fun vars(verify: VarsVerifier.() -> Unit) {
-        val vars = container.vars()
+        val vars = container.vars().sortedBy(Var::uri)
         val varIt = vars.iterator()
         VarsVerifier(container, varIt).verify()
         if (varIt.hasNext()) {
