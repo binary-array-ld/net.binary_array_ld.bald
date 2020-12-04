@@ -1,0 +1,36 @@
+netcdf attributes {
+    dimensions:
+        d0 = 1 ;
+        d1 = 1 ;
+    variables:
+        int var0 ;
+
+    :bald__isPrefixedBy = "prefix_list";
+    :prefLabel = "Variable reference metadata example";
+    :root_var = "var0";
+
+    group: foo {
+        :root_var = "/var0";
+        :sibling_var = "/baz/var3";
+        variables:
+            int var1 ;
+                var1:references = "var9";
+                var1:sibling_var = "bar/var2";
+        group: bar {
+            variables:
+                int var2 ;
+                    var2:parent_var = "../var1";
+                    var2:prefLabel = "var2";
+        }
+    }
+    group: baz {
+        variables:
+            int var3 ;
+    }
+
+    group: prefix_list {
+        :bald__ = "https://www.opengis.net/def/binary-array-ld/";
+        :skos__ = "http://www.w3.org/2004/02/skos/core#";
+        :rdf__ = "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
+    }
+}
