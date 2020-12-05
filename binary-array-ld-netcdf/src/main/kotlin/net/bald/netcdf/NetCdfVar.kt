@@ -1,6 +1,7 @@
 package net.bald.netcdf
 
 import net.bald.Attribute
+import net.bald.CoordinateRange
 import net.bald.Dimension
 import net.bald.Var
 import ucar.nc2.AttributeContainer
@@ -14,6 +15,10 @@ class NetCdfVar(
     private val v: Variable
 ): Var {
     override val uri: String get() = parent.childUri(v.shortName)
+
+    override val range: CoordinateRange? get() {
+        return v.takeIf(Variable::isCoordinateVariable)?.let(::NetCdfCoordinateRange)
+    }
 
     override fun attributes(): List<Attribute> {
         return v.attributes()

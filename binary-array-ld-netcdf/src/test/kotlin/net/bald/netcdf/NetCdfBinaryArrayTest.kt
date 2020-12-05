@@ -324,4 +324,22 @@ class NetCdfBinaryArrayTest {
             }
         }
     }
+
+    @Test
+    fun vars_range_withCoordinateVars_returnsCoordinateRange() {
+        val ba = fromCdl("/netcdf/coordinate-var.cdl", "http://test.binary-array-ld.net/coordinate-var.nc")
+        ContainerVerifier(ba.root).vars {
+            variable("http://test.binary-array-ld.net/coordinate-var.nc/elev") {
+                dimensions(15, 10)
+            }
+            variable("http://test.binary-array-ld.net/coordinate-var.nc/lat") {
+                dimensions(15)
+                range(6.5F, -6.5F)
+            }
+            variable("http://test.binary-array-ld.net/coordinate-var.nc/lon") {
+                dimensions(10)
+                range(0.5F, 9.5F)
+            }
+        }
+    }
 }

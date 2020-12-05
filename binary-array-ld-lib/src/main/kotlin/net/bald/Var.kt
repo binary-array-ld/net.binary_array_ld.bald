@@ -12,5 +12,10 @@ interface Var: AttributeSource {
     /**
      * TODO
      */
+    val range: CoordinateRange?
+
+    /**
+     * TODO
+     */
     fun dimensions(): Sequence<Dimension>
 }
