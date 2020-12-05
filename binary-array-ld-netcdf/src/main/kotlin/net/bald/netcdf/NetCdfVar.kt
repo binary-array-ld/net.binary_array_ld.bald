@@ -1,6 +1,7 @@
 package net.bald.netcdf
 
 import net.bald.Attribute
+import net.bald.Dimension
 import net.bald.Var
 import ucar.nc2.AttributeContainer
 import ucar.nc2.Variable
@@ -22,6 +23,10 @@ class NetCdfVar(
 
     private fun source(attrs: AttributeContainer): NetCdfAttributeSource {
         return NetCdfAttributeSource(parent, attrs)
+    }
+
+    override fun dimensions(): Sequence<Dimension> {
+        return v.dimensions.asSequence().map(::NetCdfDimension)
     }
 
     override fun toString(): String {

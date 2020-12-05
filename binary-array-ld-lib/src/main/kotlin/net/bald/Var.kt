@@ -8,4 +8,9 @@ interface Var: AttributeSource {
      * The URI of the variable.
      */
     val uri: String
+
+    /**
+     * TODO
+     */
+    fun dimensions(): Sequence<Dimension>
 }
