@@ -27,4 +27,5 @@ object BALD {
     val contains: Property = createProperty("${prefix}contains")
     val isPrefixedBy: Property = createProperty("${prefix}isPrefixedBy")
     val references: Property = createProperty("${prefix}references")
+    val shape: Property = createProperty("${prefix}shape")
 }

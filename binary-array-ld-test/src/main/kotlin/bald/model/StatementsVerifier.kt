@@ -14,6 +14,7 @@ class StatementsVerifier(
     /**
      * Verify that the next statement in the sequence has the given predicate and object.
      * Then, optionally begin verifying statements about the object resource.
+     * To verify that the value is a blank node, omit the [value] parameter.
      * To skip verification of the object resource, omit the [verifyResource] parameter.
      * @param prop The expected predicate.
      * @param value The expected resource object.
@@ -21,7 +22,7 @@ class StatementsVerifier(
      */
     fun statement(
         prop: Property,
-        value: Resource,
+        value: Resource? = null,
         verifyResource: (StatementsVerifier.() -> Unit)? = null
     ) {
         nextStatement(prop) { statement ->
@@ -29,7 +30,7 @@ class StatementsVerifier(
             val obj = statement.`object`
             if (obj.isResource) {
                 val resource = obj.asResource()
-                assertEquals(value.uri, resource.uri, "Wrong value on statement $statement.")
+                assertEquals(value?.uri, resource.uri, "Wrong value on statement $statement.")
                 if (verifyResource != null) {
                     ResourceVerifier(resource).statements(verifyResource)
                 }

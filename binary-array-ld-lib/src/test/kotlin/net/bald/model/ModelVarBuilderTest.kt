@@ -6,10 +6,12 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import net.bald.Attribute
+import net.bald.Dimension
 import net.bald.Var
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.createResource
+import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.RDFS
 import org.junit.jupiter.api.*
@@ -23,10 +25,15 @@ class ModelVarBuilderTest {
     }
     private val builder = ModelVarBuilder.Factory(attrFct).forContainer(container)
 
-    private fun newVar(uri: String, attrs: List<Attribute> = emptyList()): Var {
+    private fun newVar(
+        uri: String,
+        attrs: List<Attribute> = emptyList(),
+        dims: List<Dimension> = emptyList()
+    ): Var {
         return mock {
             on { this.uri } doReturn uri
             on { attributes() } doReturn attrs
+            on { dimensions() } doReturn dims.asSequence()
         }
     }
 
@@ -92,5 +99,32 @@ class ModelVarBuilderTest {
         verify(attrFct).forResource(model.createResource("http://test.binary-array-ld.net/example/foo"))
         verify(attrBuilder).addAttribute(attrs[0])
         verify(attrBuilder).addAttribute(attrs[1])
+    }
+
+    @Test
+    fun addVar_addsDimensions() {
+        val dims = listOf<Dimension>(
+            mock { on { size } doReturn 10 },
+            mock { on { size } doReturn 30 },
+            mock { on { size } doReturn 1000 }
+        )
+        val v = newVar("http://test.binary-array-ld.net/example/foo", dims = dims)
+        builder.addVar(v)
+
+        ResourceVerifier(container).statements {
+            statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
+                statement(RDF.type, BALD.Resource)
+                statement(BALD.shape) {
+                    statement(RDF.first, createTypedLiteral(10))
+                    statement(RDF.rest) {
+                        statement(RDF.first, createTypedLiteral(30))
+                        statement(RDF.rest) {
+                            statement(RDF.first, createTypedLiteral(1000))
+                            statement(RDF.rest, RDF.nil)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
