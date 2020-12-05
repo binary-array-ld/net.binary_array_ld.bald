@@ -6,9 +6,11 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import net.bald.Attribute
+import net.bald.CoordinateRange
 import net.bald.Dimension
 import net.bald.Var
 import net.bald.vocab.BALD
+import org.apache.jena.datatypes.xsd.XSDDatatype
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.createResource
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
@@ -110,6 +112,46 @@ class ModelVarBuilderTest {
                         }
                     }
                 }
+            }
+        }
+    }
+
+    @Test
+    fun addVar_withCoordinateRange_addsCoordinateRange() {
+        val range = mock<CoordinateRange> {
+            on { first } doReturn 0.5
+            on { last } doReturn 100.5
+        }
+        val v = mock<Var> {
+            on { uri } doReturn "http://test.binary-array-ld.net/example/foo"
+            on { dimensions() } doReturn emptySequence()
+            on { this.range } doReturn range
+        }
+        builder.addVar(v)
+        ResourceVerifier(container).statements {
+            statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
+                statement(RDF.type, BALD.Resource)
+                statement(BALD.arrayFirstValue, createTypedLiteral("0.5", XSDDatatype.XSDdouble))
+                statement(BALD.arrayLastValue, createTypedLiteral("100.5", XSDDatatype.XSDdouble))
+            }
+        }
+    }
+
+    @Test
+    fun addVar_withCoordinateRange_withoutLastValue_addsCoordinateRange() {
+        val range = mock<CoordinateRange> {
+            on { first } doReturn 0.5
+        }
+        val v = mock<Var> {
+            on { uri } doReturn "http://test.binary-array-ld.net/example/foo"
+            on { dimensions() } doReturn emptySequence()
+            on { this.range } doReturn range
+        }
+        builder.addVar(v)
+        ResourceVerifier(container).statements {
+            statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
+                statement(RDF.type, BALD.Resource)
+                statement(BALD.arrayFirstValue, createTypedLiteral("0.5", XSDDatatype.XSDdouble))
             }
         }
     }

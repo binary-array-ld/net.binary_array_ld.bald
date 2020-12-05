@@ -16,6 +16,7 @@ open class ModelVarBuilder(
         container.addProperty(BALD.contains, vRes)
         addAttributes(v, vRes)
         addDimensions(v, vRes)
+        addCoordinateRange(v, vRes)
     }
 
     private fun addAttributes(source: AttributeSource, resource: Resource) {
@@ -32,6 +33,17 @@ open class ModelVarBuilder(
         if (valueIt.hasNext()) {
             val list = resource.model.createList(valueIt)
             resource.addProperty(BALD.shape, list)
+        }
+    }
+
+    private fun addCoordinateRange(v: Var, resource: Resource) {
+        v.range?.let { range ->
+            range.first?.let(::createTypedLiteral)?.let { first ->
+                resource.addProperty(BALD.arrayFirstValue, first)
+            }
+            range.last?.let(::createTypedLiteral)?.let { last ->
+                resource.addProperty(BALD.arrayLastValue, last)
+            }
         }
     }
 

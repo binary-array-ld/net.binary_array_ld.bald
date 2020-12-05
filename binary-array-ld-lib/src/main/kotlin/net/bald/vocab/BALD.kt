@@ -28,4 +28,6 @@ object BALD {
     val isPrefixedBy: Property = createProperty("${prefix}isPrefixedBy")
     val references: Property = createProperty("${prefix}references")
     val shape: Property = createProperty("${prefix}shape")
+    val arrayFirstValue: Property = createProperty("${prefix}arrayFirstValue")
+    val arrayLastValue: Property = createProperty("${prefix}arrayLastValue")
 }

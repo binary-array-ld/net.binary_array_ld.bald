@@ -5,6 +5,7 @@ import bald.jsonld.ResourceFileConverter
 import bald.model.ModelVerifier
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.vocab.BALD
+import org.apache.jena.datatypes.xsd.XSDDatatype
 import org.apache.jena.rdf.model.ModelFactory.createDefaultModel
 import org.apache.jena.rdf.model.ResourceFactory.*
 import org.apache.jena.vocabulary.*
@@ -359,6 +360,61 @@ class BinaryArrayConvertCliTest {
                         statement(RDF.type, BALD.Resource)
                     }
                     statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
+                }
+            }
+        }
+    }
+
+    @Test
+    fun run_withCoordinateVars_outputsCoordinateRanges() {
+        val aliasFile = ResourceFileConverter.toFile("/turtle/alias.ttl", "ttl")
+        val inputFile = writeToNetCdf("/netcdf/coordinate-var.cdl")
+        val outputFile = createTempFile()
+
+        run(
+            "--uri", "http://test.binary-array-ld.net/example",
+            "--alias", aliasFile.absolutePath,
+            inputFile.absolutePath,
+            outputFile.absolutePath
+        )
+
+        val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
+        ModelVerifier(model).apply {
+            resource("http://test.binary-array-ld.net/example") {
+                statement(RDF.type, BALD.Container)
+                statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/")) {
+                    statement(RDF.type, BALD.Container)
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/elev")) {
+                        statement(RDF.type, BALD.Resource)
+                        statement(RDFS.label, createPlainLiteral("height"))
+                        statement(BALD.shape) {
+                            statement(RDF.first, createTypedLiteral(15))
+                            statement(RDF.rest) {
+                                statement(RDF.first, createTypedLiteral(10))
+                                statement(RDF.rest, RDF.nil)
+                            }
+                        }
+                    }
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/lat")) {
+                        statement(RDF.type, BALD.Resource)
+                        statement(RDFS.label, createPlainLiteral("latitude"))
+                        statement(BALD.arrayFirstValue, createTypedLiteral("6.5", XSDDatatype.XSDfloat))
+                        statement(BALD.arrayLastValue, createTypedLiteral("-6.5", XSDDatatype.XSDfloat))
+                        statement(BALD.shape) {
+                            statement(RDF.first, createTypedLiteral(15))
+                            statement(RDF.rest, RDF.nil)
+                        }
+                    }
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/lon")) {
+                        statement(RDF.type, BALD.Resource)
+                        statement(RDFS.label, createPlainLiteral("longitude"))
+                        statement(BALD.arrayFirstValue, createTypedLiteral("0.5", XSDDatatype.XSDfloat))
+                        statement(BALD.arrayLastValue, createTypedLiteral("9.5", XSDDatatype.XSDfloat))
+                        statement(BALD.shape) {
+                            statement(RDF.first, createTypedLiteral(10))
+                            statement(RDF.rest, RDF.nil)
+                        }
+                    }
                 }
             }
         }
