@@ -73,20 +73,6 @@ class ModelVarBuilderTest {
     }
 
     @Test
-    fun addVar_containerWithoutTrailingSlash_addsResourceToContainer() {
-        val container = model.createResource("http://test.binary-array-ld.net/example")
-
-        val v = mock<Var> { on { uri } doReturn "http://test.binary-array-ld.net/example/foo" }
-        ModelVarBuilder.Factory(attrFct).forContainer(container).addVar(v)
-
-        ResourceVerifier(container).statements {
-            statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
-                statement(RDF.type, BALD.Resource)
-            }
-        }
-    }
-
-    @Test
     fun addVar_addsAttributes() {
         val attrs = listOf<Attribute>(
             mock { on { uri } doReturn RDF.type.uri },

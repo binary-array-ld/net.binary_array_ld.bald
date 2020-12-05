@@ -26,6 +26,7 @@ class ModelBinaryArrayConverterTest {
     private fun newVar(uri: String): Var {
         return mock {
             on { this.uri } doReturn uri
+            on { dimensions() } doReturn emptySequence()
         }
     }
 
