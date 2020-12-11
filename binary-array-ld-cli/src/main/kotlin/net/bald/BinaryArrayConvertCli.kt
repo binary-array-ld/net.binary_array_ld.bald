@@ -16,13 +16,11 @@ import kotlin.system.exitProcess
  * Command Line Interface for converting NetCDF metadata to Linked Data graphs.
  */
 class BinaryArrayConvertCli {
-    private val formats = setOf("ttl", "json-ld", "rdfxml")
-
     private val opts = Options().apply {
         addOption("u", "uri", true, "The URI which identifies the dataset.")
         addOption("a", "alias", true, "Comma-delimited list of RDF alias files.")
         addOption("c", "context", true, "Comma-delimited list of JSON-LD context files.")
-        addOption("o", "output", true, "Output format. eg. ${formats.joinToString(", ")}.")
+        addOption("o", "output", true, "Output format. eg. ttl, json-ld, rdfxml.")
         addOption("h", "help", false, "Show help.")
     }
 
