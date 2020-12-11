@@ -26,4 +26,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: bald-cli
-          path: binary-array-cli/target/bald-cli.jar
+          path: binary-array-ld-cli/target/bald-cli.jar
