@@ -9,18 +9,20 @@ import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
 import org.apache.jena.rdf.model.ModelFactory
-import java.io.File
-import java.io.OutputStream
+import java.io.*
 import kotlin.system.exitProcess
 
 /**
  * Command Line Interface for converting NetCDF metadata to Linked Data graphs.
  */
 class BinaryArrayConvertCli {
+    private val formats = setOf("ttl", "json-ld", "rdfxml")
+
     private val opts = Options().apply {
         addOption("u", "uri", true, "The URI which identifies the dataset.")
         addOption("a", "alias", true, "Comma-delimited list of RDF alias files.")
         addOption("c", "context", true, "Comma-delimited list of JSON-LD context files.")
+        addOption("o", "output", true, "Output format. eg. ${formats.joinToString(", ")}.")
         addOption("h", "help", false, "Show help.")
     }
 
@@ -44,9 +46,10 @@ class BinaryArrayConvertCli {
             .withContext(opts.contextLocs)
             .withAlias(opts.aliasLocs)
         val model = ba.use(ModelBinaryArrayConverter::convert)
+        val outputFormat = opts.outputFormat ?: "ttl"
 
         modelOutput(opts.outputLoc).use { output ->
-            model.write(output, "ttl")
+            model.write(output, outputFormat)
         }
     }
 
@@ -77,7 +80,11 @@ class BinaryArrayConvertCli {
     }
 
     private fun modelOutput(outputLoc: String?): OutputStream {
-        return outputLoc?.let(::File)?.outputStream() ?: System.out
+        return outputLoc?.let(::File)?.outputStream() ?: object: FilterOutputStream(System.out) {
+            override fun close() {
+                // do nothing, leave System.out open
+            }
+        }
     }
 }
 

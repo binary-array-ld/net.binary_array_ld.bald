@@ -6,6 +6,7 @@ import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory.createDefaultModel
 import org.apache.jena.rdf.model.ResourceFactory.*
+import org.apache.jena.riot.RiotException
 import org.apache.jena.vocabulary.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -91,6 +92,36 @@ class BinaryArrayConvertCliTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun run_withOutputFormat_outputsToFile() {
+        val inputFile = writeToNetCdf("/netcdf/identity.cdl")
+        val outputFile = createTempFile()
+        run(
+            "--uri", "http://test.binary-array-ld.net/example",
+            "--output", "json-ld",
+            inputFile.absolutePath,
+            outputFile.absolutePath
+        )
+        val result = outputFile.readText()
+        val expected = javaClass.getResource("/jsonld/identity.json").readText()
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun run_withInvalidFormat_throwsException() {
+        val inputFile = writeToNetCdf("/netcdf/identity.cdl")
+        val outputFile = createTempFile()
+        val re = assertThrows<RiotException> {
+            run(
+                "--uri", "http://test.binary-array-ld.net/example",
+                "--output", "foo",
+                inputFile.absolutePath,
+                outputFile.absolutePath
+            )
+        }
+        assertEquals("No graph writer for 'foo'", re.message)
     }
 
     private fun run_withPrefixMapping_outputsPrefixMapping(cdlLoc: String) {
