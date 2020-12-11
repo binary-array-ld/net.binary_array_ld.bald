@@ -22,7 +22,7 @@ jobs:
       - name: Maven build and test
         run: mvn clean package
       - name: Upload CLI artifact
-        if: github.ref == 'refs/heads/gh-test'
+        if: github.ref == 'refs/heads/feature/gh-test'
         uses: actions/upload-artifact@v2
         with:
           name: bald-cli
