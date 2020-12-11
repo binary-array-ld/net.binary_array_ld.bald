@@ -3,7 +3,6 @@
 name: GitHub tagged release
 on:
   push:
-    branches: [ "feature/gh-test" ]
     tags: [ "*" ]
 jobs:
   build:
@@ -41,3 +40,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./binary-array-ld-cli/target/bald-cli.jar
           asset_name: bald-cli.jar
+          asset_content_type: application/java-archive
