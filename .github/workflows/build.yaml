@@ -20,10 +20,4 @@ jobs:
       - name: Install NetCDF tools
         run: sudo apt install netcdf-bin
       - name: Maven build and test
-        run: mvn clean package
-      - name: Upload CLI artifact
-        if: github.ref == 'refs/heads/feature/gh-test'
-        uses: actions/upload-artifact@v2
-        with:
-          name: bald-cli
-          path: binary-array-ld-cli/target/bald-cli.jar
+        run: mvn clean test
