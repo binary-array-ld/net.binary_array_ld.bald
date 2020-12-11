@@ -20,7 +20,7 @@ jobs:
       - name: Install NetCDF tools
         run: sudo apt install netcdf-bin
       - name: Maven build and test
-        run: mvn clean test
+        run: mvn clean package
       - name: Upload CLI artifact
 #        if: github.ref == 'refs/heads/gh-test'
         uses: actions/upload-artifact@v2
