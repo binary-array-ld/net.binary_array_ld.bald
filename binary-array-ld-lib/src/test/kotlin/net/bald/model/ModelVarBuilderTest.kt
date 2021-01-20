@@ -101,7 +101,7 @@ class ModelVarBuilderTest {
 
         ResourceVerifier(container).statements {
             statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
-                statement(RDF.type, BALD.Resource)
+                statement(RDF.type, BALD.Array)
                 statement(BALD.shape) {
                     statement(RDF.first, createTypedLiteral(10))
                     statement(RDF.rest) {

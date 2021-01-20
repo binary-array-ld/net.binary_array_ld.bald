@@ -4,6 +4,7 @@ import net.bald.AttributeSource
 import net.bald.Dimension
 import net.bald.Var
 import net.bald.vocab.BALD
+import org.apache.jena.rdf.model.Literal
 import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 
@@ -12,28 +13,17 @@ open class ModelVarBuilder(
     private val attrFct: ModelAttributeBuilder.Factory
 ) {
     open fun addVar(v: Var) {
-        val vRes = container.model.createResource(v.uri, BALD.Resource)
+        val dimBuilder = dimensionBuilder(v)
+        val vRes = container.model.createResource(v.uri, dimBuilder.type)
         container.addProperty(BALD.contains, vRes)
         addAttributes(v, vRes)
-        addDimensions(v, vRes)
         addCoordinateRange(v, vRes)
+        dimBuilder.addDimensions(vRes)
     }
 
     private fun addAttributes(source: AttributeSource, resource: Resource) {
         val builder = attrFct.forResource(resource)
         source.attributes().forEach(builder::addAttribute)
-    }
-
-    private fun addDimensions(v: Var, resource: Resource) {
-        val valueIt = v.dimensions()
-            .map(Dimension::size)
-            .map(::createTypedLiteral)
-            .iterator()
-
-        if (valueIt.hasNext()) {
-            val list = resource.model.createList(valueIt)
-            resource.addProperty(BALD.shape, list)
-        }
     }
 
     private fun addCoordinateRange(v: Var, resource: Resource) {
@@ -43,6 +33,43 @@ open class ModelVarBuilder(
             }
             range.last?.let(::createTypedLiteral)?.let { last ->
                 resource.addProperty(BALD.arrayLastValue, last)
+            }
+        }
+    }
+
+    private fun dimensionBuilder(v: Var): VarDimensionBuilder {
+        val valueIt = v.dimensions()
+            .map(Dimension::size)
+            .map(::createTypedLiteral)
+            .iterator()
+
+        return if (valueIt.hasNext()) {
+            VarDimensionBuilder.Dimensional(valueIt)
+        } else {
+            VarDimensionBuilder.Base
+        }
+    }
+
+    private interface VarDimensionBuilder {
+        val type: Resource
+        fun addDimensions(resource: Resource)
+
+        object Base: VarDimensionBuilder {
+            override val type: Resource get() = BALD.Resource
+
+            override fun addDimensions(resource: Resource) {
+                // do nothing
+            }
+        }
+
+        class Dimensional(
+            private val valueIt: Iterator<Literal>
+        ): VarDimensionBuilder {
+            override val type: Resource get() = BALD.Array
+
+            override fun addDimensions(resource: Resource) {
+                val list = resource.model.createList(valueIt)
+                resource.addProperty(BALD.shape, list)
             }
         }
     }
