@@ -27,6 +27,14 @@ test:parent_var a owl:ObjectProperty ;
     dct:identifier "parent_var" ;
     rdfs:range [ rdfs:subClassOf test:Subject ] .
 
+test:unordered_var a owl:ObjectProperty ;
+    dct:identifier "unordered_var" ;
+    rdfs:range bald:Subject .
+
+test:ordered_var a owl:ObjectProperty ;
+    dct:identifier "ordered_var" ;
+    rdfs:range bald:Subject .
+
 
 
 

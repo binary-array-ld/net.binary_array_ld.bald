@@ -21,7 +21,7 @@ class StatementsVerifier(
      */
     fun statement(
         prop: Property,
-        value: Resource,
+        value: Resource? = null,
         verifyResource: (StatementsVerifier.() -> Unit)? = null
     ) {
         nextStatement(prop) { statement ->
@@ -29,7 +29,9 @@ class StatementsVerifier(
             val obj = statement.`object`
             if (obj.isResource) {
                 val resource = obj.asResource()
-                assertEquals(value.uri, resource.uri, "Wrong value on statement $statement.")
+                if (value != null) {
+                    assertEquals(value.uri, resource.uri, "Wrong value on statement $statement.")
+                }
                 if (verifyResource != null) {
                     ResourceVerifier(resource).statements(verifyResource)
                 }

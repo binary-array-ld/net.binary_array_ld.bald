@@ -286,6 +286,25 @@ class NetCdfBinaryArrayTest {
                 attribute(BALD.isPrefixedBy.uri, createPlainLiteral("prefix_list"))
                 attribute(SKOS.prefLabel.uri, createPlainLiteral("Variable reference metadata example"))
                 attribute(TestVocab.rootVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
+                attribute(TestVocab.unorderedVar.uri) {
+                    value(createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
+                    value(createResource("http://test.binary-array-ld.net/var-ref.nc/foo/var1"))
+                    value(createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"))
+                }
+                attribute(TestVocab.orderedVar.uri) {
+                    resource {
+                        statements {
+                            statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
+                            statement(RDF.rest) {
+                                statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"))
+                                statement(RDF.rest) {
+                                    statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/baz/var3"))
+                                    statement(RDF.rest, RDF.nil)
+                                }
+                            }
+                        }
+                    }
+                }
             }
             vars {
                 variable("http://test.binary-array-ld.net/var-ref.nc/var0")
