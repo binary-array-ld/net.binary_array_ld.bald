@@ -15,4 +15,6 @@ object TestVocab {
     val rootVar: Property = createProperty("${prefix}root_var")
     val parentVar: Property = createProperty("${prefix}parent_var")
     val siblingVar: Property = createProperty("${prefix}sibling_var")
+    val orderedVar: Property = createProperty("${prefix}ordered_var")
+    val unorderedVar: Property = createProperty("${prefix}unordered_var")
 }

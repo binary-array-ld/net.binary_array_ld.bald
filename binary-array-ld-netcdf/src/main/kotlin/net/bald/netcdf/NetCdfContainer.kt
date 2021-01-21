@@ -27,6 +27,10 @@ abstract class NetCdfContainer(
     abstract val uriParser: UriParser
     abstract fun childUri(name: String): String
 
+    private val refParser: ReferenceValueParser get() {
+        return ReferenceValueParser(this)
+    }
+
     override fun vars(): Sequence<Var> {
         return group.variables.asSequence().filter(::acceptVar).map(::variable)
     }
@@ -73,13 +77,13 @@ abstract class NetCdfContainer(
             ?: childUri(name).let(ResourceFactory::createProperty)
     }
 
-    fun parseRdfNode(prop: Property, value: String): RDFNode {
-        return uriParser.parse(value)?.let(::createResource)
-            ?: context.resource(value)
+    fun parseRdfNodes(prop: Property, value: String): List<RDFNode> {
+        return uriParser.parse(value)?.let(::createResource)?.let(::listOf)
+            ?: context.resource(value)?.let(::listOf)
             ?: prop.takeIf(context::isReferenceProperty)?.let {
-                NetCdfPath.parse(value).locateVar(this)?.uri?.let(ResourceFactory::createResource)
+                refParser.parse(value)
             }
-            ?: createPlainLiteral(value)
+            ?: createPlainLiteral(value).let(::listOf)
     }
 
     override fun toString(): String {

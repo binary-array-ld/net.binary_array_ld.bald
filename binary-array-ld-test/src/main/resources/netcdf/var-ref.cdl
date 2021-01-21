@@ -8,6 +8,8 @@ netcdf attributes {
     :bald__isPrefixedBy = "prefix_list";
     :prefLabel = "Variable reference metadata example";
     :root_var = "var0";
+    :unordered_var = "var0 foo/var1 foo/bar/var2";
+    :ordered_var = "(var0 foo/bar/var2 baz/var3)";
 
     group: foo {
         :root_var = "/var0";

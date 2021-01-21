@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.stub
 import net.bald.Attribute
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.*
+import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.RDFS
 import org.junit.jupiter.api.*
 
@@ -57,7 +58,6 @@ class ModelAttributeBuilderTest {
         }
     }
 
-
     @Test
     fun addAttribute_resourceValue_addsStatement() {
         val value = createResource("http://test.binary-array-ld.net/label")
@@ -67,6 +67,31 @@ class ModelAttributeBuilderTest {
         builder.addAttribute(attr)
         ResourceVerifier(resource).statements {
             statement(RDFS.label, value)
+        }
+    }
+
+    @Test
+    fun addAttribute_rdfListValue_addsList() {
+        val value = ModelFactory.createDefaultModel().createList(
+            createResource("http://test.binary-array-ld.net/var0"),
+            createResource("http://test.binary-array-ld.net/var1"),
+            createResource("http://test.binary-array-ld.net/var2")
+        )
+        attr.stub {
+            on { values } doReturn listOf(value)
+        }
+        builder.addAttribute(attr)
+        ResourceVerifier(resource).statements {
+            statement(RDFS.label) {
+                statement(RDF.first, createResource("http://test.binary-array-ld.net/var0"))
+                statement(RDF.rest) {
+                    statement(RDF.first, createResource("http://test.binary-array-ld.net/var1"))
+                    statement(RDF.rest) {
+                        statement(RDF.first, createResource("http://test.binary-array-ld.net/var2"))
+                        statement(RDF.rest, RDF.nil)
+                    }
+                }
+            }
         }
     }
 }

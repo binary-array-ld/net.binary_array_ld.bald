@@ -17,7 +17,7 @@ class NetCdfAttribute(
     override val uri: String get() = prop.uri
 
     override val values: List<RDFNode> get() {
-        return rawValues()?.map(::node)?.toList() ?: emptyList()
+        return rawValues()?.flatMap(::nodes)?.toList() ?: emptyList()
     }
 
     private fun rawValues(): Sequence<String>? {
@@ -32,8 +32,8 @@ class NetCdfAttribute(
         }
     }
 
-    private fun node(value: String): RDFNode {
-        return parent.parseRdfNode(prop, value)
+    private fun nodes(value: String): List<RDFNode> {
+        return parent.parseRdfNodes(prop, value)
     }
 
     override fun toString(): String {
