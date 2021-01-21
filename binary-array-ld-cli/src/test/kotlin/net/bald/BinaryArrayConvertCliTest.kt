@@ -359,7 +359,20 @@ class BinaryArrayConvertCliTest {
             resource("http://test.binary-array-ld.net/example") {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/")) {
+                    statement(TestVocab.orderedVar) {
+                        statement(RDF.first, createResource("http://test.binary-array-ld.net/example/var0"))
+                        statement(RDF.rest) {
+                            statement(RDF.first, createResource("http://test.binary-array-ld.net/example/foo/bar/var2"))
+                            statement(RDF.rest) {
+                                statement(RDF.first, createResource("http://test.binary-array-ld.net/example/baz/var3"))
+                                statement(RDF.rest, RDF.nil)
+                            }
+                        }
+                    }
                     statement(TestVocab.rootVar, createResource("http://test.binary-array-ld.net/example/var0"))
+                    statement(TestVocab.unorderedVar, createResource("http://test.binary-array-ld.net/example/foo/bar/var2"))
+                    statement(TestVocab.unorderedVar, createResource("http://test.binary-array-ld.net/example/foo/var1"))
+                    statement(TestVocab.unorderedVar, createResource("http://test.binary-array-ld.net/example/var0"))
                     statement(RDF.type, BALD.Container)
                     statement(SKOS.prefLabel, createPlainLiteral("Variable reference metadata example"))
                     statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/baz")) {
