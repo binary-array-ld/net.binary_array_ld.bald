@@ -4,9 +4,12 @@ import net.bald.AttributeSource
 import net.bald.Dimension
 import net.bald.Var
 import net.bald.vocab.BALD
-import org.apache.jena.rdf.model.Literal
+import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.RDFList
+import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
+import org.apache.jena.vocabulary.RDF
 
 open class ModelVarBuilder(
     private val container: Resource,
@@ -38,15 +41,11 @@ open class ModelVarBuilder(
     }
 
     private fun dimensionBuilder(v: Var): VarDimensionBuilder {
-        val valueIt = v.dimensions()
-            .map(Dimension::size)
-            .map(::createTypedLiteral)
-            .iterator()
-
-        return if (valueIt.hasNext()) {
-            VarDimensionBuilder.Dimensional(valueIt)
-        } else {
+        val dims = v.dimensions().toList()
+        return if (dims.isEmpty()) {
             VarDimensionBuilder.Base
+        } else {
+            VarDimensionBuilder.Dimensional(container.model, dims)
         }
     }
 
@@ -63,15 +62,58 @@ open class ModelVarBuilder(
         }
 
         class Dimensional(
-            private val valueIt: Iterator<Literal>
+            private val model: Model,
+            private val dims: List<Dimension>
         ): VarDimensionBuilder {
             override val type: Resource get() = BALD.Array
 
             override fun addDimensions(resource: Resource) {
-                val list = resource.model.createList(valueIt)
-                resource.addProperty(BALD.shape, list)
+                val model = resource.model
+                val shape = shape()
+                resource.addProperty(BALD.shape, shape)
+
+                dims.forEachIndexed { idx, dim ->
+                    dim.coordinate?.let { coordinate ->
+                        if (coordinate.uri != resource.uri) {
+                            val target = model.createResource(coordinate.uri)
+                            val reshape = reshape(dim, idx)
+                            val size = size(dim)
+                            val targetShape = model.createList(size)
+
+                            val reference = model.createResource()
+                                .addProperty(RDF.type, BALD.Reference)
+                                .addProperty(BALD.reshape, reshape)
+                                .addProperty(BALD.targetShape, targetShape)
+                                .addProperty(BALD.target, target)
+                            resource.addProperty(BALD.references, reference)
+                        }
+                    }
+                }
+            }
+
+            private fun shape(): RDFList {
+                val sizeIt = dims.map(::size).iterator()
+                return model.createList(sizeIt)
+            }
+
+            private fun reshape(dim: Dimension, ordinal: Int): RDFList {
+                val nodeIt = (dims.indices).map { idx ->
+                    if (idx == ordinal) {
+                        size(dim)
+                    } else unitNode
+                }.iterator()
+
+                return model.createList(nodeIt)
+            }
+
+            private fun size(dim: Dimension): RDFNode {
+                return createTypedLiteral(dim.size)
             }
         }
+    }
+
+    companion object {
+        private val unitNode = createTypedLiteral(1)
     }
 
     open class Factory(

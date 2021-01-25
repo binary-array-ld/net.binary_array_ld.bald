@@ -155,4 +155,49 @@ class ModelVarBuilderTest {
             }
         }
     }
+
+    @Test
+    fun addVar_withDimensions_withCoordinates_addsReference() {
+        val coord1 = newVar("http://test.binary-array-ld.net/example/bar")
+        val dim1 = mock<Dimension> {
+            on { size } doReturn 10
+            on { coordinate } doReturn coord1
+        }
+        val coord2 = newVar("http://test.binary-array-ld.net/example/baz")
+        val dim2 = mock<Dimension> {
+            on { size } doReturn 90
+            on { coordinate } doReturn coord2
+        }
+        val v = newVar("http://test.binary-array-ld.net/example/foo", dims = listOf(dim1, dim2))
+        builder.addVar(v)
+
+        ResourceVerifier(container).statements {
+            statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
+                statement(RDF.type, BALD.Array)
+                statement(BALD.references) {
+                    statement(RDF.type, BALD.Reference)
+                    statement(BALD.reshape) {
+                        list(createTypedLiteral(10), createTypedLiteral(1))
+                    }
+                    statement(BALD.target, createResource("http://test.binary-array-ld.net/example/bar"))
+                    statement(BALD.targetShape) {
+                        list(createTypedLiteral(10))
+                    }
+                }
+                statement(BALD.references) {
+                    statement(RDF.type, BALD.Reference)
+                    statement(BALD.reshape) {
+                        list(createTypedLiteral(1), createTypedLiteral(90))
+                    }
+                    statement(BALD.target, createResource("http://test.binary-array-ld.net/example/baz"))
+                    statement(BALD.targetShape) {
+                        list(createTypedLiteral(90))
+                    }
+                }
+                statement(BALD.shape) {
+                    list(createTypedLiteral(10), createTypedLiteral(90))
+                }
+            }
+        }
+    }
 }
