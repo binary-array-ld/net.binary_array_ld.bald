@@ -1,6 +1,7 @@
 package bald.model
 
 import org.apache.jena.rdf.model.*
+import org.apache.jena.vocabulary.RDF
 import org.junit.jupiter.api.fail
 import kotlin.test.assertEquals
 
@@ -61,6 +62,24 @@ class StatementsVerifier(
             verify(statement)
         } else {
             fail("Expected statement with property $prop, but no more statements were found.")
+        }
+    }
+
+    fun list(vararg values: Literal) {
+        values.toList().let(::list)
+    }
+
+    fun list(values: List<Literal>) {
+        val first = values.first()
+        statement(RDF.first, first)
+
+        val rest = values.subList(1, values.size)
+        if (rest.isEmpty()) {
+            statement(RDF.rest, RDF.nil)
+        } else {
+            statement(RDF.rest) {
+                list(rest)
+            }
         }
     }
 }
