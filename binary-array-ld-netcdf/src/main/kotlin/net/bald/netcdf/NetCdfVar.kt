@@ -14,16 +14,21 @@ class NetCdfVar(
     private val parent: NetCdfContainer,
     private val v: Variable
 ): Var {
-    override val uri: String get() = parent.childUri(v.shortName)
+    val name: String get() = v.shortName
+    override val uri: String get() = parent.childUri(name)
+
+    fun isCoordinate(): Boolean {
+        return v.isCoordinateVariable
+    }
 
     override val range: CoordinateRange? get() {
-        return v.takeIf(Variable::isCoordinateVariable)?.let(::NetCdfCoordinateRange)
+        return if (isCoordinate()) {
+            NetCdfCoordinateRange(v)
+        } else null
     }
 
     override fun attributes(): List<Attribute> {
-        return v.attributes()
-            .let(::source)
-            .attributes()
+        return v.attributes().let(::source).attributes()
     }
 
     private fun source(attrs: AttributeContainer): NetCdfAttributeSource {
@@ -31,7 +36,11 @@ class NetCdfVar(
     }
 
     override fun dimensions(): Sequence<Dimension> {
-        return v.dimensions.asSequence().map(::NetCdfDimension)
+        return v.dimensions.asSequence().map(::dimension)
+    }
+
+    private fun dimension(dim: ucar.nc2.Dimension): Dimension {
+        return NetCdfDimension(parent, dim)
     }
 
     override fun toString(): String {

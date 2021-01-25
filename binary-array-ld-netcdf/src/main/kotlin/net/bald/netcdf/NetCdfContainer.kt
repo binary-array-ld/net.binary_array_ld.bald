@@ -31,16 +31,16 @@ abstract class NetCdfContainer(
         return ReferenceValueParser(this)
     }
 
-    override fun vars(): Sequence<Var> {
+    override fun vars(): Sequence<NetCdfVar> {
         return group.variables.asSequence().filter(::acceptVar).map(::variable)
-    }
-
-    override fun subContainers(): Sequence<Container> {
-        return group.groups.asSequence().filter(::acceptGroup).map(::subContainer)
     }
 
     private fun variable(v: Variable): NetCdfVar {
         return NetCdfVar(this, v)
+    }
+
+    override fun subContainers(): Sequence<Container> {
+        return group.groups.asSequence().filter(::acceptGroup).map(::subContainer)
     }
 
     private fun subContainer(group: Group): NetCdfContainer {
