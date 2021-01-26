@@ -65,13 +65,17 @@ class StatementsVerifier(
         }
     }
 
-    fun list(vararg values: Literal) {
+    fun list(vararg values: RDFNode) {
         values.toList().let(::list)
     }
 
-    fun list(values: List<Literal>) {
+    fun list(values: List<RDFNode>) {
         val first = values.first()
-        statement(RDF.first, first)
+        if (first.isLiteral) {
+            statement(RDF.first, first.asLiteral())
+        } else {
+            statement(RDF.first, first.asResource())
+        }
 
         val rest = values.subList(1, values.size)
         if (rest.isEmpty()) {

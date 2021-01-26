@@ -330,14 +330,11 @@ class BinaryArrayConvertCliTest {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/")) {
                     statement(TestVocab.orderedVar) {
-                        statement(RDF.first, createResource("http://test.binary-array-ld.net/example/var0"))
-                        statement(RDF.rest) {
-                            statement(RDF.first, createResource("http://test.binary-array-ld.net/example/foo/bar/var2"))
-                            statement(RDF.rest) {
-                                statement(RDF.first, createResource("http://test.binary-array-ld.net/example/baz/var3"))
-                                statement(RDF.rest, RDF.nil)
-                            }
-                        }
+                        list(
+                            createResource("http://test.binary-array-ld.net/example/var0"),
+                            createResource("http://test.binary-array-ld.net/example/foo/bar/var2"),
+                            createResource("http://test.binary-array-ld.net/example/baz/var3")
+                        )
                     }
                     statement(TestVocab.rootVar, createResource("http://test.binary-array-ld.net/example/var0"))
                     statement(TestVocab.unorderedVar, createResource("http://test.binary-array-ld.net/example/foo/bar/var2"))
@@ -400,12 +397,28 @@ class BinaryArrayConvertCliTest {
                     statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/elev")) {
                         statement(RDF.type, BALD.Array)
                         statement(RDFS.label, createPlainLiteral("height"))
-                        statement(BALD.shape) {
-                            statement(RDF.first, createTypedLiteral(15))
-                            statement(RDF.rest) {
-                                statement(RDF.first, createTypedLiteral(10))
-                                statement(RDF.rest, RDF.nil)
+                        statement(BALD.references) {
+                            statement(RDF.type, BALD.Reference)
+                            statement(BALD.reshape) {
+                                list(createTypedLiteral(15), createTypedLiteral(1))
                             }
+                            statement(BALD.target, createResource("http://test.binary-array-ld.net/example/lat"))
+                            statement(BALD.targetShape) {
+                                list(createTypedLiteral(15))
+                            }
+                        }
+                        statement(BALD.references) {
+                            statement(RDF.type, BALD.Reference)
+                            statement(BALD.reshape) {
+                                list(createTypedLiteral(1), createTypedLiteral(10))
+                            }
+                            statement(BALD.target, createResource("http://test.binary-array-ld.net/example/lon"))
+                            statement(BALD.targetShape) {
+                                list(createTypedLiteral(10))
+                            }
+                        }
+                        statement(BALD.shape) {
+                            list(createTypedLiteral(15), createTypedLiteral(10))
                         }
                     }
                     statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/lat")) {
@@ -414,8 +427,7 @@ class BinaryArrayConvertCliTest {
                         statement(BALD.arrayFirstValue, createTypedLiteral("6.5", XSDDatatype.XSDfloat))
                         statement(BALD.arrayLastValue, createTypedLiteral("-6.5", XSDDatatype.XSDfloat))
                         statement(BALD.shape) {
-                            statement(RDF.first, createTypedLiteral(15))
-                            statement(RDF.rest, RDF.nil)
+                            list(createTypedLiteral(15))
                         }
                     }
                     statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/lon")) {
@@ -424,8 +436,7 @@ class BinaryArrayConvertCliTest {
                         statement(BALD.arrayFirstValue, createTypedLiteral("0.5", XSDDatatype.XSDfloat))
                         statement(BALD.arrayLastValue, createTypedLiteral("9.5", XSDDatatype.XSDfloat))
                         statement(BALD.shape) {
-                            statement(RDF.first, createTypedLiteral(10))
-                            statement(RDF.rest, RDF.nil)
+                            list(createTypedLiteral(10))
                         }
                     }
                 }

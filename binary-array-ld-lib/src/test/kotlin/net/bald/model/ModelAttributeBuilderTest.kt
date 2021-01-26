@@ -83,14 +83,11 @@ class ModelAttributeBuilderTest {
         builder.addAttribute(attr)
         ResourceVerifier(resource).statements {
             statement(RDFS.label) {
-                statement(RDF.first, createResource("http://test.binary-array-ld.net/var0"))
-                statement(RDF.rest) {
-                    statement(RDF.first, createResource("http://test.binary-array-ld.net/var1"))
-                    statement(RDF.rest) {
-                        statement(RDF.first, createResource("http://test.binary-array-ld.net/var2"))
-                        statement(RDF.rest, RDF.nil)
-                    }
-                }
+                list(
+                    createResource("http://test.binary-array-ld.net/var0"),
+                    createResource("http://test.binary-array-ld.net/var1"),
+                    createResource("http://test.binary-array-ld.net/var2")
+                )
             }
         }
     }

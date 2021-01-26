@@ -297,14 +297,11 @@ class NetCdfBinaryArrayTest {
                 attribute(TestVocab.orderedVar.uri) {
                     resource {
                         statements {
-                            statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
-                            statement(RDF.rest) {
-                                statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"))
-                                statement(RDF.rest) {
-                                    statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/baz/var3"))
-                                    statement(RDF.rest, RDF.nil)
-                                }
-                            }
+                            list(
+                                createResource("http://test.binary-array-ld.net/var-ref.nc/var0"),
+                                createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"),
+                                createResource("http://test.binary-array-ld.net/var-ref.nc/baz/var3")
+                            )
                         }
                     }
                 }

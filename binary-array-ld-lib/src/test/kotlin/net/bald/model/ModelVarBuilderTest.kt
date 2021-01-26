@@ -103,14 +103,11 @@ class ModelVarBuilderTest {
             statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
                 statement(RDF.type, BALD.Array)
                 statement(BALD.shape) {
-                    statement(RDF.first, createTypedLiteral(10))
-                    statement(RDF.rest) {
-                        statement(RDF.first, createTypedLiteral(30))
-                        statement(RDF.rest) {
-                            statement(RDF.first, createTypedLiteral(1000))
-                            statement(RDF.rest, RDF.nil)
-                        }
-                    }
+                    list(
+                        createTypedLiteral(10),
+                        createTypedLiteral(30),
+                        createTypedLiteral(1000)
+                    )
                 }
             }
         }
