@@ -349,7 +349,14 @@ class NetCdfBinaryArrayTest {
         val ba = fromCdl("/netcdf/coordinate-var.cdl", "http://test.binary-array-ld.net/coordinate-var.nc")
         ContainerVerifier(ba.root).vars {
             variable("http://test.binary-array-ld.net/coordinate-var.nc/elev") {
-                dimensions(15, 10)
+                dimensions {
+                    dimension {
+                        size(15); coordinate("http://test.binary-array-ld.net/coordinate-var.nc/lat")
+                    }
+                    dimension {
+                        size(10); coordinate("http://test.binary-array-ld.net/coordinate-var.nc/lon")
+                    }
+                }
             }
             variable("http://test.binary-array-ld.net/coordinate-var.nc/lat") {
                 dimensions(15)
