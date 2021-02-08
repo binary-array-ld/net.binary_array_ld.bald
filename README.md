@@ -77,6 +77,10 @@ Where `inputFile` is the location of the NetCDF file to convert,
 and `outputFile` is the location of the file in which to output the RDF graph.
 If you don't specify an `outputFile`, the graph will be printed on the command line.
 
+By default, the RDF graph output will be in [Turtle](https://www.w3.org/TR/turtle/) format.
+You can use the `--output` or `-o` option to specify the RDF format to emit.
+This option can accept any of the RDF formats supported by Apache Jena, eg. JSON-LD and RDFXML.
+
 You can also supply various options.
 Use the `-h` or `--help` option to emit full documentation for the available options.
 ```

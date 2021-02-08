@@ -3,9 +3,6 @@ package net.bald.netcdf
 import bald.TestVocab
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
-import net.bald.Var
-import net.bald.Container
-import net.bald.context.AliasDefinition
 import net.bald.context.ModelContext
 import net.bald.model.ModelAliasDefinition
 import net.bald.vocab.BALD
