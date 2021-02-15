@@ -44,7 +44,7 @@ class ModelAliasDefinition(
 
     override fun isReferenceProperty(prop: Property): Boolean {
         return prop.inModel(model).let { modelProp ->
-            modelProp.hasProperty(RDFS.range, BALD.Subject)
+            modelProp.hasProperty(RDFS.range, BALD.Resource)
                     || modelProp.listProperties(RDFS.range).let(::containsReferenceCls)
         }
     }
@@ -59,7 +59,7 @@ class ModelAliasDefinition(
 
     private fun isReferenceCls(cls: Resource, clsUris: Set<String>): Boolean {
         return when {
-            cls.hasProperty(RDFS.subClassOf, BALD.Subject) -> true
+            cls.hasProperty(RDFS.subClassOf, BALD.Resource) -> true
             clsUris.contains(cls.uri) -> false
             else -> {
                 val nextClsUris = cls.uri?.let(clsUris::plus) ?: clsUris

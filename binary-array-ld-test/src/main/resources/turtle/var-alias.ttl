@@ -11,13 +11,13 @@ skos:prefLabel a rdf:Property ;
 
 bald:references a owl:ObjectProperty ;
     dct:identifier "references" ;
-    rdfs:range bald:Subject .
+    rdfs:range bald:Resource .
 
-test:Subject rdfs:subClassOf bald:Subject .
+test:Subject rdfs:subClassOf bald:Resource .
 
 test:root_var a owl:ObjectProperty ;
     dct:identifier "root_var" ;
-    rdfs:range bald:Subject .
+    rdfs:range bald:Resource .
 
 test:sibling_var a owl:ObjectProperty ;
     dct:identifier "sibling_var" ;
