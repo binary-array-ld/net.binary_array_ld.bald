@@ -13,7 +13,7 @@ bald:references a owl:ObjectProperty ;
     dct:identifier "references" ;
     rdfs:range bald:Resource .
 
-test:Subject rdfs:subClassOf bald:Resource .
+test:Resource rdfs:subClassOf bald:Resource .
 
 test:root_var a owl:ObjectProperty ;
     dct:identifier "root_var" ;
@@ -21,19 +21,19 @@ test:root_var a owl:ObjectProperty ;
 
 test:sibling_var a owl:ObjectProperty ;
     dct:identifier "sibling_var" ;
-    rdfs:range test:Subject .
+    rdfs:range test:Resource .
 
 test:parent_var a owl:ObjectProperty ;
     dct:identifier "parent_var" ;
-    rdfs:range [ rdfs:subClassOf test:Subject ] .
+    rdfs:range [ rdfs:subClassOf test:Resource ] .
 
 test:unordered_var a owl:ObjectProperty ;
     dct:identifier "unordered_var" ;
-    rdfs:range bald:Subject .
+    rdfs:range bald:Resource .
 
 test:ordered_var a owl:ObjectProperty ;
     dct:identifier "ordered_var" ;
-    rdfs:range bald:Subject .
+    rdfs:range bald:Resource .
 
 
 
