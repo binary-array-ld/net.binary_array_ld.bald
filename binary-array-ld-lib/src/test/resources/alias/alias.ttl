@@ -17,17 +17,17 @@ skos:prefLabel a rdf:Property ;
 
 bald:references a rdf:Property ;
     dct:identifier "references" ;
-    rdfs:range bald:Subject .
+    rdfs:range bald:Resource .
 
 bald:Organisation dct:identifier "binary-array-ld-org" .
 
-test:Subject rdfs:subClassOf bald:Subject.
+test:Resource rdfs:subClassOf bald:Resource.
 
 test:direct a rdf:Property ;
     dct:identifier "test_direct" ;
-    rdfs:range test:Subject .
+    rdfs:range test:Resource .
 
 test:indirect a rdf:Property ;
     dct:identifier "test_indirect" ;
-    rdfs:range [ rdfs:subClassOf test:Subject ] .
+    rdfs:range [ rdfs:subClassOf test:Resource ] .
 
