@@ -34,6 +34,7 @@ class StatementsVerifier(
             if (obj.isResource) {
                 val resource = obj.asResource()
                 assertEquals(value?.uri, resource.uri, "Wrong value on statement $statement.")
+
                 if (verifyResource != null) {
                     ResourceVerifier(resource).statements(sortAnon, verifyResource)
                 }
