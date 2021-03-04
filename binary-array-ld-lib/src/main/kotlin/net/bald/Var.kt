@@ -10,12 +10,12 @@ interface Var: AttributeSource {
     val uri: String
 
     /**
-     * TODO
+     * The coordinate range spanned by the variable, if it has one.
      */
     val range: CoordinateRange?
 
     /**
-     * TODO
+     * The dimensions that specify the shape of the variable.
      */
     fun dimensions(): Sequence<Dimension>
 }

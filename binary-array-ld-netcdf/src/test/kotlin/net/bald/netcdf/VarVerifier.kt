@@ -14,13 +14,19 @@ class VarVerifier(
     private val v: Var
 ): AttributeSourceVerifier(v) {
     /**
-     * TODO
+     * Verify that the variable has dimensions of the given sizes, in order.
+     * @param sizes The expected sizes.
      */
     fun dimensions(vararg sizes: Int) {
         val actual = v.dimensions().map(Dimension::size).toList()
         assertEquals(sizes.toList(), actual)
     }
 
+    /**
+     * Begin verifying the dimensions of the variable, in order.
+     * Also verify that the number of dimensions verified is equal to the total number of dimensions available.
+     * @param verify A function to perform against the [DimensionsVerifier] for the variable.
+     */
     fun dimensions(verify: DimensionsVerifier.() -> Unit) {
         val dimIt = v.dimensions().iterator()
         DimensionsVerifier(dimIt).verify()
@@ -30,7 +36,9 @@ class VarVerifier(
     }
 
     /**
-     * TODO
+     * Verify that the variable has the given coordinate range.
+     * @param first The first value in the range, if it has one.
+     * @param last The last value in the range, if it has one.
      */
     fun range(first: Any?, last: Any? = null) {
         assertNotNull(v.range) { range ->

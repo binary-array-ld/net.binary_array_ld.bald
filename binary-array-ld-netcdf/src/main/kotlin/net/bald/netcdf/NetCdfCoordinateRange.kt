@@ -5,7 +5,7 @@ import ucar.ma2.Array
 import ucar.nc2.Variable
 
 /**
- * TODO
+ * NetCDF implementation of [CoordinateRange].
  */
 class NetCdfCoordinateRange(
     private val v: Variable

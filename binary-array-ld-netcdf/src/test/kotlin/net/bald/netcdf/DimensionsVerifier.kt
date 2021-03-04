@@ -3,9 +3,6 @@ package net.bald.netcdf
 import net.bald.Dimension
 import kotlin.test.fail
 
-/**
- * TODO
- */
 class DimensionsVerifier(
     private val dimIt: Iterator<Dimension>
 ) {

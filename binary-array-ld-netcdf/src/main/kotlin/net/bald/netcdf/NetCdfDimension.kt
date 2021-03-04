@@ -4,7 +4,7 @@ import net.bald.Var
 import ucar.nc2.Dimension
 
 /**
- * TODO
+ * NetCDF implementation of [net.bald.Dimension].
  */
 class NetCdfDimension(
     private val parent: NetCdfContainer,

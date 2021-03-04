@@ -1,16 +1,17 @@
 package net.bald
 
 /**
- * TODO
+ * A dimension that specifies the shape of a variable.
  */
 interface Dimension {
     /**
-     * TODO
+     * The size of the dimension.
      */
     val size: Int
 
     /**
-     * TODO
+     * The coordinate variable that corresponds to the dimension, if one exists.
+     * Otherwise, null.
      */
     val coordinate: Var?
 }

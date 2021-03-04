@@ -1,16 +1,18 @@
 package net.bald
 
 /**
- * TODO
+ * The range of values that is spanned by a coordinate variable.
  */
 interface CoordinateRange {
     /**
-     * TODO
+     * The first value in the range, if it has one.
+     * Otherwise, null.
      */
     val first: Any?
 
     /**
-     * TODO
+     * The last value in the range, if it has one.
+     * Otherwise, null.
      */
     val last: Any?
 }
