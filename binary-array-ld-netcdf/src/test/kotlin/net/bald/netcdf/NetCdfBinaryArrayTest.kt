@@ -3,9 +3,6 @@ package net.bald.netcdf
 import bald.TestVocab
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
-import net.bald.Var
-import net.bald.Container
-import net.bald.context.AliasDefinition
 import net.bald.context.ModelContext
 import net.bald.model.ModelAliasDefinition
 import net.bald.vocab.BALD
@@ -310,6 +307,7 @@ class NetCdfBinaryArrayTest {
                 variable("http://test.binary-array-ld.net/var-ref.nc/var0")
             }
             subContainers {
+                container("http://test.binary-array-ld.net/var-ref.nc/baz")
                 container("http://test.binary-array-ld.net/var-ref.nc/foo") {
                     attributes {
                         attribute(TestVocab.rootVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
@@ -336,7 +334,6 @@ class NetCdfBinaryArrayTest {
                         }
                     }
                 }
-                container("http://test.binary-array-ld.net/var-ref.nc/baz")
             }
         }
     }
