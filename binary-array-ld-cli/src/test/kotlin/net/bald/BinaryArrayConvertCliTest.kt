@@ -7,6 +7,7 @@ import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.vocab.BALD
 import org.apache.jena.datatypes.xsd.XSDDatatype
 import org.apache.jena.rdf.model.ModelFactory.createDefaultModel
+import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.ResourceFactory.*
 import org.apache.jena.riot.RiotException
 import org.apache.jena.vocabulary.*
@@ -419,13 +420,21 @@ class BinaryArrayConvertCliTest {
             outputFile.absolutePath
         )
 
+        fun sortAnon(res: Resource): String {
+            return if (res.hasProperty(BALD.target)) {
+                res.getProperty(BALD.target).`object`.toString()
+            } else {
+                res.id.toString()
+            }
+        }
+
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
             resource("http://test.binary-array-ld.net/example") {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/")) {
                     statement(RDF.type, BALD.Container)
-                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/elev")) {
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/elev"), sortAnon = ::sortAnon) {
                         statement(RDF.type, BALD.Array)
                         statement(RDFS.label, createPlainLiteral("height"))
                         statement(BALD.references) {

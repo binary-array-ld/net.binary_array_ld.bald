@@ -19,11 +19,13 @@ class StatementsVerifier(
      * To skip verification of the object resource, omit the [verifyResource] parameter.
      * @param prop The expected predicate.
      * @param value The expected resource object.
+     * @param sortAnon An optional function which assigns a deterministic, sortable value blank nodes.
      * @param verifyResource A function to perform against the [StatementsVerifier] for the object resource.
      */
     fun statement(
         prop: Property,
         value: Resource? = null,
+        sortAnon: ((Resource) -> String)? = null,
         verifyResource: (StatementsVerifier.() -> Unit)? = null
     ) {
         nextStatement(prop) { statement ->
@@ -33,7 +35,7 @@ class StatementsVerifier(
                 val resource = obj.asResource()
                 assertEquals(value?.uri, resource.uri, "Wrong value on statement $statement.")
                 if (verifyResource != null) {
-                    ResourceVerifier(resource).statements(verifyResource)
+                    ResourceVerifier(resource).statements(sortAnon, verifyResource)
                 }
             } else {
                 fail("Expected statement with resource value $value, but got $statement.")
@@ -86,8 +88,4 @@ class StatementsVerifier(
             }
         }
     }
-}
-
-fun sortStatements(statements: Iterator<Statement>): Iterator<Statement> {
-    return statements.asSequence().sortedBy(Statement::toString).iterator()
 }

@@ -12,8 +12,10 @@ import net.bald.Var
 import net.bald.vocab.BALD
 import org.apache.jena.datatypes.xsd.XSDDatatype
 import org.apache.jena.rdf.model.ModelFactory
+import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.ResourceFactory.createResource
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
+import org.apache.jena.rdf.model.Statement
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.RDFS
 import org.junit.jupiter.api.*
@@ -168,8 +170,16 @@ class ModelVarBuilderTest {
         val v = newVar("http://test.binary-array-ld.net/example/foo", dims = listOf(dim1, dim2))
         builder.addVar(v)
 
+        fun sortAnon(res: Resource): String {
+            return if (res.hasProperty(BALD.target)) {
+                res.getProperty(BALD.target).`object`.toString()
+            } else {
+                res.id.toString()
+            }
+        }
+
         ResourceVerifier(container).statements {
-            statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
+            statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo"), sortAnon = ::sortAnon) {
                 statement(RDF.type, BALD.Array)
                 statement(BALD.references) {
                     statement(RDF.type, BALD.Reference)

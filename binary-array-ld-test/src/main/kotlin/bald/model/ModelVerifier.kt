@@ -22,7 +22,7 @@ class ModelVerifier(
     fun resource(uri: String, verify: StatementsVerifier.() -> Unit) {
         val resource = model.createResource(uri)
         assertTrue(model.containsResource(resource), "Expected resource $resource in model.")
-        ResourceVerifier(resource).statements(verify)
+        ResourceVerifier(resource).statements(verify = verify)
     }
 
     /**
