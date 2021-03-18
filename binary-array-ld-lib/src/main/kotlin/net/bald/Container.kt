@@ -6,10 +6,9 @@ package net.bald
  */
 interface Container: AttributeSource {
     /**
-     * The local name of the container, if it has one.
-     * The root container may have no name or an empty name.
+     * The URI of the container.
      */
-    val name: String?
+    val uri: String
 
     /**
      * Obtain the variables associates with this container.

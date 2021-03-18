@@ -1,9 +1,8 @@
 package net.bald;
 
-import net.bald.alias.AliasBinaryArray;
-import net.bald.alias.AliasDefinition;
+import net.bald.context.AliasDefinition;
+import net.bald.context.ModelContext;
 import net.bald.model.ModelAliasDefinition;
-import net.bald.context.ContextBinaryArray;
 import net.bald.model.ModelBinaryArrayConverter;
 import net.bald.netcdf.NetCdfBinaryArray;
 import org.apache.jena.rdf.model.Model;
@@ -26,10 +25,10 @@ public class NetCdfConvertJava {
     }
 
     public static void convertWithExternalPrefixes() throws Exception {
-        BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example");
-        PrefixMapping context = ModelFactory.createDefaultModel().read("/path/to/context.json", "json-ld");
-        BinaryArray contextBa = ContextBinaryArray.create(ba, context);
-        Model model = ModelBinaryArrayConverter.convert(contextBa);
+        PrefixMapping prefix = ModelFactory.createDefaultModel().read("/path/to/context.json", "json-ld");
+        ModelContext context = ModelContext.create(prefix, null);
+        BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", context);
+        Model model = ModelBinaryArrayConverter.convert(ba);
 
         try (OutputStream output = new FileOutputStream("/path/to/output.ttl")) {
             model.write(output, "ttl");
@@ -37,12 +36,14 @@ public class NetCdfConvertJava {
     }
 
     public static void convertWithAliases() throws Exception {
-        BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example");
+        PrefixMapping prefix = PrefixMapping.Factory.create();
         Model aliasModel = ModelFactory.createDefaultModel().read("/path/to/alias.ttl", "ttl");
         AliasDefinition alias = ModelAliasDefinition.create(aliasModel);
-        BinaryArray aliasBa = AliasBinaryArray.create(ba, alias);
+        ModelContext context = ModelContext.create(prefix, alias);
 
-        Model model = ModelBinaryArrayConverter.convert(aliasBa);
+        BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", context);
+
+        Model model = ModelBinaryArrayConverter.convert(ba);
 
         try (OutputStream output = new FileOutputStream("/path/to/output.ttl")) {
             model.write(output, "ttl");

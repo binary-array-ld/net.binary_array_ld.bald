@@ -1,8 +1,8 @@
 package net.bald.model
 
 import net.bald.AttributeSource
-import net.bald.vocab.BALD
 import net.bald.Container
+import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Resource
 
 open class ModelContainerBuilder(
@@ -11,8 +11,7 @@ open class ModelContainerBuilder(
     private val attrFct: ModelAttributeBuilder.Factory
 ) {
     open fun addContainer(container: Container) {
-        val containerUri = parent.withTrailingSlash() + (container.name ?: "")
-        val containerRes = parent.model.createResource(containerUri, BALD.Container)
+        val containerRes = parent.model.createResource(container.uri, BALD.Container)
         addSubContainers(container, containerRes)
         addVars(container, containerRes)
         addAttributes(container, containerRes)
@@ -31,7 +30,7 @@ open class ModelContainerBuilder(
 
     private fun addAttributes(source: AttributeSource, resource: Resource) {
         val builder = attrFct.forResource(resource)
-        source.attributes(resource.model).forEach(builder::addAttribute)
+        source.attributes().forEach(builder::addAttribute)
     }
 
     open class Factory(

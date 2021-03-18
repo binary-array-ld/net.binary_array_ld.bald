@@ -1,7 +1,7 @@
 package net.bald.netcdf
 
 import net.bald.BinaryArray
-import net.bald.Container
+import net.bald.context.ModelContext
 import org.apache.jena.shared.PrefixMapping
 import ucar.nc2.AttributeContainer
 import ucar.nc2.Group
@@ -15,26 +15,34 @@ import java.io.File
  */
 class NetCdfBinaryArray(
     override val uri: String,
-    private val file: NetcdfFile
+    private val file: NetcdfFile,
+    val context: ModelContext
 ): BinaryArray {
-    override val root: Container get() = container(file.rootGroup)
-    override val prefixMapping: PrefixMapping get() = prefixMapping() ?: PrefixMapping.Factory.create()
+    override val root: NetCdfContainer get() = container(file.rootGroup)
+
+    override val prefixMapping: PrefixMapping get() {
+        return PrefixMapping.Factory.create().apply {
+            setNsPrefixes(context.prefixMapping)
+            internalPrefixMapping()?.let(::setNsPrefixes)
+        }
+    }
+
+    val prefixSrc: String? get() = prefixSourceName()
 
     override fun close() {
         file.close()
     }
 
-    private fun container(group: Group): Container {
-        val prefixSrc = prefixSourceName()
-        return NetCdfContainer(group, prefixSrc)
+    private fun container(group: Group): NetCdfContainer {
+        return NetCdfRootContainer(this, group)
     }
 
-    private fun prefixMapping(): PrefixMapping? {
+    private fun internalPrefixMapping(): PrefixMapping? {
         return prefixSource()?.let(::NetCdfPrefixMappingBuilder)?.build()
     }
 
     private fun prefixSource(): AttributeContainer? {
-        return prefixSourceName()?.let { name ->
+        return prefixSrc?.let { name ->
             file.findGroup(name)
                 ?: file.findVariable(name)
                 ?: throw IllegalStateException("Prefix group or variable $name not found.")
@@ -58,21 +66,38 @@ class NetCdfBinaryArray(
          * The resulting [NetCdfBinaryArray] should be closed after use.
          * @param fileLoc The location of the NetCDF file on the local file system.
          * @param uri The URI which identifies the dataset.
+         * @param context The external context in which to resolve the binary array.
          * @return A [BinaryArray] representation of the NetCDF file.
          */
         @JvmStatic
-        fun create(fileLoc: String, uri: String? = null): BinaryArray {
+        fun create(
+            fileLoc: String,
+            uri: String?,
+            context: ModelContext?
+        ): NetCdfBinaryArray {
             val file = NetcdfFiles.open(fileLoc)
             val requiredUri = uri ?: uri(fileLoc)
-            return create(file, requiredUri)
+            return create(file, requiredUri, context)
+        }
+
+        /**
+         * @see create
+         */
+        @JvmStatic
+        fun create(fileLoc: String, uri: String? = null): NetCdfBinaryArray {
+            return create(fileLoc, uri, null)
         }
 
         /**
          * @see [create].
          */
         @JvmStatic
-        fun create(file: NetcdfFile, uri: String): BinaryArray {
-            return NetCdfBinaryArray(uri, file)
+        fun create(
+            file: NetcdfFile,
+            uri: String,
+            context: ModelContext? = null
+        ): NetCdfBinaryArray {
+            return NetCdfBinaryArray(uri, file, context ?: ModelContext.Empty)
         }
 
         private fun uri(fileLoc: String): String {

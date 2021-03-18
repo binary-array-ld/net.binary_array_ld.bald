@@ -1,0 +1,23 @@
+{
+  "@graph" : [ {
+    "@id" : "http://test.binary-array-ld.net/example",
+    "@type" : "https://www.opengis.net/def/binary-array-ld/Container",
+    "contains" : "http://test.binary-array-ld.net/example/"
+  }, {
+    "@id" : "http://test.binary-array-ld.net/example/",
+    "@type" : "https://www.opengis.net/def/binary-array-ld/Container",
+    "contains" : [ "http://test.binary-array-ld.net/example/var1", "http://test.binary-array-ld.net/example/var0" ]
+  }, {
+    "@id" : "http://test.binary-array-ld.net/example/var0",
+    "@type" : "https://www.opengis.net/def/binary-array-ld/Resource"
+  }, {
+    "@id" : "http://test.binary-array-ld.net/example/var1",
+    "@type" : "https://www.opengis.net/def/binary-array-ld/Resource"
+  } ],
+  "@context" : {
+    "contains" : {
+      "@id" : "https://www.opengis.net/def/binary-array-ld/contains",
+      "@type" : "@id"
+    }
+  }
+}

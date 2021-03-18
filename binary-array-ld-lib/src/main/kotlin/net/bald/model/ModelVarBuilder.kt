@@ -10,15 +10,14 @@ open class ModelVarBuilder(
     private val attrFct: ModelAttributeBuilder.Factory
 ) {
     open fun addVar(v: Var) {
-        val varUri = container.withTrailingSlash() + v.name
-        val vRes = container.model.createResource(varUri, BALD.Resource)
+        val vRes = container.model.createResource(v.uri, BALD.Resource)
         container.addProperty(BALD.contains, vRes)
         addAttributes(v, vRes)
     }
 
     private fun addAttributes(source: AttributeSource, resource: Resource) {
         val builder = attrFct.forResource(resource)
-        source.attributes(resource.model).forEach(builder::addAttribute)
+        source.attributes().forEach(builder::addAttribute)
     }
 
     open class Factory(

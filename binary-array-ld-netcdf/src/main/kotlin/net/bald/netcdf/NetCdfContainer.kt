@@ -3,37 +3,90 @@ package net.bald.netcdf
 import net.bald.Attribute
 import net.bald.Container
 import net.bald.Var
-import org.apache.jena.shared.PrefixMapping
+import net.bald.context.ModelContext
+import org.apache.jena.rdf.model.Property
+import org.apache.jena.rdf.model.RDFNode
+import org.apache.jena.rdf.model.ResourceFactory
+import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
+import org.apache.jena.rdf.model.ResourceFactory.createResource
+import ucar.nc2.AttributeContainer
 import ucar.nc2.Group
 import ucar.nc2.Variable
 
 /**
  * NetCDF implementation of [Container].
+ * See [NetCdfRootContainer] for the root group representation,
+ * and [NetCdfSubContainer] for sub-groups.
  */
-class NetCdfContainer(
-    private val group: Group,
-    private val prefixSrc: String? = null
+abstract class NetCdfContainer(
+    private val group: Group
 ): Container {
-    override val name: String? get() = group.shortName
+    abstract val parent: NetCdfContainer?
+    abstract val root: NetCdfContainer
+    abstract val context: ModelContext
+    abstract val uriParser: UriParser
+    abstract fun childUri(name: String): String
+
+    private val refParser: ReferenceValueParser get() {
+        return ReferenceValueParser(this)
+    }
 
     override fun vars(): Sequence<Var> {
-        return group.variables.asSequence().filter(::acceptVar).map(::NetCdfVar)
+        return group.variables.asSequence().filter(::acceptVar).map(::variable)
     }
 
     override fun subContainers(): Sequence<Container> {
-        return group.groups.asSequence().filter(::acceptGroup).map(::NetCdfContainer)
+        return group.groups.asSequence().filter(::acceptGroup).map(::subContainer)
     }
 
-    private fun acceptVar(v: Variable): Boolean {
-        return prefixSrc != v.shortName
+    private fun variable(v: Variable): NetCdfVar {
+        return NetCdfVar(this, v)
     }
 
-    private fun acceptGroup(group: Group): Boolean {
-        return prefixSrc != group.shortName
+    private fun subContainer(group: Group): NetCdfContainer {
+        return NetCdfSubContainer(this, group)
     }
 
-    override fun attributes(prefixMapping: PrefixMapping): List<Attribute> {
-        val source = group.attributes().let(::NetCdfAttributeSource)
-        return source.attributes(prefixMapping)
+    open fun acceptVar(v: Variable): Boolean {
+        return true
+    }
+
+    open fun acceptGroup(group: Group): Boolean {
+        return true
+    }
+
+    override fun attributes(): List<Attribute> {
+        return group.attributes().let(::source).attributes()
+    }
+
+    fun subContainer(name: String): NetCdfContainer? {
+        return group.findGroup(name)?.let(::subContainer)
+    }
+
+    fun variable(name: String): NetCdfVar? {
+        return group.findVariable(name)?.let(::variable)
+    }
+
+    private fun source(attrs: AttributeContainer): NetCdfAttributeSource {
+        return NetCdfAttributeSource(this, attrs)
+    }
+
+    fun parseProperty(name: String): Property {
+        return uriParser.parse(name)?.let(ResourceFactory::createProperty)
+            ?: context.property(name)
+            ?: childUri(name).let(ResourceFactory::createProperty)
+    }
+
+    fun parseRdfNodes(prop: Property, value: String): List<RDFNode> {
+        return uriParser.parse(value)?.let(::createResource)?.let(::listOf)
+            ?: context.resource(value)?.let(::listOf)
+            ?: prop.takeIf(context::isReferenceProperty)?.let {
+                refParser.parse(value)
+            }
+            ?: createPlainLiteral(value).let(::listOf)
+    }
+
+    override fun toString(): String {
+        return group.toString()
     }
 }

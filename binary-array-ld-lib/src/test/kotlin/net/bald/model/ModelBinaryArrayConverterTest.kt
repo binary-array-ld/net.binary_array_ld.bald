@@ -23,16 +23,18 @@ class ModelBinaryArrayConverterTest {
         return ModelBinaryArrayConverter.convert(ba)
     }
 
-    private fun newVar(name: String): Var {
+    private fun newVar(uri: String): Var {
         return mock {
-            on { this.name } doReturn name
+            on { this.uri } doReturn uri
         }
     }
 
     @Test
     fun convert_returnsModel() {
-        val vars = listOf(newVar("foo"), newVar("bar"), newVar("baz"))
+        val uri = "http://test.binary-array-ld.net/example"
+        val vars = listOf(newVar("$uri/foo"), newVar("$uri/bar"), newVar("$uri/baz"))
         val root = mock<Container> {
+            on { this.uri } doReturn "$uri/"
             on { vars() } doReturn vars.asSequence()
             on { subContainers() } doReturn emptySequence()
         }
@@ -41,7 +43,7 @@ class ModelBinaryArrayConverterTest {
             .setNsPrefix("skos", SKOS.uri)
             .setNsPrefix("dct", DCTerms.NS)
         val ba = mock<BinaryArray> {
-            on { uri } doReturn "http://test.binary-array-ld.net/example"
+            on { this.uri } doReturn uri
             on { this.root } doReturn root
             on { prefixMapping } doReturn prefix
         }

@@ -1,14 +1,18 @@
 package net.bald.netcdf
 
+import bald.TestVocab
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
-import net.bald.Var
-import net.bald.Container
+import net.bald.context.ModelContext
+import net.bald.model.ModelAliasDefinition
 import net.bald.vocab.BALD
+import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
 import org.apache.jena.rdf.model.ResourceFactory.createResource
+import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
+import org.apache.jena.vocabulary.RDFS
 import org.apache.jena.vocabulary.SKOS
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -16,9 +20,9 @@ import kotlin.test.assertEquals
 
 class NetCdfBinaryArrayTest {
 
-    private fun fromCdl(cdlLoc: String, uri: String? = null): BinaryArray {
+    private fun fromCdl(cdlLoc: String, uri: String? = null, context: ModelContext? = null): BinaryArray {
         val file = writeToNetCdf(cdlLoc)
-        return NetCdfBinaryArray.create(file.absolutePath, uri)
+        return NetCdfBinaryArray.create(file.absolutePath, uri, context)
     }
 
     /**
@@ -50,10 +54,10 @@ class NetCdfBinaryArrayTest {
         val uri = "http://test.binary-array-ld.net/identity.nc"
         val ba = fromCdl("/netcdf/identity.cdl", uri)
 
-        val vars = ba.root.vars().toList()
-        assertEquals(2, vars.size)
-        assertEquals("var0", vars[0].name)
-        assertEquals("var1", vars[1].name)
+        ContainerVerifier(ba.root).vars {
+            variable("$uri/var0")
+            variable("$uri/var1")
+        }
     }
 
     /**
@@ -64,38 +68,38 @@ class NetCdfBinaryArrayTest {
         val uri = "http://test.binary-array-ld.net/identity-subgroups.nc"
         val ba = fromCdl("/netcdf/identity-subgroups.cdl", uri)
         val root = ba.root
-        assertEquals("", root.name)
-        val groups = root.subContainers().sortedBy(Container::name).toList()
-        assertEquals(2, groups.size)
-
-        val group0 = groups[0]
-        val group0Vars = group0.vars().toList()
-        assertEquals("group0", group0.name)
-        assertEquals(2, group0Vars.size)
-        assertEquals("var2", group0Vars[0].name)
-        assertEquals("var3", group0Vars[1].name)
-
-        val group1 = groups[1]
-        val group1Vars = group1.vars().toList()
-        assertEquals("group1", group1.name)
-        assertEquals(2, group1Vars.size)
-        assertEquals("var4", group1Vars[0].name)
-        assertEquals("var5", group1Vars[1].name)
+        assertEquals("$uri/", root.uri)
+        ContainerVerifier(root).subContainers {
+            container("$uri/group0") {
+                vars {
+                    variable("$uri/group0/var2")
+                    variable("$uri/group0/var3")
+                }
+            }
+            container("$uri/group1") {
+                vars {
+                    variable("$uri/group1/var4")
+                    variable("$uri/group1/var5")
+                }
+            }
+        }
     }
 
     @Test
     fun root_subContainers_withInternalPrefixMappingGroup_excludesPrefixMapping() {
-        val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix.nc")
-        assertEquals(emptyList(), ba.root.subContainers().toList())
+        val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/identity.nc")
+        ContainerVerifier(ba.root).subContainers {
+            // none
+        }
     }
 
     @Test
-    fun root_subContainers_withInternalPrefixMappingVar_excludesPrefixMapping() {
+    fun root_vars_withInternalPrefixMappingVar_excludesPrefixMapping() {
         val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/prefix-var.nc")
-        val vars = ba.root.vars().toList()
-        assertEquals(2, vars.size)
-        assertEquals("var0", vars[0].name)
-        assertEquals("var1", vars[1].name)
+        ContainerVerifier(ba.root).vars {
+            variable("http://test.binary-array-ld.net/prefix-var.nc/var0")
+            variable("http://test.binary-array-ld.net/prefix-var.nc/var1")
+        }
     }
 
     @Test
@@ -163,30 +167,39 @@ class NetCdfBinaryArrayTest {
     }
 
     /**
+     * Requirements class B-8
+     */
+    @Test
+    fun prefixMapping_withExternalPrefixMapping_returnsCombinedPrefixMapping() {
+        val prefix = PrefixMapping.Factory.create()
+            .setNsPrefix("skos", "http://example.org/skos/")
+            .setNsPrefix("dct", DCTerms.NS)
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/prefix.cdl", "http://test.binary-array-ld.net/prefix.nc", ctx)
+        val expected = mapOf(
+            "bald" to BALD.prefix,
+            "skos" to SKOS.uri,
+            "dct" to DCTerms.NS
+        )
+        assertEquals(expected, ba.prefixMapping.nsPrefixMap)
+    }
+
+    /**
      * Requirements class D
      */
     @Test
     fun attributes_withAttributes_returnsRootGroupAttributes() {
-        val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc")
-        val root = ba.root
-        val prefix = org.apache.jena.shared.PrefixMapping.Factory.create()
+        val prefix = PrefixMapping.Factory.create()
             .setNsPrefix("bald", BALD.prefix)
             .setNsPrefix("skos", SKOS.uri)
             .setNsPrefix("dct", DCTerms.NS)
-
-        AttributeSourceVerifier(root).attributes(prefix) {
-            attribute(BALD.isPrefixedBy.uri, "bald__isPrefixedBy") {
-                value(createPlainLiteral("prefix_list"))
-            }
-            attribute(SKOS.prefLabel.uri, "skos__prefLabel") {
-                value(createPlainLiteral("Attributes metadata example"))
-            }
-            attribute(DCTerms.publisher.uri, "dct__publisher") {
-                value(createResource("${BALD.prefix}Organisation"))
-            }
-            attribute(null, "date") {
-                value(createPlainLiteral("2020-10-29"))
-            }
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc", ctx)
+        ContainerVerifier(ba.root).attributes {
+            attribute(BALD.isPrefixedBy.uri, createPlainLiteral("prefix_list"))
+            attribute(SKOS.prefLabel.uri, createPlainLiteral("Attributes metadata example"))
+            attribute(DCTerms.publisher.uri, createResource("${BALD.prefix}Organisation"))
+            attribute("http://test.binary-array-ld.net/attributes.nc/date", createPlainLiteral("2020-10-29"))
         }
     }
 
@@ -195,25 +208,136 @@ class NetCdfBinaryArrayTest {
      */
     @Test
     fun attributes_withAttributes_returnsVarAttributes() {
-        val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc")
-        val vars = ba.root.vars().sortedBy(Var::toString).toList()
-        val prefix = org.apache.jena.shared.PrefixMapping.Factory.create()
+        val prefix = PrefixMapping.Factory.create()
             .setNsPrefix("bald", BALD.prefix)
             .setNsPrefix("skos", SKOS.uri)
             .setNsPrefix("dct", DCTerms.NS)
             .setNsPrefix("rdf", RDF.uri)
-
-        assertEquals(2, vars.size)
-        AttributeSourceVerifier(vars[0]).attributes(prefix) {
-            attribute(RDF.type.uri, "rdf__type") {
-                value(BALD.Array)
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc", ctx)
+        ContainerVerifier(ba.root).vars {
+            variable("http://test.binary-array-ld.net/attributes.nc/var0") {
+                attributes {
+                    attribute(RDF.type.uri, BALD.Array)
+                    attribute(SKOS.prefLabel.uri, createPlainLiteral("Variable 0"))
+                }
             }
-            attribute(SKOS.prefLabel.uri, "skos__prefLabel") {
-                value(createPlainLiteral("Variable 0"))
+            variable("http://test.binary-array-ld.net/attributes.nc/var1") {
+                attributes {
+                    // none
+                }
             }
         }
-        AttributeSourceVerifier(vars[1]).attributes(prefix) {
-            // none
+    }
+
+    /**
+     * Requirements class C
+     */
+    @Test
+    fun attributes_withAliases_returnsAliasedValues() {
+        val prefix = PrefixMapping.Factory.create()
+            .setNsPrefix("bald", BALD.prefix)
+            .setNsPrefix("skos", SKOS.uri)
+            .setNsPrefix("dct", DCTerms.NS)
+            .setNsPrefix("rdf", RDF.uri)
+        val alias = javaClass.getResourceAsStream("/turtle/alias.ttl").use { input ->
+            ModelFactory.createDefaultModel().read(input, null, "ttl")
+        }.let(ModelAliasDefinition::create)
+        val ctx = ModelContext.create(prefix, alias)
+        val ba = fromCdl("/netcdf/alias.cdl", "http://test.binary-array-ld.net/alias.nc", ctx)
+        ContainerVerifier(ba.root).apply {
+            attributes {
+                attribute(BALD.isPrefixedBy.uri, createPlainLiteral("prefix_list"))
+                attribute(SKOS.prefLabel.uri, createPlainLiteral("Alias metadata example"))
+                attribute(DCTerms.publisher.uri, createResource("${BALD.prefix}Organisation"))
+                attribute("http://test.binary-array-ld.net/alias.nc/date", createPlainLiteral("2020-10-29"))
+            }
+            vars {
+                variable("http://test.binary-array-ld.net/alias.nc/var0") {
+                    attributes {
+                        attribute(RDFS.label.uri, createPlainLiteral("var-0"))
+                        attribute(RDF.type.uri, BALD.Array)
+                        attribute(SKOS.prefLabel.uri, createPlainLiteral("Variable 0"))
+                    }
+                }
+                variable("http://test.binary-array-ld.net/alias.nc/var1")
+            }
+        }
+    }
+
+    /**
+     * Requirements class E-1, E-2
+     */
+    @Test
+    fun attributes_withVariableReferences_returnsVariableValues() {
+        val prefix = PrefixMapping.Factory.create()
+            .setNsPrefix("bald", BALD.prefix)
+            .setNsPrefix("skos", SKOS.uri)
+            .setNsPrefix("dct", DCTerms.NS)
+            .setNsPrefix("rdf", RDF.uri)
+        val alias = javaClass.getResourceAsStream("/turtle/var-alias.ttl").use { input ->
+            ModelFactory.createDefaultModel().read(input, null, "ttl")
+        }.let(ModelAliasDefinition::create)
+        val ctx = ModelContext.create(prefix, alias)
+        val ba = fromCdl("/netcdf/var-ref.cdl", "http://test.binary-array-ld.net/var-ref.nc", ctx)
+
+        ContainerVerifier(ba.root).apply {
+            attributes {
+                attribute(BALD.isPrefixedBy.uri, createPlainLiteral("prefix_list"))
+                attribute(SKOS.prefLabel.uri, createPlainLiteral("Variable reference metadata example"))
+                attribute(TestVocab.rootVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
+                attribute(TestVocab.unorderedVar.uri) {
+                    value(createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
+                    value(createResource("http://test.binary-array-ld.net/var-ref.nc/foo/var1"))
+                    value(createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"))
+                }
+                attribute(TestVocab.orderedVar.uri) {
+                    resource {
+                        statements {
+                            statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
+                            statement(RDF.rest) {
+                                statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"))
+                                statement(RDF.rest) {
+                                    statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/baz/var3"))
+                                    statement(RDF.rest, RDF.nil)
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            vars {
+                variable("http://test.binary-array-ld.net/var-ref.nc/var0")
+            }
+            subContainers {
+                container("http://test.binary-array-ld.net/var-ref.nc/foo") {
+                    attributes {
+                        attribute(TestVocab.rootVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
+                        attribute(TestVocab.siblingVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/baz/var3"))
+                    }
+                    vars {
+                        variable("http://test.binary-array-ld.net/var-ref.nc/foo/var1") {
+                            attributes {
+                                attribute(BALD.references.uri, createPlainLiteral("var9"))
+                                attribute(TestVocab.siblingVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"))
+                            }
+                        }
+                    }
+                    subContainers {
+                        container("http://test.binary-array-ld.net/var-ref.nc/foo/bar") {
+                            vars {
+                                variable("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2") {
+                                    attributes {
+                                        attribute(TestVocab.parentVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/foo/var1"))
+                                        attribute(SKOS.prefLabel.uri, createPlainLiteral("var2"))
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                container("http://test.binary-array-ld.net/var-ref.nc/baz")
+            }
         }
     }
 }

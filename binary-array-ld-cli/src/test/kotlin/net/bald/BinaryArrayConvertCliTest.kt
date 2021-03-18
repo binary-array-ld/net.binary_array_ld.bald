@@ -1,11 +1,13 @@
 package net.bald
 
+import bald.TestVocab
 import bald.jsonld.ResourceFileConverter
 import bald.model.ModelVerifier
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory.createDefaultModel
 import org.apache.jena.rdf.model.ResourceFactory.*
+import org.apache.jena.riot.RiotException
 import org.apache.jena.vocabulary.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -91,6 +93,36 @@ class BinaryArrayConvertCliTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun run_withOutputFormat_outputsToFile() {
+        val inputFile = writeToNetCdf("/netcdf/identity.cdl")
+        val outputFile = createTempFile()
+        run(
+            "--uri", "http://test.binary-array-ld.net/example",
+            "--output", "json-ld",
+            inputFile.absolutePath,
+            outputFile.absolutePath
+        )
+        val result = outputFile.readText()
+        val expected = javaClass.getResource("/jsonld/identity.json").readText()
+        assertEquals(expected, result)
+    }
+
+    @Test
+    fun run_withInvalidFormat_throwsException() {
+        val inputFile = writeToNetCdf("/netcdf/identity.cdl")
+        val outputFile = createTempFile()
+        val re = assertThrows<RiotException> {
+            run(
+                "--uri", "http://test.binary-array-ld.net/example",
+                "--output", "foo",
+                inputFile.absolutePath,
+                outputFile.absolutePath
+            )
+        }
+        assertEquals("No graph writer for 'foo'", re.message)
     }
 
     private fun run_withPrefixMapping_outputsPrefixMapping(cdlLoc: String) {
@@ -297,6 +329,81 @@ class BinaryArrayConvertCliTest {
                     statement(RDF.type, BALD.Resource)
                 }
                 statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
+            }
+        }
+    }
+
+    /**
+     * Requirements class E-1, E-2
+     */
+    @Test
+    fun run_withVariableReferenceAttributes_outputsVariableReferences() {
+        val inputFile = writeToNetCdf("/netcdf/var-ref.cdl")
+        val outputFile = createTempFile()
+        val contextFile = ResourceFileConverter.toFile("/jsonld/context.json")
+        val aliasFile = ResourceFileConverter.toFile("/turtle/var-alias.ttl", "ttl")
+
+        run(
+            "--uri", "http://test.binary-array-ld.net/example",
+            "--context", contextFile.absolutePath,
+            "--alias", aliasFile.absolutePath,
+            inputFile.absolutePath,
+            outputFile.absolutePath
+        )
+
+        val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
+        ModelVerifier(model).apply {
+            prefix("bald", BALD.prefix)
+            prefix("skos", SKOS.uri)
+            prefix("dct", DCTerms.NS)
+            resource("http://test.binary-array-ld.net/example") {
+                statement(RDF.type, BALD.Container)
+                statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/")) {
+                    statement(TestVocab.orderedVar) {
+                        statement(RDF.first, createResource("http://test.binary-array-ld.net/example/var0"))
+                        statement(RDF.rest) {
+                            statement(RDF.first, createResource("http://test.binary-array-ld.net/example/foo/bar/var2"))
+                            statement(RDF.rest) {
+                                statement(RDF.first, createResource("http://test.binary-array-ld.net/example/baz/var3"))
+                                statement(RDF.rest, RDF.nil)
+                            }
+                        }
+                    }
+                    statement(TestVocab.rootVar, createResource("http://test.binary-array-ld.net/example/var0"))
+                    statement(TestVocab.unorderedVar, createResource("http://test.binary-array-ld.net/example/foo/bar/var2"))
+                    statement(TestVocab.unorderedVar, createResource("http://test.binary-array-ld.net/example/foo/var1"))
+                    statement(TestVocab.unorderedVar, createResource("http://test.binary-array-ld.net/example/var0"))
+                    statement(RDF.type, BALD.Container)
+                    statement(SKOS.prefLabel, createPlainLiteral("Variable reference metadata example"))
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/baz")) {
+                        statement(RDF.type, BALD.Container)
+                        statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/baz/var3")) {
+                            statement(RDF.type, BALD.Resource)
+                        }
+                    }
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo")) {
+                        statement(TestVocab.rootVar, createResource("http://test.binary-array-ld.net/example/var0"))
+                        statement(TestVocab.siblingVar, createResource("http://test.binary-array-ld.net/example/baz/var3"))
+                        statement(RDF.type, BALD.Container)
+                        statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo/bar")) {
+                            statement(RDF.type, BALD.Container)
+                            statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo/bar/var2")) {
+                                statement(TestVocab.parentVar, createResource("http://test.binary-array-ld.net/example/foo/var1"))
+                                statement(RDF.type, BALD.Resource)
+                                statement(SKOS.prefLabel, createPlainLiteral("var2"))
+                            }
+                        }
+                        statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo/var1")) {
+                            statement(TestVocab.siblingVar, createResource("http://test.binary-array-ld.net/example/foo/bar/var2"))
+                            statement(RDF.type, BALD.Resource)
+                            statement(BALD.references, createPlainLiteral("var9"))
+                        }
+                    }
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var0")) {
+                        statement(RDF.type, BALD.Resource)
+                    }
+                    statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
+                }
             }
         }
     }

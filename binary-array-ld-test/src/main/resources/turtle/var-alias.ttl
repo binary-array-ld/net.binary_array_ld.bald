@@ -1,0 +1,40 @@
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+@prefix dct: <http://purl.org/dc/terms/>
+@prefix owl: <http://www.w3.org/2002/07/owl#>
+@prefix skos: <http://www.w3.org/2004/02/skos/core#>
+@prefix bald: <https://www.opengis.net/def/binary-array-ld/>
+@prefix test: <http://test.binary-array-ld.net/vocab/>
+
+skos:prefLabel a rdf:Property ;
+    dct:identifier "prefLabel" .
+
+bald:references a owl:ObjectProperty ;
+    dct:identifier "references" ;
+    rdfs:range bald:Resource .
+
+test:Resource rdfs:subClassOf bald:Resource .
+
+test:root_var a owl:ObjectProperty ;
+    dct:identifier "root_var" ;
+    rdfs:range bald:Resource .
+
+test:sibling_var a owl:ObjectProperty ;
+    dct:identifier "sibling_var" ;
+    rdfs:range test:Resource .
+
+test:parent_var a owl:ObjectProperty ;
+    dct:identifier "parent_var" ;
+    rdfs:range [ rdfs:subClassOf test:Resource ] .
+
+test:unordered_var a owl:ObjectProperty ;
+    dct:identifier "unordered_var" ;
+    rdfs:range bald:Resource .
+
+test:ordered_var a owl:ObjectProperty ;
+    dct:identifier "ordered_var" ;
+    rdfs:range bald:Resource .
+
+
+
+

@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import net.bald.Attribute
-import com.nhaarman.mockitokotlin2.*
 import net.bald.Container
 import net.bald.Var
 import net.bald.vocab.BALD
@@ -30,8 +29,9 @@ class ModelContainerBuilderTest {
     private val vars = listOf<Var>(mock(), mock(), mock())
     private val attrs = listOf<Attribute>(mock(), mock(), mock())
     private val container = mock<Container> {
+        on { uri } doReturn "http://test.binary-array-ld.net/example/foo"
         on { vars() } doReturn vars.asSequence()
-        on { attributes(any()) } doReturn attrs
+        on { attributes() } doReturn attrs
         on { subContainers() } doReturn emptySequence()
     }
 
@@ -39,7 +39,7 @@ class ModelContainerBuilderTest {
     fun addContainer_addsContainerToModel() {
         builder.addContainer(container)
         ResourceVerifier(parent).statements {
-            statement(BALD.contains, model.createResource("${parent.uri}/")) {
+            statement(BALD.contains, model.createResource("${parent.uri}/foo")) {
                 statement(RDF.type, BALD.Container)
             }
         }
@@ -48,7 +48,7 @@ class ModelContainerBuilderTest {
     @Test
     fun addContainer_addsVars() {
         builder.addContainer(container)
-        verify(varFct).forContainer(model.createResource("${parent.uri}/"))
+        verify(varFct).forContainer(model.createResource("${parent.uri}/foo"))
         verify(varBuilder).addVar(vars[0])
         verify(varBuilder).addVar(vars[1])
         verify(varBuilder).addVar(vars[2])
@@ -57,25 +57,10 @@ class ModelContainerBuilderTest {
     @Test
     fun addContainer_addsAttributes() {
         builder.addContainer(container)
-        verify(container).attributes(model)
-        verify(attrFct).forResource(model.createResource("${parent.uri}/"))
+        verify(container).attributes()
+        verify(attrFct).forResource(model.createResource("${parent.uri}/foo"))
         verify(attrBuilder).addAttribute(attrs[0])
         verify(attrBuilder).addAttribute(attrs[1])
         verify(attrBuilder).addAttribute(attrs[2])
-    }
-
-    @Test
-    fun addContainer_parentWithTrailingSlash_addsContainerToModel() {
-        val parent = model.createResource("http://test.binary-array-ld.net/example/")
-        container.stub {
-            on { name } doReturn "foo"
-        }
-
-        ModelContainerBuilder.Factory(varFct, attrFct).forParent(parent).addContainer(container)
-        ResourceVerifier(parent).statements {
-            statement(BALD.contains, model.createResource("${parent.uri}foo")) {
-                statement(RDF.type, BALD.Container)
-            }
-        }
     }
 }
