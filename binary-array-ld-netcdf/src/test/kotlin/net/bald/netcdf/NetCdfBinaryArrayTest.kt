@@ -5,7 +5,7 @@ import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
 import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
-import net.bald.model.ModelAliasDefinition
+import net.bald.alias.ModelAliasDefinition
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral

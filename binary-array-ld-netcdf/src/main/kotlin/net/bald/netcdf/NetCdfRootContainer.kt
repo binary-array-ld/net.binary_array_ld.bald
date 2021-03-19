@@ -4,7 +4,6 @@ import ucar.nc2.Group
 import ucar.nc2.Variable
 import net.bald.Container
 import net.bald.alias.AliasDefinition
-import net.bald.context.ModelContext
 
 /**
  * NetCDF implementation of [Container] based on the root group.

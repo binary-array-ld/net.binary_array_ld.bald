@@ -2,7 +2,7 @@ package net.bald
 
 import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
-import net.bald.model.ModelAliasDefinition
+import net.bald.alias.ModelAliasDefinition
 import net.bald.model.ModelBinaryArrayConverter
 import net.bald.netcdf.NetCdfBinaryArray
 import org.apache.commons.cli.DefaultParser

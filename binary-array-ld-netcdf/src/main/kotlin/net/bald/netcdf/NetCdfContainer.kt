@@ -4,7 +4,6 @@ import net.bald.Attribute
 import net.bald.Container
 import net.bald.Var
 import net.bald.alias.AliasDefinition
-import net.bald.context.ModelContext
 import org.apache.jena.rdf.model.Property
 import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.rdf.model.ResourceFactory
