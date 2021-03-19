@@ -1,5 +1,6 @@
 package net.bald
 
+import net.bald.context.AliasDefinition
 import net.bald.context.ModelContext
 import net.bald.model.ModelAliasDefinition
 import net.bald.model.ModelBinaryArrayConverter
@@ -38,9 +39,10 @@ class BinaryArrayConvertCli {
     }
 
     private fun doRun(opts: CommandLineOptions) {
-        val context = context(opts.contextLocs, opts.aliasLocs)
+        val context = context(opts.contextLocs)
+        val alias = alias(opts.aliasLocs)
         val inputLoc = opts.inputLoc ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
-        val ba = NetCdfBinaryArray.create(inputLoc, opts.uri, context)
+        val ba = NetCdfBinaryArray.create(inputLoc, opts.uri, context, alias)
         val model = ba.use(ModelBinaryArrayConverter::convert)
         val outputFormat = opts.outputFormat ?: "ttl"
 
@@ -49,15 +51,18 @@ class BinaryArrayConvertCli {
         }
     }
 
-    private fun context(contextLocs: List<String>, aliasLocs: List<String>): ModelContext {
+    private fun context(contextLocs: List<String>): ModelContext {
         val prefixes = contextLocs.map { contextLoc ->
             ModelFactory.createDefaultModel().read(contextLoc, "json-ld")
         }
-        val alias = ModelFactory.createDefaultModel().apply {
+
+        return ModelContext.create(prefixes)
+    }
+
+    private fun alias(aliasLocs: List<String>): AliasDefinition {
+        return ModelFactory.createDefaultModel().apply {
             aliasLocs.forEach(::read)
         }.let(ModelAliasDefinition::create)
-
-        return ModelContext.create(prefixes, alias)
     }
 
     private fun options(opts: Options, vararg args: String): CommandLineOptions {

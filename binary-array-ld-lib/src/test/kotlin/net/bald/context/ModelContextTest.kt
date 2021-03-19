@@ -1,19 +1,18 @@
 package net.bald.context
 
-import com.nhaarman.mockitokotlin2.mock
 import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.SKOS
 import org.apache.jena.vocabulary.VCARD
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
 class ModelContextTest {
     private val prefix = PrefixMapping.Factory.create()
         .setNsPrefix("skos", SKOS.uri)
         .setNsPrefix("dct", DCTerms.getURI())
-    private val alias = mock<AliasDefinition>()
-    private val context = ModelContext.create(prefix, alias)
+    private val context = ModelContext.create(prefix)
 
     /**
      * Requirements class B-4
@@ -41,7 +40,7 @@ class ModelContextTest {
                 .setNsPrefix("vcard", VCARD.uri)
                 .setNsPrefix("dct", DCTerms.getURI())
         )
-        val context = ModelContext.create(prefixes, alias)
+        val context = ModelContext.create(prefixes)
         val result = context.prefixMapping.nsPrefixMap
         val expected = mapOf(
             "skos" to SKOS.uri,
@@ -65,7 +64,7 @@ class ModelContextTest {
                 .setNsPrefix("dct", DCTerms.getURI())
         )
         val iae = assertThrows<IllegalArgumentException> {
-            ModelContext.create(prefixes, alias)
+            ModelContext.create(prefixes)
         }
         assertEquals("The namespace prefixes [skos] have conflicting definitions in contexts.", iae.message)
     }

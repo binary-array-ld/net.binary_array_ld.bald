@@ -24,19 +24,15 @@ See the [Jena docs](https://jena.apache.org/tutorials/rdf_api.html) for more inf
 Pass a model to the `ModelAliasDefinition.create` method to create an `AliasDefinition` instance.
 You may also create your own implementation of `AliasDefinition`.
 
-You can pass this instance to the `ModelContext.create` method to create a `ModelContext` instance.
-You can pass this instance to the `NetCdfBinaryArray.create` method to create a binary array with the given context.
+You can pass this instance to the `NetCdfBinaryArray.create` method to create a binary array with the given aliases.
 
 Note that you can pass both a contextual [prefix mapping](context.md),
-and an alias definition to create a `ModelContext` with both.
+and an alias definition to create a `BinaryArray` with both.
 
 ```java
 Model aliasModel = ModelFactory.createDefaultModel().read("/path/to/alias.ttl", "ttl");
 AliasDefinition alias = ModelAliasDefinition.create(aliasModel);
-ModelContext context = ModelContext.create((PrefixMapping)null, alias);
-
-BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", context);
-
+BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", null, alias);
 Model model = ModelBinaryArrayConverter.convert(ba);
 
 try (OutputStream output = new FileOutputStream("/path/to/output.ttl")) {
