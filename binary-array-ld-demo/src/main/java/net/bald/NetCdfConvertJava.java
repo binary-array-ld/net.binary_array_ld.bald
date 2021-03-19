@@ -36,10 +36,9 @@ public class NetCdfConvertJava {
     }
 
     public static void convertWithAliases() throws Exception {
-        PrefixMapping prefix = PrefixMapping.Factory.create();
         Model aliasModel = ModelFactory.createDefaultModel().read("/path/to/alias.ttl", "ttl");
         AliasDefinition alias = ModelAliasDefinition.create(aliasModel);
-        ModelContext context = ModelContext.create(prefix, alias);
+        ModelContext context = ModelContext.create((PrefixMapping)null, alias);
 
         BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", context);
 

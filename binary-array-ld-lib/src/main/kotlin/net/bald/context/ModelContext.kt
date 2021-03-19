@@ -80,8 +80,8 @@ interface ModelContext: AliasDefinition {
          * @see create
          */
         @JvmStatic
-        fun create(prefix: PrefixMapping, alias: AliasDefinition? = null): ModelContext {
-            return Base(prefix, alias ?: AliasDefinition.Empty)
+        fun create(prefix: PrefixMapping? = null, alias: AliasDefinition? = null): ModelContext {
+            return Base(prefix ?: PrefixMapping.Factory.create(), alias ?: AliasDefinition.Empty)
         }
     }
 }
