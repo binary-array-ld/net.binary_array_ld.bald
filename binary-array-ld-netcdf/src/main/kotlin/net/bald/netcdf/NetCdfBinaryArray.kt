@@ -89,7 +89,7 @@ class NetCdfBinaryArray(
          */
         @JvmStatic
         fun create(fileLoc: String, uri: String? = null): NetCdfBinaryArray {
-            return create(fileLoc, uri)
+            return create(fileLoc, uri, null, null)
         }
 
         /**
