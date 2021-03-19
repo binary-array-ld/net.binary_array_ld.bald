@@ -1,7 +1,7 @@
 # Binary Array Linked Data
 
 [Kotlin](https://kotlinlang.org/) library and CLI for Binary Array Linked Data (BALD) functionality.
-* [GitHub Pages](docs/about.md)
+* [GitHub Pages](https://binary-array-ld.github.io/net.binary_array_ld.bald/)
 
 This project consists of the following modules:
 * **binary-array-ld-lib** Core library containing BALD functionality. In particular, binary array to linked data (RDF) conversion.
@@ -13,7 +13,7 @@ RDF representations are provided by [Apache Jena](https://jena.apache.org/).
 
 ## Usage
 
-See the [GitHub pages](docs/usage.md) for usage documentation.
+See the [GitHub pages](https://binary-array-ld.github.io/net.binary_array_ld.bald/usage.html) for usage documentation.
 
 ## Development
 
