@@ -1,7 +1,7 @@
 package net.bald.netcdf
 
 import net.bald.Container
-import net.bald.context.AliasDefinition
+import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
 import ucar.nc2.Group
 

@@ -1,7 +1,7 @@
 package net.bald.netcdf
 
 import net.bald.BinaryArray
-import net.bald.context.AliasDefinition
+import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
 import org.apache.jena.shared.PrefixMapping
 import ucar.nc2.AttributeContainer

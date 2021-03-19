@@ -1,7 +1,7 @@
 package net.bald.netcdf
 
 import net.bald.AttributeSource
-import net.bald.context.AliasDefinition
+import net.bald.alias.AliasDefinition
 import org.apache.jena.rdf.model.Property
 import org.apache.jena.shared.PrefixMapping
 import ucar.nc2.Attribute

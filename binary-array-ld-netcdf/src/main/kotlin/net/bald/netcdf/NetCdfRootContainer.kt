@@ -3,7 +3,7 @@ package net.bald.netcdf
 import ucar.nc2.Group
 import ucar.nc2.Variable
 import net.bald.Container
-import net.bald.context.AliasDefinition
+import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
 
 /**
