@@ -76,14 +76,11 @@ open class ModelVarBuilder(
                     dim.coordinate?.let { coordinate ->
                         if (coordinate.uri != resource.uri) {
                             val target = model.createResource(coordinate.uri)
-                            val reshape = reshape(dim, idx)
-                            val size = size(dim)
-                            val targetShape = model.createList(size)
+                            val targetRefShape = targetRefShape(dim, idx)
 
                             val reference = model.createResource()
                                 .addProperty(RDF.type, BALD.Reference)
-                                .addProperty(BALD.reshape, reshape)
-                                .addProperty(BALD.targetShape, targetShape)
+                                .addProperty(BALD.targetRefShape, targetRefShape)
                                 .addProperty(BALD.target, target)
                             resource.addProperty(BALD.references, reference)
                         }
@@ -96,7 +93,7 @@ open class ModelVarBuilder(
                 return model.createList(sizeIt)
             }
 
-            private fun reshape(dim: Dimension, ordinal: Int): RDFList {
+            private fun targetRefShape(dim: Dimension, ordinal: Int): RDFList {
                 val nodeIt = (dims.indices).map { idx ->
                     if (idx == ordinal) {
                         size(dim)

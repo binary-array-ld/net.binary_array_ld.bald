@@ -15,7 +15,6 @@ import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.ResourceFactory.createResource
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
-import org.apache.jena.rdf.model.Statement
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.RDFS
 import org.junit.jupiter.api.*
@@ -183,22 +182,16 @@ class ModelVarBuilderTest {
                 statement(RDF.type, BALD.Array)
                 statement(BALD.references) {
                     statement(RDF.type, BALD.Reference)
-                    statement(BALD.reshape) {
-                        list(createTypedLiteral(10), createTypedLiteral(1))
-                    }
                     statement(BALD.target, createResource("http://test.binary-array-ld.net/example/bar"))
-                    statement(BALD.targetShape) {
-                        list(createTypedLiteral(10))
+                    statement(BALD.targetRefShape) {
+                        list(createTypedLiteral(10), createTypedLiteral(1))
                     }
                 }
                 statement(BALD.references) {
                     statement(RDF.type, BALD.Reference)
-                    statement(BALD.reshape) {
-                        list(createTypedLiteral(1), createTypedLiteral(90))
-                    }
                     statement(BALD.target, createResource("http://test.binary-array-ld.net/example/baz"))
-                    statement(BALD.targetShape) {
-                        list(createTypedLiteral(90))
+                    statement(BALD.targetRefShape) {
+                        list(createTypedLiteral(1), createTypedLiteral(90))
                     }
                 }
                 statement(BALD.shape) {

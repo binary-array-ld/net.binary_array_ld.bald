@@ -439,22 +439,16 @@ class BinaryArrayConvertCliTest {
                         statement(RDFS.label, createPlainLiteral("height"))
                         statement(BALD.references) {
                             statement(RDF.type, BALD.Reference)
-                            statement(BALD.reshape) {
-                                list(createTypedLiteral(15), createTypedLiteral(1))
-                            }
                             statement(BALD.target, createResource("http://test.binary-array-ld.net/example/lat"))
-                            statement(BALD.targetShape) {
-                                list(createTypedLiteral(15))
+                            statement(BALD.targetRefShape) {
+                                list(createTypedLiteral(15), createTypedLiteral(1))
                             }
                         }
                         statement(BALD.references) {
                             statement(RDF.type, BALD.Reference)
-                            statement(BALD.reshape) {
-                                list(createTypedLiteral(1), createTypedLiteral(10))
-                            }
                             statement(BALD.target, createResource("http://test.binary-array-ld.net/example/lon"))
-                            statement(BALD.targetShape) {
-                                list(createTypedLiteral(10))
+                            statement(BALD.targetRefShape) {
+                                list(createTypedLiteral(1), createTypedLiteral(10))
                             }
                         }
                         statement(BALD.shape) {
