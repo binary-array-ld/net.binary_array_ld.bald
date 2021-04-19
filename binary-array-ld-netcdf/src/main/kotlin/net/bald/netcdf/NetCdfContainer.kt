@@ -3,7 +3,7 @@ package net.bald.netcdf
 import net.bald.Attribute
 import net.bald.Container
 import net.bald.Var
-import net.bald.context.ModelContext
+import net.bald.alias.AliasDefinition
 import org.apache.jena.rdf.model.Property
 import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.rdf.model.ResourceFactory
@@ -23,7 +23,7 @@ abstract class NetCdfContainer(
 ): Container {
     abstract val parent: NetCdfContainer?
     abstract val root: NetCdfContainer
-    abstract val context: ModelContext
+    abstract val alias: AliasDefinition
     abstract val uriParser: UriParser
     abstract fun childUri(name: String): String
 
@@ -73,14 +73,14 @@ abstract class NetCdfContainer(
 
     fun parseProperty(name: String): Property {
         return uriParser.parse(name)?.let(ResourceFactory::createProperty)
-            ?: context.property(name)
+            ?: alias.property(name)
             ?: childUri(name).let(ResourceFactory::createProperty)
     }
 
     fun parseRdfNodes(prop: Property, value: String): List<RDFNode> {
         return uriParser.parse(value)?.let(::createResource)?.let(::listOf)
-            ?: context.resource(value)?.let(::listOf)
-            ?: prop.takeIf(context::isReferenceProperty)?.let {
+            ?: alias.resource(value)?.let(::listOf)
+            ?: prop.takeIf(alias::isReferenceProperty)?.let {
                 refParser.parse(value)
             }
             ?: createPlainLiteral(value).let(::listOf)

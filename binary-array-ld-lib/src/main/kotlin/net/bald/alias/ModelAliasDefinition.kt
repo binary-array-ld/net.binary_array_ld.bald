@@ -1,6 +1,5 @@
-package net.bald.model
+package net.bald.alias
 
-import net.bald.context.AliasDefinition
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.*
 import org.apache.jena.vocabulary.DCTerms
