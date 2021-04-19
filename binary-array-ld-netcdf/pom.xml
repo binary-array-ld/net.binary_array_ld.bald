@@ -40,6 +40,22 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+                <configuration>
+                    <externalDocumentationLinks>
+                        <link>
+                            <url>https://www.unidata.ucar.edu/software/netcdf-java/v4.5/javadoc/</url>
+                        </link>
+                    </externalDocumentationLinks>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <repositories>
         <repository>
             <id>unidata-all</id>

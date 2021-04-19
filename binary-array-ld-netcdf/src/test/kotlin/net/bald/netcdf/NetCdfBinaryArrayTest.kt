@@ -3,8 +3,9 @@ package net.bald.netcdf
 import bald.TestVocab
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
+import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
-import net.bald.model.ModelAliasDefinition
+import net.bald.alias.ModelAliasDefinition
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
@@ -20,9 +21,9 @@ import kotlin.test.assertEquals
 
 class NetCdfBinaryArrayTest {
 
-    private fun fromCdl(cdlLoc: String, uri: String? = null, context: ModelContext? = null): BinaryArray {
+    private fun fromCdl(cdlLoc: String, uri: String? = null, context: ModelContext? = null, alias: AliasDefinition? = null): BinaryArray {
         val file = writeToNetCdf(cdlLoc)
-        return NetCdfBinaryArray.create(file.absolutePath, uri, context)
+        return NetCdfBinaryArray.create(file.absolutePath, uri, context, alias)
     }
 
     /**
@@ -243,8 +244,8 @@ class NetCdfBinaryArrayTest {
         val alias = javaClass.getResourceAsStream("/turtle/alias.ttl").use { input ->
             ModelFactory.createDefaultModel().read(input, null, "ttl")
         }.let(ModelAliasDefinition::create)
-        val ctx = ModelContext.create(prefix, alias)
-        val ba = fromCdl("/netcdf/alias.cdl", "http://test.binary-array-ld.net/alias.nc", ctx)
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/alias.cdl", "http://test.binary-array-ld.net/alias.nc", ctx, alias)
         ContainerVerifier(ba.root).apply {
             attributes {
                 attribute(BALD.isPrefixedBy.uri, createPlainLiteral("prefix_list"))
@@ -278,8 +279,8 @@ class NetCdfBinaryArrayTest {
         val alias = javaClass.getResourceAsStream("/turtle/var-alias.ttl").use { input ->
             ModelFactory.createDefaultModel().read(input, null, "ttl")
         }.let(ModelAliasDefinition::create)
-        val ctx = ModelContext.create(prefix, alias)
-        val ba = fromCdl("/netcdf/var-ref.cdl", "http://test.binary-array-ld.net/var-ref.nc", ctx)
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/var-ref.cdl", "http://test.binary-array-ld.net/var-ref.nc", ctx, alias)
 
         ContainerVerifier(ba.root).apply {
             attributes {

@@ -3,7 +3,7 @@ package net.bald.netcdf
 import ucar.nc2.Group
 import ucar.nc2.Variable
 import net.bald.Container
-import net.bald.context.ModelContext
+import net.bald.alias.AliasDefinition
 
 /**
  * NetCDF implementation of [Container] based on the root group.
@@ -13,7 +13,7 @@ class NetCdfRootContainer(
     group: Group,
 ): NetCdfContainer(group) {
     override val uri: String get() = ba.uri + "/"
-    override val context: ModelContext get() = ba.context
+    override val alias: AliasDefinition get() = ba.alias
     override val parent: NetCdfContainer? get() = null
     override val root: NetCdfContainer get() = this
     override val uriParser: UriParser get() = UriParser(ba.prefixMapping)
