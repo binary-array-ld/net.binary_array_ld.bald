@@ -20,7 +20,7 @@ class NetCdfAttribute(
         return rawValues()?.flatMap(::nodes)?.toList() ?: emptyList()
     }
 
-    private fun rawValues(): Sequence<String>? {
+    fun rawValues(): Sequence<String>? {
         return if (attr.isArray) {
             attr.values?.let { values ->
                 ArrayIterator(values).asSequence().map(Any::toString)

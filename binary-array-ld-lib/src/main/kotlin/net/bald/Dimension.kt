@@ -5,13 +5,12 @@ package net.bald
  */
 interface Dimension {
     /**
+     * The uniquely identifying name of the dimension in the binary array.
+     */
+    val name: String
+
+    /**
      * The size of the dimension.
      */
     val size: Int
-
-    /**
-     * The coordinate variable that corresponds to the dimension, if one exists.
-     * Otherwise, null.
-     */
-    val coordinate: Var?
 }

@@ -31,7 +31,7 @@ class ModelContainerBuilderTest {
     private val container = mock<Container> {
         on { uri } doReturn "http://test.binary-array-ld.net/example/foo"
         on { vars() } doReturn vars.asSequence()
-        on { attributes() } doReturn attrs
+        on { attributes() } doReturn attrs.asSequence()
         on { subContainers() } doReturn emptySequence()
     }
 

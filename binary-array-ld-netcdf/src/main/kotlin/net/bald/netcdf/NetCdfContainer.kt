@@ -55,7 +55,7 @@ abstract class NetCdfContainer(
         return true
     }
 
-    override fun attributes(): List<Attribute> {
+    override fun attributes(): Sequence<Attribute> {
         return group.attributes().let(::source).attributes()
     }
 
@@ -81,9 +81,13 @@ abstract class NetCdfContainer(
         return uriParser.parse(value)?.let(::createResource)?.let(::listOf)
             ?: alias.resource(value)?.let(::listOf)
             ?: prop.takeIf(alias::isReferenceProperty)?.let {
-                refParser.parse(value)
+                refParser.parse(value)?.asResources()
             }
             ?: createPlainLiteral(value).let(::listOf)
+    }
+
+    fun parseReferences(value: String): ReferenceCollection? {
+        return refParser.parse(value)
     }
 
     override fun toString(): String {

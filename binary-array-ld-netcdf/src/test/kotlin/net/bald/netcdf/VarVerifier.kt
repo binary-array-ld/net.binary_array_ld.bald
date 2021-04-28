@@ -46,4 +46,13 @@ class VarVerifier(
             assertEquals(last, range.last)
         }
     }
+
+    /**
+     * Verify that the variable has references to variables of the given URIs, in order.
+     * @param uris The expected URIs.
+     */
+    fun references(vararg uris: String) {
+        val actual = v.references().map(Var::uri).toList()
+        assertEquals(uris.toList(), actual)
+    }
 }

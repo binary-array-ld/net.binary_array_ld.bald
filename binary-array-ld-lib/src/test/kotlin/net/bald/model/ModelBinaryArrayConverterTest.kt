@@ -27,6 +27,8 @@ class ModelBinaryArrayConverterTest {
         return mock {
             on { this.uri } doReturn uri
             on { dimensions() } doReturn emptySequence()
+            on { attributes() } doReturn emptySequence()
+            on { references() } doReturn emptySequence()
         }
     }
 
@@ -38,6 +40,7 @@ class ModelBinaryArrayConverterTest {
             on { this.uri } doReturn "$uri/"
             on { vars() } doReturn vars.asSequence()
             on { subContainers() } doReturn emptySequence()
+            on { attributes() } doReturn emptySequence()
         }
         val prefix = PrefixMapping.Factory.create()
             .setNsPrefix("bald", BALD.prefix)

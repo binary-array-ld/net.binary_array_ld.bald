@@ -17,12 +17,4 @@ class DimensionVerifier(
     fun size(size: Int) {
         assertEquals(size, dim.size)
     }
-
-    /**
-     * Verify that the dimension corresponds to the given coordinate variable.
-     * @param uri The URI of the expected coordinate variable.
-     */
-    fun coordinate(uri: String) {
-        assertEquals(uri, dim.coordinate?.uri)
-    }
 }

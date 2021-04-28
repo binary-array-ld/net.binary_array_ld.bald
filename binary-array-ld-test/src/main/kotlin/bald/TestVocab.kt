@@ -12,6 +12,7 @@ object TestVocab {
     /**
      * Properties
      */
+    val references: Property = createProperty("${prefix}references")
     val rootVar: Property = createProperty("${prefix}root_var")
     val parentVar: Property = createProperty("${prefix}parent_var")
     val siblingVar: Property = createProperty("${prefix}sibling_var")

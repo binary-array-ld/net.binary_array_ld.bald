@@ -12,10 +12,10 @@ class NetCdfAttributeSource(
     private val attrs: AttributeContainer
 ): AttributeSource {
 
-    override fun attributes(): List<net.bald.Attribute> {
+    override fun attributes(): Sequence<NetCdfAttribute> {
         return attrs.asSequence().filterNot(::isReserved).map { attr ->
             NetCdfAttribute(parent, attr)
-        }.toList()
+        }
     }
 
     private fun isReserved(attr: Attribute): Boolean {

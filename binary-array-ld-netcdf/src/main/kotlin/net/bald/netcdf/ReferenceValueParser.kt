@@ -1,17 +1,13 @@
 package net.bald.netcdf
 
-import org.apache.jena.rdf.model.ModelFactory
-import org.apache.jena.rdf.model.Resource
-import org.apache.jena.rdf.model.ResourceFactory
-
 class ReferenceValueParser(
     private val group: NetCdfContainer
 ) {
-    fun parse(value: String): List<Resource>? {
+    fun parse(value: String): ReferenceCollection? {
         return value.trim().let(::doParse)
     }
 
-    private fun doParse(value: String): List<Resource>? {
+    private fun doParse(value: String): ReferenceCollection? {
         val collector = if (value.startsWith('(') && value.endsWith(')')) {
             value.substringAfter('(').substringBeforeLast(')').let(ReferenceCollector::Ordered)
         } else {
@@ -32,30 +28,7 @@ class ReferenceValueParser(
             .map(String::trim)
     }
 
-    private fun resolve(value: String): Resource? {
-        return NetCdfPath.parse(value).locateVar(group)?.uri?.let(ResourceFactory::createResource)
-    }
-
-    private interface ReferenceCollector {
-        val raw: String
-        fun collect(nodes: List<Resource>): List<Resource>
-
-        class Unordered(
-            override val raw: String
-        ): ReferenceCollector {
-            override fun collect(nodes: List<Resource>): List<Resource> {
-                return nodes
-            }
-
-        }
-
-        class Ordered(
-            override val raw: String
-        ): ReferenceCollector {
-            override fun collect(nodes: List<Resource>): List<Resource> {
-                val nodeIt = nodes.iterator()
-                return ModelFactory.createDefaultModel().createList(nodeIt).let(::listOf)
-            }
-        }
+    private fun resolve(value: String): NetCdfVar? {
+        return NetCdfPath.parse(value).locateVar(group)
     }
 }
