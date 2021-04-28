@@ -1,0 +1,16 @@
+@prefix NetCDF: <http://def.scitools.org.uk/NetCDF/> .
+@prefix bald: <https://www.opengis.net/def/binary-array-ld/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix this: <http://secret.binary-array-ld.net/alias.nc/> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<http://secret.binary-array-ld.net/alias.nc> a bald:Container ;
+    bald:contains this:var0,
+        this:var1 ;
+    NetCDF:title "Sample netCDF file definition with alias terms from the netCDF user guide" .
+
+this:var0 a bald:Resource .
+
+this:var1 a bald:Resource .

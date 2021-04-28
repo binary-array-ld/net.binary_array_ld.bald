@@ -1,0 +1,32 @@
+tests:
+  - name: req-a1
+    comment: |
+      Verify that the identity of a file is always present within the RDF graph parsed from that file.
+      Verify that the identity of variables and groups within a file are defined relative to the defined file identity.
+    root: "/spec/test/a1"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/identity.nc"
+    output: "output.ttl"
+  - name: req-a2
+    comment: |
+      Verify that defined prefixes within a file are recognised and used to expand prefix notation attribute names and values.
+    root: "/spec/test/a2"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/prefix.nc"
+    output: "output.ttl"
+  - name: req-a3
+    root: "/spec/test/a3"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/alias.nc"
+      alias: "/turtle/netcdf.ttl"
+    output: "output.ttl"
+  - name: req-a4
+    root: "/spec/test/a4"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/attributes.nc"
+      alias: "/turtle/netcdf.ttl"
+    output: "output.ttl"
