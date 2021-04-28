@@ -19,6 +19,7 @@ object BALD {
     val Container: Resource = createResource("${prefix}Container")
     val Resource: Resource = createResource("${prefix}Resource")
     val Array: Resource = createResource("${prefix}Array")
+    val Reference: Resource = createResource("${prefix}Reference")
 
     /**
      * Properties
@@ -26,4 +27,9 @@ object BALD {
     val contains: Property = createProperty("${prefix}contains")
     val isPrefixedBy: Property = createProperty("${prefix}isPrefixedBy")
     val references: Property = createProperty("${prefix}references")
+    val shape: Property = createProperty("${prefix}shape")
+    val targetRefShape: Property = createProperty("${prefix}targetRefShape")
+    val arrayFirstValue: Property = createProperty("${prefix}arrayFirstValue")
+    val arrayLastValue: Property = createProperty("${prefix}arrayLastValue")
+    val target: Property = createProperty("${prefix}target")
 }

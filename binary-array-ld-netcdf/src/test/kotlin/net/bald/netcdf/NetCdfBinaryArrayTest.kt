@@ -3,8 +3,9 @@ package net.bald.netcdf
 import bald.TestVocab
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.BinaryArray
+import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
-import net.bald.model.ModelAliasDefinition
+import net.bald.alias.ModelAliasDefinition
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.createPlainLiteral
@@ -20,9 +21,9 @@ import kotlin.test.assertEquals
 
 class NetCdfBinaryArrayTest {
 
-    private fun fromCdl(cdlLoc: String, uri: String? = null, context: ModelContext? = null): BinaryArray {
+    private fun fromCdl(cdlLoc: String, uri: String? = null, context: ModelContext? = null, alias: AliasDefinition? = null): BinaryArray {
         val file = writeToNetCdf(cdlLoc)
-        return NetCdfBinaryArray.create(file.absolutePath, uri, context)
+        return NetCdfBinaryArray.create(file.absolutePath, uri, context, alias)
     }
 
     /**
@@ -243,8 +244,8 @@ class NetCdfBinaryArrayTest {
         val alias = javaClass.getResourceAsStream("/turtle/alias.ttl").use { input ->
             ModelFactory.createDefaultModel().read(input, null, "ttl")
         }.let(ModelAliasDefinition::create)
-        val ctx = ModelContext.create(prefix, alias)
-        val ba = fromCdl("/netcdf/alias.cdl", "http://test.binary-array-ld.net/alias.nc", ctx)
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/alias.cdl", "http://test.binary-array-ld.net/alias.nc", ctx, alias)
         ContainerVerifier(ba.root).apply {
             attributes {
                 attribute(BALD.isPrefixedBy.uri, createPlainLiteral("prefix_list"))
@@ -278,8 +279,8 @@ class NetCdfBinaryArrayTest {
         val alias = javaClass.getResourceAsStream("/turtle/var-alias.ttl").use { input ->
             ModelFactory.createDefaultModel().read(input, null, "ttl")
         }.let(ModelAliasDefinition::create)
-        val ctx = ModelContext.create(prefix, alias)
-        val ba = fromCdl("/netcdf/var-ref.cdl", "http://test.binary-array-ld.net/var-ref.nc", ctx)
+        val ctx = ModelContext.create(prefix)
+        val ba = fromCdl("/netcdf/var-ref.cdl", "http://test.binary-array-ld.net/var-ref.nc", ctx, alias)
 
         ContainerVerifier(ba.root).apply {
             attributes {
@@ -294,14 +295,11 @@ class NetCdfBinaryArrayTest {
                 attribute(TestVocab.orderedVar.uri) {
                     resource {
                         statements {
-                            statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
-                            statement(RDF.rest) {
-                                statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"))
-                                statement(RDF.rest) {
-                                    statement(RDF.first, createResource("http://test.binary-array-ld.net/var-ref.nc/baz/var3"))
-                                    statement(RDF.rest, RDF.nil)
-                                }
-                            }
+                            list(
+                                createResource("http://test.binary-array-ld.net/var-ref.nc/var0"),
+                                createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"),
+                                createResource("http://test.binary-array-ld.net/var-ref.nc/baz/var3")
+                            )
                         }
                     }
                 }
@@ -310,6 +308,7 @@ class NetCdfBinaryArrayTest {
                 variable("http://test.binary-array-ld.net/var-ref.nc/var0")
             }
             subContainers {
+                container("http://test.binary-array-ld.net/var-ref.nc/baz")
                 container("http://test.binary-array-ld.net/var-ref.nc/foo") {
                     attributes {
                         attribute(TestVocab.rootVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
@@ -336,7 +335,31 @@ class NetCdfBinaryArrayTest {
                         }
                     }
                 }
-                container("http://test.binary-array-ld.net/var-ref.nc/baz")
+            }
+        }
+    }
+
+    @Test
+    fun vars_range_withCoordinateVars_returnsCoordinateRange() {
+        val ba = fromCdl("/netcdf/coordinate-var.cdl", "http://test.binary-array-ld.net/coordinate-var.nc")
+        ContainerVerifier(ba.root).vars {
+            variable("http://test.binary-array-ld.net/coordinate-var.nc/elev") {
+                dimensions {
+                    dimension {
+                        size(15); coordinate("http://test.binary-array-ld.net/coordinate-var.nc/lat")
+                    }
+                    dimension {
+                        size(10); coordinate("http://test.binary-array-ld.net/coordinate-var.nc/lon")
+                    }
+                }
+            }
+            variable("http://test.binary-array-ld.net/coordinate-var.nc/lat") {
+                dimensions(15)
+                range(6.5F, -6.5F)
+            }
+            variable("http://test.binary-array-ld.net/coordinate-var.nc/lon") {
+                dimensions(10)
+                range(0.5F, 9.5F)
             }
         }
     }

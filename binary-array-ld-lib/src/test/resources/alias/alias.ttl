@@ -21,13 +21,13 @@ bald:references a rdf:Property ;
 
 bald:Organisation dct:identifier "binary-array-ld-org" .
 
-test:Subject rdfs:subClassOf bald:Resource .
+test:Resource rdfs:subClassOf bald:Resource.
 
 test:direct a rdf:Property ;
     dct:identifier "test_direct" ;
-    rdfs:range test:Subject .
+    rdfs:range test:Resource .
 
 test:indirect a rdf:Property ;
     dct:identifier "test_indirect" ;
-    rdfs:range [ rdfs:subClassOf test:Subject ] .
+    rdfs:range [ rdfs:subClassOf test:Resource ] .
 

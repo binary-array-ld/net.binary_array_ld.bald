@@ -28,12 +28,12 @@ class ContainerVerifier(
 
     /**
      * Begin verifying the sub-containers in the container.
-     * Sub-containers are supplied in the order they are declared.
+     * Sub-containers are supplied in alphabetical order of their URIs.
      * Also verify that the number of sub-containers verified is equal to the total number of sub-containers available.
      * @param verify A function to perform against the [ContainersVerifier] for the container.
      */
     fun subContainers(verify: ContainersVerifier.() -> Unit) {
-        val containers = container.subContainers()
+        val containers = container.subContainers().sortedBy(Container::uri)
         val containerIt = containers.iterator()
         ContainersVerifier(container, containerIt).verify()
         if (containerIt.hasNext()) {

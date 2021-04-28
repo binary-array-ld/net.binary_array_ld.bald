@@ -1,4 +1,4 @@
-package net.bald.context
+package net.bald.alias
 
 import org.apache.jena.rdf.model.Property
 import org.apache.jena.rdf.model.Resource
@@ -29,6 +29,9 @@ interface AliasDefinition {
      */
     fun isReferenceProperty(prop: Property): Boolean
 
+    /**
+     * A substitute [AliasDefinition] implementation that represents a null or empty definition.
+     */
     object Empty: AliasDefinition {
         override fun property(identifier: String): Property? {
             return null

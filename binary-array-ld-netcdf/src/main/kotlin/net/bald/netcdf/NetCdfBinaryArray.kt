@@ -1,6 +1,7 @@
 package net.bald.netcdf
 
 import net.bald.BinaryArray
+import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
 import org.apache.jena.shared.PrefixMapping
 import ucar.nc2.AttributeContainer
@@ -16,7 +17,8 @@ import java.io.File
 class NetCdfBinaryArray(
     override val uri: String,
     private val file: NetcdfFile,
-    val context: ModelContext
+    private val context: ModelContext,
+    val alias: AliasDefinition
 ): BinaryArray {
     override val root: NetCdfContainer get() = container(file.rootGroup)
 
@@ -66,18 +68,20 @@ class NetCdfBinaryArray(
          * The resulting [NetCdfBinaryArray] should be closed after use.
          * @param fileLoc The location of the NetCDF file on the local file system.
          * @param uri The URI which identifies the dataset.
-         * @param context The external context in which to resolve the binary array.
+         * @param context The external context with which to resolve prefix mappings.
+         * @param alias The alias definition with which to resolve resource and property references.
          * @return A [BinaryArray] representation of the NetCDF file.
          */
         @JvmStatic
         fun create(
             fileLoc: String,
-            uri: String?,
-            context: ModelContext?
+            uri: String? = null,
+            context: ModelContext? = null,
+            alias: AliasDefinition? = null
         ): NetCdfBinaryArray {
             val file = NetcdfFiles.open(fileLoc)
             val requiredUri = uri ?: uri(fileLoc)
-            return create(file, requiredUri, context)
+            return create(file, requiredUri, context, alias)
         }
 
         /**
@@ -85,7 +89,7 @@ class NetCdfBinaryArray(
          */
         @JvmStatic
         fun create(fileLoc: String, uri: String? = null): NetCdfBinaryArray {
-            return create(fileLoc, uri, null)
+            return create(fileLoc, uri, null, null)
         }
 
         /**
@@ -95,9 +99,12 @@ class NetCdfBinaryArray(
         fun create(
             file: NetcdfFile,
             uri: String,
-            context: ModelContext? = null
+            context: ModelContext? = null,
+            alias: AliasDefinition? = null
         ): NetCdfBinaryArray {
-            return NetCdfBinaryArray(uri, file, context ?: ModelContext.Empty)
+            val requiredContext = context ?: ModelContext.Empty
+            val requiredAlias = alias ?: AliasDefinition.Empty
+            return NetCdfBinaryArray(uri, file, requiredContext, requiredAlias)
         }
 
         private fun uri(fileLoc: String): String {
