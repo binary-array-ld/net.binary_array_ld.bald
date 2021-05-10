@@ -8,12 +8,13 @@ netcdf attributes {
         int var0(d0, d1, d2) ;
             var0:bald__references = "var1 var2" ;
         int var1(d1, d2, d3) ;
-            var1:bald__references = "var2";
+            var1:test__references = "var2";
         int var2(d2) ;
 
     :bald__isPrefixedBy = "prefix_list";
 
     group: prefix_list {
         :bald__ = "https://www.opengis.net/def/binary-array-ld/";
+        :test__ = "http://test.binary-array-ld.net/vocab/";
     }
 }

@@ -31,7 +31,6 @@ class NetCdfVar(
         return v.attributes()
             .let(::source)
             .attributes()
-            .filterNot(::isVarReference)
     }
 
     private fun source(attrs: AttributeContainer): NetCdfAttributeSource {
@@ -70,15 +69,10 @@ class NetCdfVar(
     private fun attributeRefs(): Sequence<NetCdfVar> {
         return v.attributes().let(::source)
             .attributes()
-            .filter(::isVarReference)
             .mapNotNull(NetCdfAttribute::rawValues)
             .flatten()
             .mapNotNull(parent::parseReferences)
             .flatMap(ReferenceCollection::asVars)
-    }
-
-    private fun isVarReference(attr: NetCdfAttribute): Boolean {
-        return BALD.references.hasURI(attr.uri)
     }
 
     override fun toString(): String {

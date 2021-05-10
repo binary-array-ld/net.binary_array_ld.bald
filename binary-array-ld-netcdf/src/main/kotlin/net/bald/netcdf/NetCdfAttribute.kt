@@ -16,8 +16,8 @@ class NetCdfAttribute(
 
     override val uri: String get() = prop.uri
 
-    override val values: List<RDFNode> get() {
-        return rawValues()?.flatMap(::nodes)?.toList() ?: emptyList()
+    override val values: Sequence<RDFNode> get() {
+        return rawValues()?.flatMap(::nodes) ?: emptySequence()
     }
 
     fun rawValues(): Sequence<String>? {

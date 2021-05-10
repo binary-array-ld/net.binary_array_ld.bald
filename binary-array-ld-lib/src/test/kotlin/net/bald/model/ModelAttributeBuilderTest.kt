@@ -22,7 +22,7 @@ class ModelAttributeBuilderTest {
     @Test
     fun addAttribute_withoutValues_doesNothing() {
         attr.stub {
-            on { values } doReturn emptyList()
+            on { values } doReturn emptySequence()
         }
         builder.addAttribute(attr)
         ResourceVerifier(resource).statements {
@@ -34,7 +34,7 @@ class ModelAttributeBuilderTest {
     fun addAttribute_singleValue_addsStatement() {
         val value = createPlainLiteral("Variable 0")
         attr.stub {
-            on { values } doReturn listOf(value)
+            on { values } doReturn sequenceOf(value)
         }
         builder.addAttribute(attr)
         ResourceVerifier(resource).statements {
@@ -49,7 +49,7 @@ class ModelAttributeBuilderTest {
             createPlainLiteral("Variable 0")
         )
         attr.stub {
-            on { this.values } doReturn values
+            on { this.values } doReturn values.asSequence()
         }
         builder.addAttribute(attr)
         ResourceVerifier(resource).statements {
@@ -62,7 +62,7 @@ class ModelAttributeBuilderTest {
     fun addAttribute_resourceValue_addsStatement() {
         val value = createResource("http://test.binary-array-ld.net/label")
         attr.stub {
-            on { values } doReturn listOf(value)
+            on { values } doReturn sequenceOf(value)
         }
         builder.addAttribute(attr)
         ResourceVerifier(resource).statements {
@@ -78,7 +78,7 @@ class ModelAttributeBuilderTest {
             createResource("http://test.binary-array-ld.net/var2")
         )
         attr.stub {
-            on { values } doReturn listOf(value)
+            on { values } doReturn sequenceOf(value)
         }
         builder.addAttribute(attr)
         ResourceVerifier(resource).statements {
