@@ -480,9 +480,11 @@ class BinaryArrayConvertCliTest {
     fun run_withVariableReferences_outputsVariableReferences() {
         val inputFile = writeToNetCdf("/netcdf/ref-attr.cdl")
         val outputFile = createTempFile()
+        val aliasFile = ResourceFileConverter.toFile("/turtle/var-alias.ttl", "ttl")
 
         run(
             "--uri", "http://test.binary-array-ld.net/example",
+            "--alias", aliasFile.absolutePath,
             inputFile.absolutePath,
             outputFile.absolutePath
         )
@@ -520,6 +522,7 @@ class BinaryArrayConvertCliTest {
                         }
                     }
                     statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var1")) {
+                        statement(TestVocab.references, createResource("http://test.binary-array-ld.net/example/var2"))
                         statement(RDF.type, BALD.Array)
                         statement(BALD.references) {
                             statement(RDF.type, BALD.Reference)

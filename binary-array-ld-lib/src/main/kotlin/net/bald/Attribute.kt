@@ -14,5 +14,5 @@ interface Attribute {
     /**
      * The values of the attribute, expressed as RDF resource or literal nodes.
      */
-    val values: List<RDFNode>
+    val values: Sequence<RDFNode>
 }

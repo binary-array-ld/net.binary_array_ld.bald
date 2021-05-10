@@ -369,7 +369,7 @@ class NetCdfBinaryArrayTest {
     }
 
     @Test
-    fun vars_range_withReferenceAttributes_returnsReferences() {
+    fun vars_withReferenceAttributes_returnsReferences() {
         val ba = fromCdl("/netcdf/ref-attr.cdl", "http://test.binary-array-ld.net/ref-attr.nc")
         ContainerVerifier(ba.root).vars {
             variable("http://test.binary-array-ld.net/ref-attr.nc/var0") {
