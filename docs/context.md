@@ -16,7 +16,9 @@ java -jar bald-cli.jar --context /path/to/context.json /path/to/netcdf.nc /path/
 
 ## Library
 
-You can provide the context as an Apache Jena [prefix mapping](https://jena.apache.org/documentation/javadoc/jena/org/apache/jena/shared/PrefixMapping.html).
+For simple usage, use the `NetCdfLd.convert` method as described [here](lib.md#simple-usage). 
+
+Alternatively, you can provide the context as an Apache Jena [prefix mapping](https://jena.apache.org/documentation/javadoc/jena/org/apache/jena/shared/PrefixMapping.html).
 Pass a prefix mapping (or list of mappings) to the `ModelContext.create` method to create a `ModelContext` instance.
 You may also create your own implementation of `ModelContext`.
 
