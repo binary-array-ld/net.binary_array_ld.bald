@@ -71,7 +71,7 @@ NetCDF and CDL file formats are supported.
 You can also optionally supply a URI as the identifier of the dataset.
 
 You can pass the resulting `BinaryArray` instance to the `ModelBinaryArrayConverter.convert`
-method to obtain 
+method to obtain the RDF graph as a Jena model.
 
 You can also implement the `BinaryArray` interface with your own binary array metadata representations.
 
