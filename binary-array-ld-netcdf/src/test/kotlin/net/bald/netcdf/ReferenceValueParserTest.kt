@@ -19,7 +19,7 @@ class ReferenceValueParserTest {
 
     @Test
     fun singleValue_returnsResource() {
-        val results = parser.parse("var0")
+        val results = parser.parse("var0")?.asResources()
         assertNotNull(results) {
             assertEquals(1, it.size)
             assertEquals("$uri/var0", it.single().uri)
@@ -34,7 +34,7 @@ class ReferenceValueParserTest {
 
     @Test
     fun unorderedSet_returnsResources() {
-        val results = parser.parse("var0 var1 foo/var2")
+        val results = parser.parse("var0 var1 foo/var2")?.asResources()
         assertNotNull(results) {
             assertEquals(3, it.size)
             assertEquals("$uri/var0", it[0].uri)
@@ -45,7 +45,7 @@ class ReferenceValueParserTest {
 
     @Test
     fun unorderedSet_withExtraWhitespace_returnsResources() {
-        val results = parser.parse(" var0  var1   foo/var2  ")
+        val results = parser.parse(" var0  var1   foo/var2  ")?.asResources()
         assertNotNull(results) {
             assertEquals(3, it.size)
             assertEquals("$uri/var0", it[0].uri)
@@ -62,7 +62,7 @@ class ReferenceValueParserTest {
 
     @Test
     fun orderedList_returnsRdfList() {
-        val results = parser.parse("(var0 var1 foo/var2)")
+        val results = parser.parse("(var0 var1 foo/var2)")?.asResources()
         assertNotNull(results) {
             assertEquals(1, it.size)
             val list = it.single() as RDFList
@@ -75,7 +75,7 @@ class ReferenceValueParserTest {
 
     @Test
     fun orderedList_withExtraWhitespace_returnsRdfList() {
-        val results = parser.parse(" ( var0 var1  foo/var2 ) ")
+        val results = parser.parse(" ( var0 var1  foo/var2 ) ")?.asResources()
         assertNotNull(results) {
             assertEquals(1, it.size)
             val list = it.single() as RDFList

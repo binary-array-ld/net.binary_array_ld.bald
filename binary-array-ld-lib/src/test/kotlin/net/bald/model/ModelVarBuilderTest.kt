@@ -26,17 +26,20 @@ class ModelVarBuilderTest {
     private val attrFct = mock<ModelAttributeBuilder.Factory> {
         on { forResource(any()) } doReturn attrBuilder
     }
-    private val builder = ModelVarBuilder.Factory(attrFct).forContainer(container)
+    private val refFct = ModelReferenceBuilder.Factory()
+    private val builder = ModelVarBuilder.Factory(attrFct, refFct).forContainer(container)
 
     private fun newVar(
         uri: String,
         attrs: List<Attribute> = emptyList(),
-        dims: List<Dimension> = emptyList()
+        dims: List<Dimension> = emptyList(),
+        refs: List<Var> = emptyList()
     ): Var {
         return mock {
             on { this.uri } doReturn uri
-            on { attributes() } doReturn attrs
+            on { attributes() } doReturn attrs.asSequence()
             on { dimensions() } doReturn dims.asSequence()
+            on { references() } doReturn refs.asSequence()
         }
     }
 
@@ -93,9 +96,18 @@ class ModelVarBuilderTest {
     @Test
     fun addVar_addsDimensions() {
         val dims = listOf<Dimension>(
-            mock { on { size } doReturn 10 },
-            mock { on { size } doReturn 30 },
-            mock { on { size } doReturn 1000 }
+            mock {
+                on { name } doReturn "dim1"
+                on { size } doReturn 10
+            },
+            mock {
+                on { name } doReturn "dim2"
+                on { size } doReturn 30
+            },
+            mock {
+                on { name } doReturn "dim3"
+                on { size } doReturn 1000
+            }
         )
         val v = newVar("http://test.binary-array-ld.net/example/foo", dims = dims)
         builder.addVar(v)
@@ -122,6 +134,7 @@ class ModelVarBuilderTest {
         }
         val v = mock<Var> {
             on { uri } doReturn "http://test.binary-array-ld.net/example/foo"
+            on { attributes() } doReturn emptySequence()
             on { dimensions() } doReturn emptySequence()
             on { this.range } doReturn range
         }
@@ -142,6 +155,7 @@ class ModelVarBuilderTest {
         }
         val v = mock<Var> {
             on { uri } doReturn "http://test.binary-array-ld.net/example/foo"
+            on { attributes() } doReturn emptySequence()
             on { dimensions() } doReturn emptySequence()
             on { this.range } doReturn range
         }
@@ -156,17 +170,18 @@ class ModelVarBuilderTest {
 
     @Test
     fun addVar_withDimensions_withCoordinates_addsReference() {
-        val coord1 = newVar("http://test.binary-array-ld.net/example/bar")
         val dim1 = mock<Dimension> {
+            on { name } doReturn "dim1"
             on { size } doReturn 10
-            on { coordinate } doReturn coord1
         }
-        val coord2 = newVar("http://test.binary-array-ld.net/example/baz")
+        val coord1 = newVar("http://test.binary-array-ld.net/example/bar", dims = listOf(dim1))
         val dim2 = mock<Dimension> {
+            on { name } doReturn "dim2"
             on { size } doReturn 90
-            on { coordinate } doReturn coord2
         }
-        val v = newVar("http://test.binary-array-ld.net/example/foo", dims = listOf(dim1, dim2))
+        val coord2 = newVar("http://test.binary-array-ld.net/example/baz", dims = listOf(dim2))
+
+        val v = newVar("http://test.binary-array-ld.net/example/foo", refs = listOf(coord1, coord2), dims = listOf(dim1, dim2))
         builder.addVar(v)
 
         fun sortAnon(res: Resource): String {
@@ -177,11 +192,16 @@ class ModelVarBuilderTest {
             }
         }
 
+        container.model.write(System.out)
+
         ResourceVerifier(container).statements {
             statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo"), sortAnon = ::sortAnon) {
                 statement(RDF.type, BALD.Array)
                 statement(BALD.references) {
                     statement(RDF.type, BALD.Reference)
+                    statement(BALD.sourceRefShape) {
+                        list(createTypedLiteral(10), createTypedLiteral(90))
+                    }
                     statement(BALD.target, createResource("http://test.binary-array-ld.net/example/bar"))
                     statement(BALD.targetRefShape) {
                         list(createTypedLiteral(10), createTypedLiteral(1))
@@ -189,6 +209,9 @@ class ModelVarBuilderTest {
                 }
                 statement(BALD.references) {
                     statement(RDF.type, BALD.Reference)
+                    statement(BALD.sourceRefShape) {
+                        list(createTypedLiteral(10), createTypedLiteral(90))
+                    }
                     statement(BALD.target, createResource("http://test.binary-array-ld.net/example/baz"))
                     statement(BALD.targetRefShape) {
                         list(createTypedLiteral(1), createTypedLiteral(90))

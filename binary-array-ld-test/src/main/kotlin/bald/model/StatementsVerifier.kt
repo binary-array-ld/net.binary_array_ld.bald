@@ -1,6 +1,7 @@
 package bald.model
 
 import org.apache.jena.rdf.model.*
+import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 import org.apache.jena.vocabulary.RDF
 import org.junit.jupiter.api.fail
 import kotlin.test.assertEquals
@@ -70,6 +71,10 @@ class StatementsVerifier(
 
     fun list(vararg values: RDFNode) {
         values.toList().let(::list)
+    }
+
+    fun list(vararg values: Int) {
+        values.map(::createTypedLiteral).let(::list)
     }
 
     fun list(values: List<RDFNode>) {

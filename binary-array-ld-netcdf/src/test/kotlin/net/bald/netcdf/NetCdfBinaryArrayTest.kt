@@ -317,7 +317,7 @@ class NetCdfBinaryArrayTest {
                     vars {
                         variable("http://test.binary-array-ld.net/var-ref.nc/foo/var1") {
                             attributes {
-                                attribute(BALD.references.uri, createPlainLiteral("var9"))
+                                attribute(TestVocab.references.uri, createPlainLiteral("var9"))
                                 attribute(TestVocab.siblingVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/foo/bar/var2"))
                             }
                         }
@@ -344,12 +344,16 @@ class NetCdfBinaryArrayTest {
         val ba = fromCdl("/netcdf/coordinate-var.cdl", "http://test.binary-array-ld.net/coordinate-var.nc")
         ContainerVerifier(ba.root).vars {
             variable("http://test.binary-array-ld.net/coordinate-var.nc/elev") {
+                references(
+                    "http://test.binary-array-ld.net/coordinate-var.nc/lat",
+                    "http://test.binary-array-ld.net/coordinate-var.nc/lon"
+                )
                 dimensions {
-                    dimension {
-                        size(15); coordinate("http://test.binary-array-ld.net/coordinate-var.nc/lat")
+                    dimension("lat") {
+                        size(15)
                     }
-                    dimension {
-                        size(10); coordinate("http://test.binary-array-ld.net/coordinate-var.nc/lon")
+                    dimension("lon") {
+                        size(10)
                     }
                 }
             }
@@ -360,6 +364,29 @@ class NetCdfBinaryArrayTest {
             variable("http://test.binary-array-ld.net/coordinate-var.nc/lon") {
                 dimensions(10)
                 range(0.5F, 9.5F)
+            }
+        }
+    }
+
+    @Test
+    fun vars_withReferenceAttributes_returnsReferences() {
+        val ba = fromCdl("/netcdf/ref-attr.cdl", "http://test.binary-array-ld.net/ref-attr.nc")
+        ContainerVerifier(ba.root).vars {
+            variable("http://test.binary-array-ld.net/ref-attr.nc/var0") {
+                dimensions(10, 90, 15)
+                references(
+                    "http://test.binary-array-ld.net/ref-attr.nc/var1",
+                    "http://test.binary-array-ld.net/ref-attr.nc/var2"
+                )
+            }
+            variable("http://test.binary-array-ld.net/ref-attr.nc/var1") {
+                dimensions(90, 15, 60)
+                references(
+                    "http://test.binary-array-ld.net/ref-attr.nc/var2"
+                )
+            }
+            variable("http://test.binary-array-ld.net/ref-attr.nc/var2") {
+                dimensions(15)
             }
         }
     }

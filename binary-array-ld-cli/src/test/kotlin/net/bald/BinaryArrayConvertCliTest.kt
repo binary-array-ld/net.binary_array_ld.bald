@@ -339,7 +339,7 @@ class BinaryArrayConvertCliTest {
      * Requirements class E-1, E-2
      */
     @Test
-    fun run_withVariableReferenceAttributes_outputsVariableReferences() {
+    fun run_withVariableValueAttributes_outputsVariableValues() {
         val inputFile = writeToNetCdf("/netcdf/var-ref.cdl")
         val outputFile = createTempFile()
         val contextFile = ResourceFileConverter.toFile("/jsonld/context.json")
@@ -393,9 +393,9 @@ class BinaryArrayConvertCliTest {
                             }
                         }
                         statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/foo/var1")) {
+                            statement(TestVocab.references, createPlainLiteral("var9"))
                             statement(TestVocab.siblingVar, createResource("http://test.binary-array-ld.net/example/foo/bar/var2"))
                             statement(RDF.type, BALD.Resource)
-                            statement(BALD.references, createPlainLiteral("var9"))
                         }
                     }
                     statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var0")) {
@@ -420,39 +420,37 @@ class BinaryArrayConvertCliTest {
             outputFile.absolutePath
         )
 
-        fun sortAnon(res: Resource): String {
-            return if (res.hasProperty(BALD.target)) {
-                res.getProperty(BALD.target).`object`.toString()
-            } else {
-                res.id.toString()
-            }
-        }
-
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
             resource("http://test.binary-array-ld.net/example") {
                 statement(RDF.type, BALD.Container)
                 statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/")) {
                     statement(RDF.type, BALD.Container)
-                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/elev"), sortAnon = ::sortAnon) {
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/elev"), sortAnon = ::sortRefs) {
                         statement(RDF.type, BALD.Array)
                         statement(RDFS.label, createPlainLiteral("height"))
                         statement(BALD.references) {
                             statement(RDF.type, BALD.Reference)
+                            statement(BALD.sourceRefShape) {
+                                list(15, 10)
+                            }
                             statement(BALD.target, createResource("http://test.binary-array-ld.net/example/lat"))
                             statement(BALD.targetRefShape) {
-                                list(createTypedLiteral(15), createTypedLiteral(1))
+                                list(15, 1)
                             }
                         }
                         statement(BALD.references) {
                             statement(RDF.type, BALD.Reference)
+                            statement(BALD.sourceRefShape) {
+                                list(15, 10)
+                            }
                             statement(BALD.target, createResource("http://test.binary-array-ld.net/example/lon"))
                             statement(BALD.targetRefShape) {
-                                list(createTypedLiteral(1), createTypedLiteral(10))
+                                list(1, 10)
                             }
                         }
                         statement(BALD.shape) {
-                            list(createTypedLiteral(15), createTypedLiteral(10))
+                            list(15, 10)
                         }
                     }
                     statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/lat")) {
@@ -461,7 +459,7 @@ class BinaryArrayConvertCliTest {
                         statement(BALD.arrayFirstValue, createTypedLiteral("6.5", XSDDatatype.XSDfloat))
                         statement(BALD.arrayLastValue, createTypedLiteral("-6.5", XSDDatatype.XSDfloat))
                         statement(BALD.shape) {
-                            list(createTypedLiteral(15))
+                            list(15)
                         }
                     }
                     statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/lon")) {
@@ -470,11 +468,93 @@ class BinaryArrayConvertCliTest {
                         statement(BALD.arrayFirstValue, createTypedLiteral("0.5", XSDDatatype.XSDfloat))
                         statement(BALD.arrayLastValue, createTypedLiteral("9.5", XSDDatatype.XSDfloat))
                         statement(BALD.shape) {
-                            list(createTypedLiteral(10))
+                            list(10)
                         }
                     }
                 }
             }
+        }
+    }
+
+    @Test
+    fun run_withVariableReferences_outputsVariableReferences() {
+        val inputFile = writeToNetCdf("/netcdf/ref-attr.cdl")
+        val outputFile = createTempFile()
+        val aliasFile = ResourceFileConverter.toFile("/turtle/var-alias.ttl", "ttl")
+
+        run(
+            "--uri", "http://test.binary-array-ld.net/example",
+            "--alias", aliasFile.absolutePath,
+            inputFile.absolutePath,
+            outputFile.absolutePath
+        )
+
+        val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
+        ModelVerifier(model).apply {
+            resource("http://test.binary-array-ld.net/example") {
+                statement(RDF.type, BALD.Container)
+                statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/")) {
+                    statement(RDF.type, BALD.Container)
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var0"), sortAnon = ::sortRefs) {
+                        statement(RDF.type, BALD.Array)
+                        statement(BALD.references) {
+                            statement(RDF.type, BALD.Reference)
+                            statement(BALD.sourceRefShape) {
+                                list(10, 90, 15, 1)
+                            }
+                            statement(BALD.target, createResource("http://test.binary-array-ld.net/example/var1"))
+                            statement(BALD.targetRefShape) {
+                                list(1, 90, 15, 60)
+                            }
+                        }
+                        statement(BALD.references) {
+                            statement(RDF.type, BALD.Reference)
+                            statement(BALD.sourceRefShape) {
+                                list(10, 90, 15)
+                            }
+                            statement(BALD.target, createResource("http://test.binary-array-ld.net/example/var2"))
+                            statement(BALD.targetRefShape) {
+                                list(1, 1, 15)
+                            }
+                        }
+                        statement(BALD.shape) {
+                            list(10, 90, 15)
+                        }
+                    }
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var1")) {
+                        statement(TestVocab.references, createResource("http://test.binary-array-ld.net/example/var2"))
+                        statement(RDF.type, BALD.Array)
+                        statement(BALD.references) {
+                            statement(RDF.type, BALD.Reference)
+                            statement(BALD.sourceRefShape) {
+                                list(90, 15, 60)
+                            }
+                            statement(BALD.target, createResource("http://test.binary-array-ld.net/example/var2"))
+                            statement(BALD.targetRefShape) {
+                                list(1, 15, 1)
+                            }
+                        }
+                        statement(BALD.shape) {
+                            list(90, 15, 60)
+                        }
+                    }
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var2")) {
+                        statement(RDF.type, BALD.Array)
+                        statement(BALD.shape) {
+                            list(15)
+                        }
+                    }
+                    statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
+                }
+            }
+        }
+    }
+
+    private fun sortRefs(res: Resource): String {
+        return if (res.hasProperty(BALD.target)) {
+            res.getProperty(BALD.target).`object`.toString()
+        } else {
+            res.id.toString()
         }
     }
 }

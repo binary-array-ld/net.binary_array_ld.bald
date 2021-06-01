@@ -9,7 +9,7 @@
 skos:prefLabel a rdf:Property ;
     dct:identifier "prefLabel" .
 
-bald:references a owl:ObjectProperty ;
+test:references a owl:ObjectProperty ;
     dct:identifier "references" ;
     rdfs:range bald:Resource .
 

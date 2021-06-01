@@ -8,5 +8,5 @@ interface AttributeSource {
      * Obtain the list of attributes that describe this entity.
      * @return The list of attributes.
      */
-    fun attributes(): List<Attribute>
+    fun attributes(): Sequence<Attribute>
 }
