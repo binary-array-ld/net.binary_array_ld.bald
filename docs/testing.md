@@ -62,12 +62,12 @@ class MySpecTest: BaseSpecTest(MyTestConverter)
 
 object MyTestConverter: Converter {
     override fun convert(
-        inputLoc: File,
+        input: File,
         uri: String?,
-        contextLocs: List<File>,
-        aliasLocs: List<File>
+        contexts: List<File>?,
+        aliases: List<File>?
     ): Model {
-        TODO("Call my implementation here")
+        TODO("My implementation here")
     }
 }
 ```
