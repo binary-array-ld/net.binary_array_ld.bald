@@ -2,7 +2,6 @@ package net.bald.netcdf
 
 import net.bald.CoordinateRange
 import net.bald.Var
-import net.bald.vocab.BALD
 import ucar.nc2.AttributeContainer
 import ucar.nc2.Variable
 

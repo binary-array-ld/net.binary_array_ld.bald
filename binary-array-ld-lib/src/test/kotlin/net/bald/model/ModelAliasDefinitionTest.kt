@@ -1,6 +1,5 @@
 package net.bald.model
 
-import net.bald.alias.ModelAliasDefinition
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.createProperty

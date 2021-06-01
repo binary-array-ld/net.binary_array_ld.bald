@@ -7,7 +7,6 @@ import com.nhaarman.mockitokotlin2.stub
 import net.bald.Attribute
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.*
-import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.RDFS
 import org.junit.jupiter.api.*
 
