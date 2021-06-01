@@ -1,7 +1,7 @@
 package bald.spec
 
 import bald.json.JsonTestSpec
-import bald.json.JsonUtil
+import bald.json.YamlUtil
 import org.junit.jupiter.api.extension.ExtensionContext
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.ArgumentsProvider
@@ -11,7 +11,7 @@ import kotlin.streams.asStream
 /**
  * JUnit arguments provider for deserializing [SpecRequirement] instances.
  * The test suite is defined in the /spec/spec.yaml resource.
- * Tests are defined in [JsonTestSpec] and [JsonTestScenario] format.
+ * Tests are defined in [JsonTestSpec] format.
  * @see BaseSpecTest
  */
 class TestScenarioProvider: ArgumentsProvider {
@@ -21,7 +21,7 @@ class TestScenarioProvider: ArgumentsProvider {
 
     private fun suite(): TestSpec {
         return javaClass.getResourceAsStream("/spec/spec.yaml").use { input ->
-            JsonUtil.mapper.readValue(input, JsonTestSpec::class.java)
+            YamlUtil.mapper.readValue(input, JsonTestSpec::class.java)
         }
     }
 }

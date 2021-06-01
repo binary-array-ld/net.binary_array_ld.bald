@@ -1,5 +1,6 @@
 package bald.spec
 
+import net.bald.Converter
 import org.apache.jena.rdf.model.Model
 
 /**

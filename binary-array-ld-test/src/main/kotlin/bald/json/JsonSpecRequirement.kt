@@ -3,10 +3,10 @@ package bald.json
 import bald.file.ResourceFileConverter
 import bald.model.ResourceModelConverter
 import bald.netcdf.CdlConverter
-import bald.spec.Converter
 import bald.spec.SpecRequirement
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonFormat
+import net.bald.Converter
 import org.apache.jena.rdf.model.Model
 import java.io.File
 
@@ -38,11 +38,10 @@ class JsonSpecRequirement(
         private val alias: List<String> = emptyList()
     ) {
         fun convert(parent: JsonSpecRequirement, converter: Converter): Model {
-            val file = parent.locate(file).let(CdlConverter::writeToNetCdf)
-            val contextLoc = files(context)
-            val aliasLoc = files(alias)
-
-            return converter.convert(file, uri, contextLoc, aliasLoc)
+            val inputLoc: File = parent.locate(file).let(CdlConverter::writeToNetCdf)
+            val contextLocs: List<File> = files(context)
+            val aliasLocs: List<File> = files(alias)
+            return converter.convert(inputLoc, uri, contextLocs, aliasLocs)
         }
 
         private fun files(resourceLocs: List<String>): List<File> {

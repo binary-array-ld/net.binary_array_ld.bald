@@ -2,6 +2,7 @@ package bald.spec
 
 import bald.json.JsonSpecRequirement
 import bald.json.JsonTestSpec
+import net.bald.Converter
 import org.apache.jena.rdf.model.Model
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ArgumentsSource
