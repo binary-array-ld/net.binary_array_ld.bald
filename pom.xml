@@ -15,7 +15,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <kotlin.version>1.4.32</kotlin.version>
         <kotlin.code.style>official</kotlin.code.style>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <junit.platform.version>1.2.0</junit.platform.version>
         <junit.jupiter.version>5.5.2</junit.jupiter.version>
         <jena.version>3.13.1</jena.version>
