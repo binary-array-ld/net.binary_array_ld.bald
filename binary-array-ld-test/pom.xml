@@ -18,6 +18,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>net.binary-array-ld</groupId>
+            <artifactId>binary-array-ld-api</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-core</artifactId>
             <version>${jena.version}</version>
