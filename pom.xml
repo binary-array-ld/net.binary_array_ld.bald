@@ -29,6 +29,7 @@
         <module>binary-array-ld-netcdf</module>
         <module>binary-array-ld-test</module>
         <module>binary-array-ld-demo</module>
+        <module>binary-array-ld-api</module>
     </modules>
 
     <dependencies>
