@@ -6,14 +6,22 @@ as described in the [draft specification](http://docs.opengeospatial.org/DRAFTS/
 ## CLI
 
 You can provide aliases as a set of RDF files.
-Use the `--alias` or `-a` option to specify the locations of alias files
-as a comma-delimited list.
-Note that these files must have a suitable extension in order to be parsed correctly.
+Use the `--alias` or `-a` option to specify the locations of alias files as a comma-delimited list.
+These can be the paths of files on the local file system, or the URLs of remote resources. 
+
+Note that the alias paths must have a suitable extension in order to be parsed correctly.
 
 #### Example
 ```
 java -jar bald-cli.jar --alias /path/to/alias.ttl /path/to/netcdf.nc /path/to/graph.ttl
 ```
+
+### Note
+
+If your alias files are remote resources and you are using a proxy server,
+you must provide the proxy host and port with the `-Dhttp.proxyHost` and `-Dhttp.proxyPort`
+JVM arguments.
+See [here](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.html) for official documentation.
 
 ## Library
 
