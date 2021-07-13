@@ -69,6 +69,7 @@ class NetCdfVar(
     private fun attributeRefs(): Sequence<NetCdfVar> {
         return v.attributes().let(::source)
             .attributes()
+            .filter { attr -> attr.prop.let(parent.alias::isReferenceProperty) }
             .mapNotNull(NetCdfAttribute::rawValues)
             .flatten()
             .mapNotNull(parent::parseReferences)

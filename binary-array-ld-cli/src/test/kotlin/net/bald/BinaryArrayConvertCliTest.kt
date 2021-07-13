@@ -475,12 +475,22 @@ class BinaryArrayConvertCliTest {
         ModelVerifier(model).apply {
             resource("http://test.binary-array-ld.net/example/") {
                 statement(RDF.type, BALD.Container)
-                statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var0"), sortAnon = ::sortRefs) {
-                    statement(RDF.type, BALD.Array)
-                    statement(BALD.references) {
-                        statement(RDF.type, BALD.Reference)
-                        statement(BALD.sourceRefShape) {
-                            list(10, 90, 15, 1)
+                statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/")) {
+                    statement(RDF.type, BALD.Container)
+                    statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var0"), sortAnon = ::sortRefs) {
+                        statement(createProperty("${TestVocab.prefix}name"), createStringLiteral("var0"))
+                        statement(TestVocab.references, createResource("http://test.binary-array-ld.net/example/var1"))
+                        statement(TestVocab.references, createResource("http://test.binary-array-ld.net/example/var2"))
+                        statement(RDF.type, BALD.Array)
+                        statement(BALD.references) {
+                            statement(RDF.type, BALD.Reference)
+                            statement(BALD.sourceRefShape) {
+                                list(10, 90, 15, 1)
+                            }
+                            statement(BALD.target, createResource("http://test.binary-array-ld.net/example/var1"))
+                            statement(BALD.targetRefShape) {
+                                list(1, 90, 15, 60)
+                            }
                         }
                         statement(BALD.target, createResource("http://test.binary-array-ld.net/example/var1"))
                         statement(BALD.targetRefShape) {
