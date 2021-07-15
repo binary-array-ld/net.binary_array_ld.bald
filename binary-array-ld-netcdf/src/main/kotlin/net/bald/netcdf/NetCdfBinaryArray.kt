@@ -1,6 +1,8 @@
 package net.bald.netcdf
 
 import net.bald.BinaryArray
+import net.bald.Distribution
+import net.bald.Format
 import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
 import org.apache.jena.shared.PrefixMapping
@@ -28,6 +30,9 @@ class NetCdfBinaryArray(
             internalPrefixMapping()?.let(::setNsPrefixes)
         }
     }
+
+    override val format: Format get() = NetCdfFormat
+    override val distribution: Distribution get() = NetCdfDistribution()
 
     val prefixSrc: String? get() = prefixSourceName()
 

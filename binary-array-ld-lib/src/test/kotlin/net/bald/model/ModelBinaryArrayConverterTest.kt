@@ -1,6 +1,7 @@
 package net.bald.model
 
 import bald.model.ModelVerifier
+import bald.model.StatementsVerifier
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import net.bald.BinaryArray
@@ -8,7 +9,9 @@ import net.bald.Container
 import net.bald.Var
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.ResourceFactory
 import org.apache.jena.shared.PrefixMapping
+import org.apache.jena.vocabulary.DCAT
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
@@ -59,7 +62,9 @@ class ModelBinaryArrayConverterTest {
             prefix("skos", SKOS.uri)
             prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(RDF.type, BALD.Container)
+                distribution()
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/bar")) {
                     statement(RDF.type, BALD.Resource)
                 }

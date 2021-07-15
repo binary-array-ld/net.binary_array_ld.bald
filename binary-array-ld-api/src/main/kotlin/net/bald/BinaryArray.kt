@@ -23,4 +23,14 @@ interface BinaryArray: Closeable {
      * The root container.
      */
     val root: Container
+
+    /**
+     * The format of the binary array.
+     */
+    val format: Format
+
+    /**
+     * The distribution of the binary array, if it is available. Otherwise, null.
+     */
+    val distribution: Distribution?
 }

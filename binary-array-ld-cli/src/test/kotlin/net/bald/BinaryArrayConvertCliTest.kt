@@ -3,6 +3,7 @@ package net.bald
 import bald.TestVocab
 import bald.jsonld.ResourceFileConverter
 import bald.model.ModelVerifier
+import bald.model.StatementsVerifier
 import bald.netcdf.CdlConverter.writeToNetCdf
 import net.bald.vocab.BALD
 import org.apache.jena.datatypes.xsd.XSDDatatype
@@ -54,7 +55,9 @@ class BinaryArrayConvertCliTest {
         ModelVerifier(model).apply {
             // A-1
             resource("$inputFileUri/") {
+                format()
                 statement(RDF.type, BALD.Container)
+                distribution()
                 // A-2
                 statement(BALD.contains, model.createResource("$inputFileUri/var0")) {
                     statement(RDF.type, BALD.Resource)
@@ -79,7 +82,9 @@ class BinaryArrayConvertCliTest {
         ModelVerifier(model).apply {
             // A-1
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(RDF.type, BALD.Container)
+                distribution()
                 // A-2
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Resource)
@@ -131,7 +136,9 @@ class BinaryArrayConvertCliTest {
             prefix("bald", BALD.prefix)
             prefix("skos", SKOS.uri)
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(RDF.type, BALD.Container)
+                distribution()
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Resource)
                 }
@@ -171,7 +178,9 @@ class BinaryArrayConvertCliTest {
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(RDF.type, BALD.Container)
+                distribution()
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/group0")) {
                     statement(RDF.type, BALD.Container)
                     statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/group0/var2")) {
@@ -227,7 +236,9 @@ class BinaryArrayConvertCliTest {
             prefix("dct", DCTerms.NS)
             prefix("xsd", XSD.NS)
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(RDF.type, BALD.Container)
+                distribution()
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Resource)
                 }
@@ -261,12 +272,14 @@ class BinaryArrayConvertCliTest {
             prefix("skos", SKOS.uri)
             prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(DCTerms.publisher, createResource("${BALD.prefix}Organisation"))
                 // D-4
                 statement(createProperty("http://test.binary-array-ld.net/example/date"), createPlainLiteral("2020-10-29"))
                 statement(RDF.type, BALD.Container)
                 // D-2
                 statement(SKOS.prefLabel, createPlainLiteral("Attributes metadata example"))
+                distribution()
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Array)
                     statement(RDF.type, BALD.Resource)
@@ -304,11 +317,13 @@ class BinaryArrayConvertCliTest {
             prefix("skos", SKOS.uri)
             prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 // D-3
                 statement(DCTerms.publisher, createResource("${BALD.prefix}Organisation"))
                 statement(createProperty("http://test.binary-array-ld.net/example/date"), createPlainLiteral("2020-10-29"))
                 statement(RDF.type, BALD.Container)
                 statement(SKOS.prefLabel, createPlainLiteral("Alias metadata example"))
+                distribution()
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Array)
                     statement(RDF.type, BALD.Resource)
@@ -347,6 +362,7 @@ class BinaryArrayConvertCliTest {
             prefix("skos", SKOS.uri)
             prefix("dct", DCTerms.NS)
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(TestVocab.orderedVar) {
                     list(
                         createResource("http://test.binary-array-ld.net/example/var0"),
@@ -360,6 +376,7 @@ class BinaryArrayConvertCliTest {
                 statement(TestVocab.unorderedVar, createResource("http://test.binary-array-ld.net/example/var0"))
                 statement(RDF.type, BALD.Container)
                 statement(SKOS.prefLabel, createPlainLiteral("Variable reference metadata example"))
+                distribution()
                 statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/baz")) {
                     statement(RDF.type, BALD.Container)
                     statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/baz/var3")) {
@@ -408,7 +425,9 @@ class BinaryArrayConvertCliTest {
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(RDF.type, BALD.Container)
+                distribution()
                 statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/elev"), sortAnon = ::sortRefs) {
                     statement(RDF.type, BALD.Array)
                     statement(RDFS.label, createPlainLiteral("height"))
@@ -474,7 +493,9 @@ class BinaryArrayConvertCliTest {
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
             resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(RDF.type, BALD.Container)
+                distribution()
                 statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var0"), sortAnon = ::sortRefs) {
                     statement(createProperty("${TestVocab.prefix}name"), createStringLiteral("var0"))
                     statement(TestVocab.references, createResource("http://test.binary-array-ld.net/example/var1"))
@@ -537,6 +558,23 @@ class BinaryArrayConvertCliTest {
             res.getProperty(BALD.target).`object`.toString()
         } else {
             res.id.toString()
+        }
+    }
+
+    private fun StatementsVerifier.format() {
+        statement(DCTerms.format) {
+            statement(DCTerms.identifier, createResource("http://vocab.nerc.ac.uk/collection/M01/current/NC/"))
+            statement(RDF.type, DCTerms.MediaType)
+        }
+    }
+
+    private fun StatementsVerifier.distribution() {
+        statement(DCAT.distribution) {
+            statement(RDF.type, DCAT.Distribution)
+            statement(DCAT.mediaType) {
+                statement(DCTerms.identifier, createStringLiteral("application/x-netcdf"))
+                statement(RDF.type, DCTerms.MediaType)
+            }
         }
     }
 }

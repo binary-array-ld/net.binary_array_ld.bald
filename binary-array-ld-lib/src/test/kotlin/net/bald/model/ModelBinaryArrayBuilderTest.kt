@@ -7,8 +7,11 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import net.bald.BinaryArray
 import net.bald.Container
+import net.bald.Distribution
+import net.bald.Format
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory
+import org.apache.jena.rdf.model.ResourceFactory.createResource
 import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
@@ -24,14 +27,24 @@ class ModelBinaryArrayBuilderTest {
         on { forRoot(model) } doReturn containerBuilder
     }
     private val builder = ModelBinaryArrayBuilder.Factory(containerFct).forModel(model)
-    private val root = mock<Container>()
+    private val root = mock<Container> {
+        on { uri } doReturn "http://test.binary-array-ld.net/example/"
+    }
     private val prefix = PrefixMapping.Factory.create()
         .setNsPrefix("bald", BALD.prefix)
         .setNsPrefix("skos", SKOS.uri)
+    private val format = mock<Format> {
+        on { identifier } doReturn createResource("http://vocab.nerc.ac.uk/collection/M01/current/NC/")
+    }
+    private val distribution = mock<Distribution> {
+        on { mediaType } doReturn "application/x-netcdf"
+    }
     private val ba = mock<BinaryArray> {
         on { uri } doReturn "http://test.binary-array-ld.net/example"
         on { this.root } doReturn root
         on { prefixMapping } doReturn prefix
+        on { format } doReturn format
+        on { distribution } doReturn distribution
     }
 
     @Test
@@ -75,5 +88,16 @@ class ModelBinaryArrayBuilderTest {
             builder.addBinaryArray(ba)
         }
         assertEquals("Unable to add prefix mapping eg to model: URI must end with / or #.", iae.message)
+    }
+
+    @Test
+    fun addBinaryArray_addsFormatAndDistribution() {
+        builder.addBinaryArray(ba)
+        ModelVerifier(model).apply {
+            resource("http://test.binary-array-ld.net/example/") {
+                format()
+                distribution()
+            }
+        }
     }
 }
