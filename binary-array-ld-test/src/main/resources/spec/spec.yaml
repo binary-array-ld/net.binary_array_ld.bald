@@ -30,3 +30,9 @@ tests:
       uri: "http://secret.binary-array-ld.net/attributes.nc"
       alias: "/turtle/netcdf.ttl"
     output: "output.ttl"
+  - name: req-a5
+    root: "/spec/test/a5"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/reference.nc/"
+    output: "output.ttl"
