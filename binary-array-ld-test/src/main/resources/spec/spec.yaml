@@ -34,5 +34,5 @@ tests:
     root: "/spec/test/a5"
     input:
       file: "input.cdl"
-      uri: "http://secret.binary-array-ld.net/reference.nc/"
+      uri: "http://secret.binary-array-ld.net/reference.nc"
     output: "output.ttl"
