@@ -18,11 +18,11 @@ import java.lang.IllegalArgumentException
 import kotlin.test.assertEquals
 
 class ModelBinaryArrayBuilderTest {
+    private val model = ModelFactory.createDefaultModel()
     private val containerBuilder = mock<ModelContainerBuilder>()
     private val containerFct = mock<ModelContainerBuilder.Factory> {
-        on { forParent(any()) } doReturn containerBuilder
+        on { forRoot(model) } doReturn containerBuilder
     }
-    private val model = ModelFactory.createDefaultModel()
     private val builder = ModelBinaryArrayBuilder.Factory(containerFct).forModel(model)
     private val root = mock<Container>()
     private val prefix = PrefixMapping.Factory.create()
@@ -35,17 +35,9 @@ class ModelBinaryArrayBuilderTest {
     }
 
     @Test
-    fun addBinaryArray_addsFileContainer() {
-        builder.addBinaryArray(ba)
-        ModelVerifier(model).resource("http://test.binary-array-ld.net/example") {
-            statement(RDF.type, BALD.Container)
-        }
-    }
-
-    @Test
     fun addBinaryArray_addsRootContainer() {
         builder.addBinaryArray(ba)
-        verify(containerFct).forParent(model.getResource("http://test.binary-array-ld.net/example"))
+        verify(containerFct).forRoot(model)
         verify(containerBuilder).addContainer(root)
     }
 

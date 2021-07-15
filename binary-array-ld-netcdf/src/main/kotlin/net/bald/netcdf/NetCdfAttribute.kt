@@ -12,7 +12,7 @@ class NetCdfAttribute(
     private val attr: Attribute
 ): net.bald.Attribute {
     private val name: String get() = attr.shortName
-    private val prop: Property get() = parent.parseProperty(name)
+    val prop: Property get() = parent.parseProperty(name)
 
     override val uri: String get() = prop.uri
 
