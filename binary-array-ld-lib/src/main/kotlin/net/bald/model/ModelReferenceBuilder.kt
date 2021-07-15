@@ -3,9 +3,11 @@ package net.bald.model
 import net.bald.Dimension
 import net.bald.Var
 import net.bald.vocab.BALD
+import org.apache.jena.datatypes.xsd.XSDDatatype
 import org.apache.jena.rdf.model.Literal
 import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.ResourceFactory
+import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 import org.apache.jena.vocabulary.RDF
 
 class ModelReferenceBuilder(
@@ -40,13 +42,15 @@ class ModelReferenceBuilder(
 
         fun shape(dimIds: List<String>): Iterator<Literal> {
             return dimIds.asSequence().map { dimId ->
-                dimsById[dimId]?.size?.let(ResourceFactory::createTypedLiteral) ?: unitNode
+                dimsById[dimId]?.size?.let { size ->
+                    createTypedLiteral(size.toString(), XSDDatatype.XSDinteger)
+                } ?: unitNode
             }.iterator()
         }
     }
 
     companion object {
-        private val unitNode = ResourceFactory.createTypedLiteral(1)
+        private val unitNode = createTypedLiteral("1", XSDDatatype.XSDinteger)
     }
 
     open class Factory {
