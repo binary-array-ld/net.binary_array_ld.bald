@@ -4,9 +4,7 @@ import bald.model.ModelVerifier
 import bald.model.StatementsVerifier
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import net.bald.BinaryArray
-import net.bald.Container
-import net.bald.Var
+import net.bald.*
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ResourceFactory
@@ -49,10 +47,17 @@ class ModelBinaryArrayConverterTest {
             .setNsPrefix("bald", BALD.prefix)
             .setNsPrefix("skos", SKOS.uri)
             .setNsPrefix("dct", DCTerms.NS)
+        val format = mock<Format> {
+            on { identifier } doReturn ResourceFactory.createResource("http://vocab.nerc.ac.uk/collection/M01/current/NC/")
+        }
+        val distribution = mock<Distribution> {
+            on { mediaType } doReturn "application/x-netcdf"
+        }
         val ba = mock<BinaryArray> {
-            on { this.uri } doReturn uri
             on { this.root } doReturn root
             on { prefixMapping } doReturn prefix
+            on { this.format } doReturn format
+            on { this.distribution } doReturn distribution
         }
 
         val model = convert(ba)

@@ -10,11 +10,6 @@ import java.io.Closeable
  */
 interface BinaryArray: Closeable {
     /**
-     * The URI which identifies the dataset.
-     */
-    val uri: String
-
-    /**
      * The prefix mapping to apply to the RDF graph.
      */
     val prefixMapping: PrefixMapping

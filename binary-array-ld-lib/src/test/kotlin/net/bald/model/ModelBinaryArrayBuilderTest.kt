@@ -40,7 +40,6 @@ class ModelBinaryArrayBuilderTest {
         on { mediaType } doReturn "application/x-netcdf"
     }
     private val ba = mock<BinaryArray> {
-        on { uri } doReturn "http://test.binary-array-ld.net/example"
         on { this.root } doReturn root
         on { prefixMapping } doReturn prefix
         on { format } doReturn format

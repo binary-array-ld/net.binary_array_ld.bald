@@ -17,7 +17,7 @@ import java.io.File
  * Should be closed after use.
  */
 class NetCdfBinaryArray(
-    override val uri: String,
+    val uri: String,
     private val file: NetcdfFile,
     private val context: ModelContext,
     val alias: AliasDefinition
