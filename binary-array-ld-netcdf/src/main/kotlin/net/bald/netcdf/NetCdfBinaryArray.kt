@@ -5,12 +5,14 @@ import net.bald.Distribution
 import net.bald.Format
 import net.bald.alias.AliasDefinition
 import net.bald.context.ModelContext
+import org.apache.jena.rdf.model.ResourceFactory.createResource
 import org.apache.jena.shared.PrefixMapping
 import ucar.nc2.AttributeContainer
 import ucar.nc2.Group
 import ucar.nc2.NetcdfFile
 import ucar.nc2.NetcdfFiles
 import java.io.File
+import java.net.URI
 
 /**
  * NetCDF implementation of [BinaryArray].
@@ -20,7 +22,8 @@ class NetCdfBinaryArray(
     val uri: String,
     private val file: NetcdfFile,
     private val context: ModelContext,
-    val alias: AliasDefinition
+    val alias: AliasDefinition,
+    private val downloadUrl: String?
 ): BinaryArray {
     override val root: NetCdfContainer get() = container(file.rootGroup)
 
@@ -32,7 +35,18 @@ class NetCdfBinaryArray(
     }
 
     override val format: Format get() = NetCdfFormat
-    override val distribution: Distribution get() = NetCdfDistribution()
+    override val distribution: Distribution get() {
+        val downloadUrl = downloadUrl ?: file.location.takeIf(::isHttp)
+        val res = downloadUrl?.let(::createResource)
+        return NetCdfDistribution(res)
+    }
+
+    private fun isHttp(loc: String): Boolean {
+        return try {
+            val scheme = URI(loc).scheme
+            scheme == "http" || scheme == "https"
+        } catch (e: Exception) { false }
+    }
 
     val prefixSrc: String? get() = prefixSourceName()
 
@@ -75,6 +89,7 @@ class NetCdfBinaryArray(
          * @param uri The URI which identifies the dataset.
          * @param context The external context with which to resolve prefix mappings.
          * @param alias The alias definition with which to resolve resource and property references.
+         * @param downloadUrl The URL from which the file can be downloaded, if it has one. Otherwise, null.
          * @return A [BinaryArray] representation of the NetCDF file.
          */
         @JvmStatic
@@ -82,11 +97,12 @@ class NetCdfBinaryArray(
             fileLoc: String,
             uri: String? = null,
             context: ModelContext? = null,
-            alias: AliasDefinition? = null
+            alias: AliasDefinition? = null,
+            downloadUrl: String? = null
         ): NetCdfBinaryArray {
             val file = NetcdfFiles.open(fileLoc)
             val requiredUri = uri ?: uri(fileLoc)
-            return create(file, requiredUri, context, alias)
+            return create(file, requiredUri, context, alias, downloadUrl)
         }
 
         /**
@@ -105,11 +121,12 @@ class NetCdfBinaryArray(
             file: NetcdfFile,
             uri: String,
             context: ModelContext? = null,
-            alias: AliasDefinition? = null
+            alias: AliasDefinition? = null,
+            downloadUrl: String? = null
         ): NetCdfBinaryArray {
             val requiredContext = context ?: ModelContext.Empty
             val requiredAlias = alias ?: AliasDefinition.Empty
-            return NetCdfBinaryArray(uri, file, requiredContext, requiredAlias)
+            return NetCdfBinaryArray(uri, file, requiredContext, requiredAlias, downloadUrl)
         }
 
         private fun uri(fileLoc: String): String {
