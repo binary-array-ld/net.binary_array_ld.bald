@@ -46,6 +46,10 @@ You can find the documentation for this feature [here](context.md#cli).
 The CLI supports [aliases](alias.md).
 You can find the documentation for this feature [here](alias.md#cli).
 
+### Download URL
+
+The CLI supports [download URLs](download.md).
+
 ### Quick Reference
 
 You can supply command line options in long form with the `--` prefix or short form with `-`,
@@ -58,3 +62,4 @@ followed by their value.
 | --output | -o | Output format, eg. ttl, json-ld, rdfxml. | ttl |
 | --context | -c | Comma-delimited list of JSON-LD context files. ||
 | --alias | -a | Comma-delimited list of RDF alias files. ||
+| --download | -d | The URL from which the original file can be downloaded, if available. ||
