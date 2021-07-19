@@ -12,7 +12,10 @@ class NetCdfRootContainer(
     private val ba: NetCdfBinaryArray,
     group: Group,
 ): NetCdfContainer(group) {
-    override val uri: String get() = ba.uri + "/"
+    override val uri: String get() {
+        val uri = ba.uri
+        return if (uri.endsWith("/")) uri else "$uri/"
+    }
     override val alias: AliasDefinition get() = ba.alias
     override val parent: NetCdfContainer? get() = null
     override val root: NetCdfContainer get() = this
