@@ -1,7 +1,6 @@
 package net.bald.model
 
 import bald.model.ModelVerifier
-import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -13,7 +12,6 @@ import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.ResourceFactory.createResource
 import org.apache.jena.shared.PrefixMapping
-import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
