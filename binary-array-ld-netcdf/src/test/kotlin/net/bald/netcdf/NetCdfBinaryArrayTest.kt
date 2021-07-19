@@ -33,7 +33,7 @@ class NetCdfBinaryArrayTest {
     fun uri_withUri_returnsValue() {
         val uri = "http://test.binary-array-ld.net/identity.nc"
         val ba = fromCdl("/netcdf/identity.cdl", uri)
-        assertEquals(uri, ba.uri)
+        assertEquals("$uri/", ba.root.uri)
     }
 
     /**
@@ -370,7 +370,10 @@ class NetCdfBinaryArrayTest {
 
     @Test
     fun vars_withReferenceAttributes_returnsReferences() {
-        val ba = fromCdl("/netcdf/ref-attr.cdl", "http://test.binary-array-ld.net/ref-attr.nc")
+        val alias = javaClass.getResourceAsStream("/turtle/var-alias.ttl").use { input ->
+            ModelFactory.createDefaultModel().read(input, null, "ttl")
+        }.let(ModelAliasDefinition::create)
+        val ba = fromCdl("/netcdf/ref-attr.cdl", "http://test.binary-array-ld.net/ref-attr.nc", alias = alias)
         ContainerVerifier(ba.root).vars {
             variable("http://test.binary-array-ld.net/ref-attr.nc/var0") {
                 dimensions(10, 90, 15)

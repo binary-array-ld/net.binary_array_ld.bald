@@ -3,11 +3,10 @@ package net.bald.model
 import bald.model.ModelVerifier
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
-import net.bald.BinaryArray
-import net.bald.Container
-import net.bald.Var
+import net.bald.*
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.ResourceFactory
 import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
@@ -46,10 +45,17 @@ class ModelBinaryArrayConverterTest {
             .setNsPrefix("bald", BALD.prefix)
             .setNsPrefix("skos", SKOS.uri)
             .setNsPrefix("dct", DCTerms.NS)
+        val format = mock<Format> {
+            on { identifier } doReturn ResourceFactory.createResource("http://vocab.nerc.ac.uk/collection/M01/current/NC/")
+        }
+        val distribution = mock<Distribution> {
+            on { mediaType } doReturn "application/x-netcdf"
+        }
         val ba = mock<BinaryArray> {
-            on { this.uri } doReturn uri
             on { this.root } doReturn root
             on { prefixMapping } doReturn prefix
+            on { this.format } doReturn format
+            on { this.distribution } doReturn distribution
         }
 
         val model = convert(ba)
@@ -58,19 +64,18 @@ class ModelBinaryArrayConverterTest {
             prefix("bald", BALD.prefix)
             prefix("skos", SKOS.uri)
             prefix("dct", DCTerms.NS)
-            resource("http://test.binary-array-ld.net/example") {
+            resource("http://test.binary-array-ld.net/example/") {
+                format()
                 statement(RDF.type, BALD.Container)
-                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/")) {
-                    statement(RDF.type, BALD.Container)
-                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/bar")) {
-                        statement(RDF.type, BALD.Resource)
-                    }
-                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/baz")) {
-                        statement(RDF.type, BALD.Resource)
-                    }
-                    statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/foo")) {
-                        statement(RDF.type, BALD.Resource)
-                    }
+                distribution()
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/bar")) {
+                    statement(RDF.type, BALD.Resource)
+                }
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/baz")) {
+                    statement(RDF.type, BALD.Resource)
+                }
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/foo")) {
+                    statement(RDF.type, BALD.Resource)
                 }
             }
         }
