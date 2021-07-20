@@ -34,10 +34,10 @@ The `NetCdfLd.convert` method accepts the following parameters:
 
 | Parameter | Type | Description |
 |-----------|------|-------------|
-| input     | File | The NetCDF binary array file to convert. |
-| uri       | String | The URI of the binary array. Optional. |
-| contexts  | List\<File> | The files containing [JSON-LD contexts](#context). Optional. |
-| aliases   | List\<File> | The files containing [alias definitions](#aliases). Optional. |
+| input     | URI | The location of the NetCDF binary array file to convert. |
+| uri       | String | The URI that identifies the binary array. Optional. |
+| contexts  | List\<URI> | The locations of files containing [JSON-LD contexts](#context). Optional. |
+| aliases   | List\<URI> | The locations of files containing [alias definitions](#aliases). Optional. |
 
 Optional parameters are optional in Kotlin or nullable in Java. 
 
@@ -46,7 +46,7 @@ To read a NetCDF binary array and emit it to a file in [Turtle](https://www.w3.o
 
 Kotlin
 ```kotlin
-val input = File("/path/to/input.nc")
+val input = File("/path/to/input.nc").toURI()
 val model = NetCdfLd.convert(input, "http://test.binary-array-ld.net/example")
 File("/path/to/output.ttl").outputStream().use { output ->
     model.write(output, "ttl")
@@ -54,7 +54,7 @@ File("/path/to/output.ttl").outputStream().use { output ->
 ```
 Java
 ```java
-File input = new File("/path/to/input.nc");
+File input = new File("/path/to/input.nc").toURI();
 Model model = NetCdfLd.INSTANCE.convert(input, "http://test.binary-array-ld.net/example", null, null);
 
 try (OutputStream output = new FileOutputStream("/path/to/output.ttl")) {
