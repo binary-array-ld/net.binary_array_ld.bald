@@ -5,7 +5,8 @@ import net.bald.Dimension
 import net.bald.Var
 import net.bald.vocab.BALD
 import org.apache.jena.datatypes.xsd.XSDDatatype
-import org.apache.jena.rdf.model.*
+import org.apache.jena.rdf.model.RDFNode
+import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 
 open class ModelVarBuilder(

@@ -2,12 +2,11 @@ package net.bald.netcdf
 
 import net.bald.Converter
 import net.bald.alias.AliasDefinition
-import net.bald.model.ModelAliasDefinition
 import net.bald.context.ModelContext
+import net.bald.model.ModelAliasDefinition
 import net.bald.model.ModelBinaryArrayConverter
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
-import java.io.File
 import java.net.URI
 
 object NetCdfLdConverter: Converter {

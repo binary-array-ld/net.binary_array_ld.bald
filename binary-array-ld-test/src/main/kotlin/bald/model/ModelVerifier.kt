@@ -1,8 +1,6 @@
 package bald.model
 
 import org.apache.jena.rdf.model.Model
-import org.apache.jena.rdf.model.Resource
-import org.junit.jupiter.api.fail
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 

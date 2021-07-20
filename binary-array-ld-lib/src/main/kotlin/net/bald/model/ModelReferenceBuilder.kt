@@ -6,7 +6,6 @@ import net.bald.vocab.BALD
 import org.apache.jena.datatypes.xsd.XSDDatatype
 import org.apache.jena.rdf.model.Literal
 import org.apache.jena.rdf.model.Resource
-import org.apache.jena.rdf.model.ResourceFactory
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 import org.apache.jena.vocabulary.RDF
 

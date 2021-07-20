@@ -17,7 +17,7 @@ import org.apache.jena.rdf.model.ResourceFactory.createResource
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.RDFS
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Test
 
 class ModelVarBuilderTest {
     private val model = ModelFactory.createDefaultModel()

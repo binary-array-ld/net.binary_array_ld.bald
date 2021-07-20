@@ -1,9 +1,9 @@
 package net.bald.netcdf
 
-import ucar.nc2.Group
-import ucar.nc2.Variable
 import net.bald.Container
 import net.bald.alias.AliasDefinition
+import ucar.nc2.Group
+import ucar.nc2.Variable
 
 /**
  * NetCDF implementation of [Container] based on the root group.

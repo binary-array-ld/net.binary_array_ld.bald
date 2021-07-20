@@ -15,7 +15,6 @@ import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.SKOS
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import java.lang.IllegalArgumentException
 import kotlin.test.assertEquals
 
 class ModelBinaryArrayBuilderTest {
