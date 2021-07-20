@@ -1,7 +1,7 @@
 package net.bald
 
 import org.apache.jena.rdf.model.Model
-import java.io.File
+import java.net.URI
 
 /**
  * A binary array to linked data converter.
@@ -9,17 +9,17 @@ import java.io.File
 interface Converter {
     /**
      * Convert a binary array file to a linked data graph.
-     * @param input The NetCDF binary array file to convert.
-     * @param uri The URI of the binary array.
-     * @param contexts The files containing JSON-LD contexts.
-     * @param aliases The files containing alias definitions.
+     * @param input The location of the NetCDF binary array file to convert.
+     * @param uri The URI that identifies the binary array.
+     * @param contexts The location of files containing JSON-LD contexts.
+     * @param aliases The location of files containing alias definitions.
      * @return The linked data graph.
      */
     fun convert(
-        input: File,
+        input: URI,
         uri: String? = null,
-        contexts: List<File>? = null,
-        aliases: List<File>? = null,
+        contexts: List<URI>? = null,
+        aliases: List<URI>? = null,
     ): Model
 }
 

@@ -1,7 +1,6 @@
 package net.bald.model
 
 import bald.model.ModelVerifier
-import bald.model.StatementsVerifier
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.mock
 import net.bald.*
@@ -9,11 +8,10 @@ import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ResourceFactory
 import org.apache.jena.shared.PrefixMapping
-import org.apache.jena.vocabulary.DCAT
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Test
 
 /**
  * Test the full Binary Array -> Linked Data conversion process using a mock binary array.

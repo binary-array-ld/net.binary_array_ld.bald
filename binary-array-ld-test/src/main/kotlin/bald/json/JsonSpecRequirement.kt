@@ -38,9 +38,9 @@ class JsonSpecRequirement(
         private val alias: List<String> = emptyList()
     ) {
         fun convert(parent: JsonSpecRequirement, converter: Converter): Model {
-            val inputLoc: File = parent.locate(file).let(CdlConverter::writeToNetCdf)
-            val contextLocs: List<File> = files(context)
-            val aliasLocs: List<File> = files(alias)
+            val inputLoc = parent.locate(file).let(CdlConverter::writeToNetCdf).toURI()
+            val contextLocs = files(context).map(File::toURI)
+            val aliasLocs = files(alias).map(File::toURI)
             return converter.convert(inputLoc, uri, contextLocs, aliasLocs)
         }
 

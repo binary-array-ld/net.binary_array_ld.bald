@@ -7,6 +7,7 @@ import org.apache.commons.cli.Options
 import java.io.File
 import java.io.FilterOutputStream
 import java.io.OutputStream
+import java.net.URI
 import kotlin.system.exitProcess
 
 /**
@@ -36,10 +37,10 @@ class BinaryArrayConvertCli {
     }
 
     private fun doRun(opts: CommandLineOptions) {
-        val input = opts.inputLoc?.let(::File) ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
+        val input = opts.inputLoc?.let(::URI) ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
         val uri = opts.uri
-        val context = opts.contextLocs.map(::File)
-        val alias = opts.aliasLocs.map(::File)
+        val context = opts.contextLocs.map(::URI)
+        val alias = opts.aliasLocs.map(::URI)
 
         val model = NetCdfLdConverter.convert(input, uri, context, alias)
         val outputFormat = opts.outputFormat ?: "ttl"
