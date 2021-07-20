@@ -18,7 +18,7 @@ this: a bald:Container ;
     bald:isPrefixedBy "prefix_list" .
 
 this:var0 a bald:Resource ;
-    this:rdfs__label "rdfs__label" .
+    rdfs:label "Variable Zero" .
 
 this:var1 a bald:Resource ;
-    this:rdfs__label "rdfs__label" .
+    rdfs:label "Variable One" .
