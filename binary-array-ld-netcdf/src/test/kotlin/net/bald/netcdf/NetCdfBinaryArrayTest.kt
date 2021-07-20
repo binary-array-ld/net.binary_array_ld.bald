@@ -33,7 +33,7 @@ class NetCdfBinaryArrayTest {
     fun uri_withUri_returnsValue() {
         val uri = "http://test.binary-array-ld.net/identity.nc"
         val ba = fromCdl("/netcdf/identity.cdl", uri)
-        assertEquals(uri, ba.uri)
+        assertEquals("$uri/", ba.root.uri)
     }
 
     /**
