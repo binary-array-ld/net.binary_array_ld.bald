@@ -22,6 +22,3 @@ the `ncgen` command line tool must be available on your system.
 
 You can use Maven to build this project and each of its modules with `mvn clean package`.
 After building, the JAR for the command line application is located at `binary-array-ld-cli/target/bald-cli.jar`.
-
-
-

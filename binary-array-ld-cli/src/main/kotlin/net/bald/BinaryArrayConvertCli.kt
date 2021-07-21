@@ -21,6 +21,7 @@ class BinaryArrayConvertCli {
         addOption("a", "alias", true, "Comma-delimited list of RDF alias files.")
         addOption("c", "context", true, "Comma-delimited list of JSON-LD context files.")
         addOption("o", "output", true, "Output format. eg. ttl, json-ld, rdfxml.")
+        addOption("d", "download", true, "The URL from which the original file can be downloaded.")
         addOption("h", "help", false, "Show help.")
     }
 
@@ -42,7 +43,7 @@ class BinaryArrayConvertCli {
         val context = context(opts.contextLocs)
         val alias = alias(opts.aliasLocs)
         val inputLoc = opts.inputLoc ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
-        val ba = NetCdfBinaryArray.create(inputLoc, opts.uri, context, alias)
+        val ba = NetCdfBinaryArray.create(inputLoc, opts.uri, context, alias, opts.downloadUrl)
         val model = ba.use(ModelBinaryArrayConverter::convert)
         val outputFormat = opts.outputFormat ?: "ttl"
 
