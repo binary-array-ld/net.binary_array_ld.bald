@@ -35,6 +35,7 @@ class NetCdfBinaryArray(
     }
 
     override val format: Format get() = NetCdfFormat
+
     override val distribution: Distribution get() {
         val downloadUrl = downloadUrl ?: file.location.takeIf(::isHttp)
         val res = downloadUrl?.let(::createResource)
