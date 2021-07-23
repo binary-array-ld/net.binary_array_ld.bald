@@ -36,6 +36,7 @@ class ModelBinaryArrayBuilderTest {
     }
     private val distribution = mock<Distribution> {
         on { mediaType } doReturn "application/x-netcdf"
+        on { downloadUrl } doReturn createResource("http://test.binary-array-ld.net/download/example.nc")
     }
     private val ba = mock<BinaryArray> {
         on { this.root } doReturn root
@@ -93,7 +94,7 @@ class ModelBinaryArrayBuilderTest {
         ModelVerifier(model).apply {
             resource("http://test.binary-array-ld.net/example/") {
                 format()
-                distribution()
+                distribution("http://test.binary-array-ld.net/download/example.nc")
             }
         }
     }
