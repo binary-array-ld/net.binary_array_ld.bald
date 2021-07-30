@@ -77,7 +77,7 @@ class ModelAliasDefinition(
          */
         @JvmStatic
         fun create(model: Model): AliasDefinition {
-            return ModelAliasDefinition(model)
+            return ModelAliasDefinition(model.add(vocab))
         }
 
         private val vocab: Model by lazy {
