@@ -98,6 +98,33 @@ class BinaryArrayConvertCliTest {
     }
 
     @Test
+    fun run_withDownloadUrl_outputsDownloadUrl() {
+        val inputFile = writeToNetCdf("/netcdf/identity.cdl")
+        val outputFile = createTempFile()
+        run(
+            "--uri", "http://test.binary-array-ld.net/example",
+            "--download", "http://test.binary-array-ld.net/download/example.nc",
+            inputFile.absolutePath,
+            outputFile.absolutePath
+        )
+
+        val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
+        ModelVerifier(model).apply {
+            resource("http://test.binary-array-ld.net/example/") {
+                format()
+                statement(RDF.type, BALD.Container)
+                distribution("http://test.binary-array-ld.net/download/example.nc")
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var0")) {
+                    statement(RDF.type, BALD.Resource)
+                }
+                statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
+                    statement(RDF.type, BALD.Resource)
+                }
+            }
+        }
+    }
+
+    @Test
     fun run_withOutputFormat_outputsToFile() {
         val inputFile = writeToNetCdf("/netcdf/identity.cdl")
         val outputFile = createTempFile()
@@ -569,9 +596,10 @@ class BinaryArrayConvertCliTest {
         }
     }
 
-    private fun StatementsVerifier.distribution() {
+    private fun StatementsVerifier.distribution(downloadUrl: String? = null) {
         statement(DCAT.distribution) {
             statement(RDF.type, DCAT.Distribution)
+            if (downloadUrl != null) statement(DCAT.downloadURL, createResource(downloadUrl))
             statement(DCAT.mediaType) {
                 statement(DCTerms.identifier, createStringLiteral("application/x-netcdf"))
                 statement(RDF.type, DCTerms.MediaType)
