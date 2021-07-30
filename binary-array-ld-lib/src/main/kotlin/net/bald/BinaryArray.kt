@@ -28,5 +28,4 @@ interface BinaryArray: Closeable {
      * The distribution of the binary array, if it is available. Otherwise, null.
      */
     val distribution: Distribution?
-
 }

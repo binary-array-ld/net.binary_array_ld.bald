@@ -27,7 +27,7 @@ public class NetCdfConvertJava {
     public static void convertWithExternalPrefixes() throws Exception {
         PrefixMapping prefix = ModelFactory.createDefaultModel().read("/path/to/context.json", "json-ld");
         ModelContext context = ModelContext.create(prefix);
-        BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", context, null);
+        BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", context, null, null);
         Model model = ModelBinaryArrayConverter.convert(ba);
 
         try (OutputStream output = new FileOutputStream("/path/to/output.ttl")) {
@@ -38,7 +38,7 @@ public class NetCdfConvertJava {
     public static void convertWithAliases() throws Exception {
         Model aliasModel = ModelFactory.createDefaultModel().read("/path/to/alias.ttl", "ttl");
         AliasDefinition alias = ModelAliasDefinition.create(aliasModel);
-        BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", null, alias);
+        BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", null, alias, null);
         Model model = ModelBinaryArrayConverter.convert(ba);
 
         try (OutputStream output = new FileOutputStream("/path/to/output.ttl")) {

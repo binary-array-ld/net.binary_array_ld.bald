@@ -18,12 +18,19 @@ import org.apache.jena.vocabulary.SKOS
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 
 class NetCdfBinaryArrayTest {
 
-    private fun fromCdl(cdlLoc: String, uri: String? = null, context: ModelContext? = null, alias: AliasDefinition? = null): BinaryArray {
+    private fun fromCdl(
+        cdlLoc: String,
+        uri: String? = null,
+        context: ModelContext? = null,
+        alias: AliasDefinition? = null,
+        downloadUrl: String? = null
+    ): BinaryArray {
         val file = writeToNetCdf(cdlLoc)
-        return NetCdfBinaryArray.create(file.absolutePath, uri, context, alias)
+        return NetCdfBinaryArray.create(file.absolutePath, uri, context, alias, downloadUrl)
     }
 
     /**
@@ -46,6 +53,24 @@ class NetCdfBinaryArrayTest {
         val expectedUri = netCdfFile.toPath().toUri().toString()
         assertEquals(expectedUri, ba.uri)
     }
+
+    @Test
+    fun distribution_withDownloadUrl_returnsDistribution() {
+        val downloadUrl = "http://test.binary-array-ld.net/download/identity.nc"
+        val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/identity.nc", downloadUrl = downloadUrl)
+        val distribution = ba.distribution
+        assertEquals(downloadUrl, distribution?.downloadUrl?.uri)
+        assertEquals("application/x-netcdf", distribution?.mediaType)
+    }
+
+    @Test
+    fun distribution_withoutDownloadUrl_returnsEmptyDistribution() {
+        val ba = fromCdl("/netcdf/identity.cdl", "http://test.binary-array-ld.net/identity.nc")
+        val distribution = ba.distribution
+        assertNull(distribution?.downloadUrl?.uri)
+        assertEquals("application/x-netcdf", distribution?.mediaType)
+    }
+
 
     /**
      * Requirements class A-2

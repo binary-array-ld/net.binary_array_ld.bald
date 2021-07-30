@@ -7,3 +7,4 @@ This project can be used as a command line interface or as a library.
 ### Features
 * [Context](context.md)
 * [Aliases](alias.md)
+* [Download URL](download.md)

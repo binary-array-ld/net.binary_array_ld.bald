@@ -13,5 +13,6 @@ class CommandLineOptions(
     val aliasLocs: List<String> get() = cmd.getOptionValue("alias")?.split(",") ?: emptyList()
     val contextLocs: List<String> get() = cmd.getOptionValue("context")?.split(",") ?: emptyList()
     val outputFormat: String? get() = cmd.getOptionValue("output")
+    val downloadUrl: String? get() = cmd.getOptionValue("download")
     val help: Boolean get() = cmd.hasOption("help")
 }
