@@ -173,7 +173,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -273,7 +272,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -316,7 +314,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -361,7 +358,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -432,7 +428,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -576,7 +571,6 @@ class BinaryArrayConvertCliTest {
                         list(15)
                     }
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }

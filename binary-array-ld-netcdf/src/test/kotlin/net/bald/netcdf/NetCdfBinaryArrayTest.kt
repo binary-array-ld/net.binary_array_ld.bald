@@ -222,7 +222,6 @@ class NetCdfBinaryArrayTest {
         val ctx = ModelContext.create(prefix)
         val ba = fromCdl("/netcdf/attributes.cdl", "http://test.binary-array-ld.net/attributes.nc", ctx)
         ContainerVerifier(ba.root).attributes {
-            attribute(BALD.isPrefixedBy.uri, createPlainLiteral("prefix_list"))
             attribute(SKOS.prefLabel.uri, createPlainLiteral("Attributes metadata example"))
             attribute(DCTerms.publisher.uri, createResource("${BALD.prefix}Organisation"))
             attribute("http://test.binary-array-ld.net/attributes.nc/date", createPlainLiteral("2020-10-29"))
@@ -273,7 +272,6 @@ class NetCdfBinaryArrayTest {
         val ba = fromCdl("/netcdf/alias.cdl", "http://test.binary-array-ld.net/alias.nc", ctx, alias)
         ContainerVerifier(ba.root).apply {
             attributes {
-                attribute(BALD.isPrefixedBy.uri, createPlainLiteral("prefix_list"))
                 attribute(SKOS.prefLabel.uri, createPlainLiteral("Alias metadata example"))
                 attribute(DCTerms.publisher.uri, createResource("${BALD.prefix}Organisation"))
                 attribute("http://test.binary-array-ld.net/alias.nc/date", createPlainLiteral("2020-10-29"))
@@ -309,7 +307,6 @@ class NetCdfBinaryArrayTest {
 
         ContainerVerifier(ba.root).apply {
             attributes {
-                attribute(BALD.isPrefixedBy.uri, createPlainLiteral("prefix_list"))
                 attribute(SKOS.prefLabel.uri, createPlainLiteral("Variable reference metadata example"))
                 attribute(TestVocab.rootVar.uri, createResource("http://test.binary-array-ld.net/var-ref.nc/var0"))
                 attribute(TestVocab.unorderedVar.uri) {
