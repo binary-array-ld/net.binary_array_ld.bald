@@ -73,6 +73,7 @@ class NetCdfVar(
             .flatten()
             .mapNotNull(parent::parseReferences)
             .flatMap(ReferenceCollection::asVars)
+            .filter { v -> v.dimensions().iterator().hasNext() }
     }
 
     override fun toString(): String {

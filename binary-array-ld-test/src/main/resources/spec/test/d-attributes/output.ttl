@@ -16,8 +16,7 @@ this: a bald:Container ;
             dcat:mediaType [ a dct:MediaType ;
                     dct:identifier "application/x-netcdf" ] ] ;
     bald:contains this:var0,
-        this:var1 ;
-    bald:isPrefixedBy "prefix_list" .
+        this:var1 .
 
 this:var0 a bald:Resource ;
     rdfs:label "Variable Zero" .

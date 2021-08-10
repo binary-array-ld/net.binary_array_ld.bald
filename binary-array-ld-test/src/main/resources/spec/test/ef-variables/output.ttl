@@ -36,9 +36,11 @@ this:data_variable1 a bald:Array ;
     this:long_name "data variable one" ;
     bald:references [ a bald:Reference ;
             bald:target this:pdim1 ;
+            bald:sourceRefShape ( 11 17 ) ;
             bald:targetRefShape ( 1 17 ) ],
         [ a bald:Reference ;
             bald:target this:pdim0 ;
+            bald:sourceRefShape ( 11 17 ) ;
             bald:targetRefShape ( 11 1 ) ],
         [ a bald:Reference ;
             bald:sourceRefShape ( 11 17 1 ) ;
@@ -55,9 +57,11 @@ this:data_variable2 a bald:Array ;
             bald:targetRefShape ( 11 17 2 ) ],
         [ a bald:Reference ;
             bald:target this:pdim0 ;
+            bald:sourceRefShape ( 11 17 ) ;
             bald:targetRefShape ( 11 1 ) ],
         [ a bald:Reference ;
             bald:target this:pdim1 ;
+            bald:sourceRefShape ( 11 17 ) ;
             bald:targetRefShape ( 1 17 ) ],
         this:location_variable ;
     bald:shape ( 11 17 ) .
@@ -71,9 +75,11 @@ this:pdim1 a bald:Array ;
 this:location_variable a bald:Array ;
     bald:references [ a bald:Reference ;
             bald:target this:pdim1 ;
+            bald:sourceRefShape  ( 11 17 2 ) ;
             bald:targetRefShape ( 1 17 1 ) ],
         [ a bald:Reference ;
             bald:target this:pdim0 ;
+            bald:sourceRefShape  ( 11 17 2 ) ;
             bald:targetRefShape ( 11 1 1 ) ],
         this:location_reference_system ;
     bald:shape ( 11 17 2 ) .

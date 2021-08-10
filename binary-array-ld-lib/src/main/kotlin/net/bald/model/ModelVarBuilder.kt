@@ -26,10 +26,7 @@ open class ModelVarBuilder(
 
     private fun addAttributes(source: AttributeSource, resource: Resource) {
         val builder = attrFct.forResource(resource)
-        source.attributes().filterNot { attr ->
-//            BALD.references.hasURI(attr.uri)
-            false
-        }.forEach(builder::addAttribute)
+        source.attributes().forEach(builder::addAttribute)
     }
 
     private fun addCoordinateRange(v: Var, resource: Resource) {
