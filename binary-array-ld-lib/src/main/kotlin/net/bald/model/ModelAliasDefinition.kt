@@ -3,6 +3,7 @@ package net.bald.model
 import net.bald.alias.AliasDefinition
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.*
+import org.apache.jena.riot.RDFLanguages
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.OWL
 import org.apache.jena.vocabulary.RDF
@@ -77,7 +78,13 @@ class ModelAliasDefinition(
          */
         @JvmStatic
         fun create(model: Model): AliasDefinition {
-            return ModelAliasDefinition(model)
+            return ModelAliasDefinition(model.add(vocab))
+        }
+
+        private val vocab: Model by lazy {
+            this::class.java.getResourceAsStream("/bald/vocab/bald.ttl")?.use { input ->
+                ModelFactory.createDefaultModel().read(input, null, RDFLanguages.strLangTurtle)
+            } ?: throw IllegalStateException("Failed to load base vocabulary.")
         }
     }
 }
