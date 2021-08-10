@@ -10,11 +10,11 @@ import org.apache.jena.rdf.model.ModelFactory
 import java.net.URI
 
 object NetCdfLdConverter: Converter {
-    override fun convert(input: URI, uri: String?, contexts: List<URI>?, aliases: List<URI>?): Model {
+    override fun convert(input: URI, uri: String?, contexts: List<URI>?, aliases: List<URI>?, downloadUrl: String?): Model {
         val fileLoc = input.toString()
         val context = context(contexts)
         val alias = alias(aliases)
-        val ba = NetCdfBinaryArray.create(fileLoc, uri, context, alias)
+        val ba = NetCdfBinaryArray.create(fileLoc, uri, context, alias, downloadUrl)
         return ba.use(ModelBinaryArrayConverter::convert)
     }
 

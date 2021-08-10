@@ -38,6 +38,11 @@ class ModelBinaryArrayBuilder(
             val distribution = model.createResource()
                 .addProperty(RDF.type, DCAT.Distribution)
                 .addProperty(DCAT.mediaType, mediaType)
+                .apply {
+                    dist.downloadUrl?.let { downloadUrl ->
+                        addProperty(DCAT.downloadURL, downloadUrl)
+                    }
+                }
             root.addProperty(DCAT.distribution, distribution)
         }
     }

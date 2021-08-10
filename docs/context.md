@@ -32,7 +32,7 @@ to create a `BinaryArray` with both.
 ```java
 PrefixMapping prefix = ModelFactory.createDefaultModel().read("/path/to/context.json", "json-ld");
 ModelContext context = ModelContext.create(prefix);
-BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", context, null);
+BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.nc", "http://test.binary-array-ld.net/example", context, null, null);
 Model model = ModelBinaryArrayConverter.convert(ba);
 
 try (OutputStream output = new FileOutputStream("/path/to/output.ttl")) {

@@ -105,3 +105,7 @@ You can find the documentation for this feature [here](context.md#library).
 
 The library supports [aliases](alias.md).
 You can find the documentation for this feature [here](alias.md#library).
+
+### Download URL
+
+The library supports [download URLs](download.md).

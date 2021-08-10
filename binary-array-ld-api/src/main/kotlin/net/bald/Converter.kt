@@ -13,6 +13,7 @@ interface Converter {
      * @param uri The URI that identifies the binary array.
      * @param contexts The location of files containing JSON-LD contexts.
      * @param aliases The location of files containing alias definitions.
+     * @param downloadUrl The URL from which the NetCDF file can be downloaded, if one exists. Otherwise, null.
      * @return The linked data graph.
      */
     fun convert(
@@ -20,6 +21,7 @@ interface Converter {
         uri: String? = null,
         contexts: List<URI>? = null,
         aliases: List<URI>? = null,
+        downloadUrl: String? = null
     ): Model
 }
 

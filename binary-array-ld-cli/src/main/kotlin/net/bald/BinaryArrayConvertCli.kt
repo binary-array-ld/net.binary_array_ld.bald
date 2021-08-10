@@ -19,6 +19,7 @@ class BinaryArrayConvertCli {
         addOption("a", "alias", true, "Comma-delimited list of RDF alias files.")
         addOption("c", "context", true, "Comma-delimited list of JSON-LD context files.")
         addOption("o", "output", true, "Output format. eg. ttl, json-ld, rdfxml.")
+        addOption("d", "download", true, "The URL from which the original file can be downloaded.")
         addOption("h", "help", false, "Show help.")
     }
 
@@ -41,8 +42,9 @@ class BinaryArrayConvertCli {
         val uri = opts.uri
         val context = opts.contextLocs.map(::URI)
         val alias = opts.aliasLocs.map(::URI)
+        val downloadUrl = opts.downloadUrl
 
-        val model = NetCdfLdConverter.convert(input, uri, context, alias)
+        val model = NetCdfLdConverter.convert(input, uri, context, alias, downloadUrl)
         val outputFormat = opts.outputFormat ?: "ttl"
 
         modelOutput(opts.outputLoc).use { output ->
