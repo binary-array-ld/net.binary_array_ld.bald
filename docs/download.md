@@ -23,8 +23,9 @@ Otherwise, you can simply pass in a null value.
 
 #### Example
 ```java
-BinaryArray ba = NetCdfBinaryArray.create("/path/to/input.ttl", "http://test.binary-array-ld.net/example", null, null, "http://test.binary-array-ld.net/download/netcdf.nc");
-Model model = ModelBinaryArrayConverter.convert(ba);
+String downloadUrl = "http://test.binary-array-ld.net/download/netcdf.nc";
+URI input = new File("/path/to/input.nc").toURI();
+Model model = NetCdfLdConverter.INSTANCE.convert(input, "http://test.binary-array-ld.net/example", null, null, downloadUrl);
 
 try (OutputStream output = new FileOutputStream("/path/to/output.ttl")) {
     model.write(output, "ttl");
