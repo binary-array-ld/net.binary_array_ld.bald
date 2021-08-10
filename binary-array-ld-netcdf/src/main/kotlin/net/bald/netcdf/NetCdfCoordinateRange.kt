@@ -14,6 +14,9 @@ class NetCdfCoordinateRange(
     override val last: Any? get() = v.read().flip(0).let(::firstElement)
 
     private fun firstElement(array: Array): Any? {
-        return array.takeIf(Array::hasNext)?.next()
+        return array.takeIf(Array::hasNext)?.next()?.takeUnless { value ->
+            // For some reason empty array values are rendered as minimum-valued integers, so ignore them.
+            value == (Int.MIN_VALUE + 1)
+        }
     }
 }

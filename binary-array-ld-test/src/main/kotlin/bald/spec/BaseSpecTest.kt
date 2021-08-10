@@ -21,7 +21,7 @@ open class BaseSpecTest(
     @ParameterizedTest
     @ArgumentsSource(TestScenarioProvider::class)
     fun test(test: SpecRequirement) {
-        println("Test ${test.name}:\n${test.comment}")
+        println("Test ${test.name}:\n${test.comment ?: "No description"}")
 
         val result = test.result(converter)
         val expected = test.expectation()

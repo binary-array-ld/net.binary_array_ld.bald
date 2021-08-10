@@ -27,7 +27,8 @@ open class ModelVarBuilder(
     private fun addAttributes(source: AttributeSource, resource: Resource) {
         val builder = attrFct.forResource(resource)
         source.attributes().filterNot { attr ->
-            BALD.references.hasURI(attr.uri)
+//            BALD.references.hasURI(attr.uri)
+            false
         }.forEach(builder::addAttribute)
     }
 
