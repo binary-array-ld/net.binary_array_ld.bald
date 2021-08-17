@@ -19,9 +19,10 @@ class ModelBinaryArrayBuilder(
 ) {
     fun addBinaryArray(ba: BinaryArray) {
         val root = ba.root
-        val res = model.createResource(root.uri)
+        val rootUri = root.uri
+        val res = model.createResource(rootUri)
 
-        addPrefixMapping(ba.prefixMapping)
+        addPrefixMapping(ba.prefixMapping, rootUri)
         addFormat(ba, res)
         addDistribution(ba, res)
         containerFct.forRoot(model).addContainer(root)
@@ -51,10 +52,14 @@ class ModelBinaryArrayBuilder(
         }
     }
 
-    private fun addPrefixMapping(prefixMapping: PrefixMapping) {
+    private fun addPrefixMapping(prefixMapping: PrefixMapping, rootUri: String) {
         prefixMapping.nsPrefixMap.onEach { (prefix, uri) ->
             validatePrefixMapping(prefix, uri)
         }.let(model::setNsPrefixes)
+
+        if (model.getNsPrefixURI("this") == null) {
+            model.setNsPrefix("this", rootUri)
+        }
     }
 
     private fun validatePrefixMapping(prefix: String, uri: String) {

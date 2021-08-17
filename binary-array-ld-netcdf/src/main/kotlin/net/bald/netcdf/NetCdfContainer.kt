@@ -40,7 +40,9 @@ abstract class NetCdfContainer(
     }
 
     override fun subContainers(): Sequence<Container> {
-        return group.groups.asSequence().filter(::acceptGroup).map(::subContainer)
+        return group.groups.asSequence()
+            .filter(::acceptGroup)
+            .map(::subContainer)
     }
 
     private fun subContainer(group: Group): NetCdfContainer {
@@ -55,8 +57,15 @@ abstract class NetCdfContainer(
         return true
     }
 
+    open fun acceptAttr(attr: Attribute): Boolean {
+        return true
+    }
+
     override fun attributes(): Sequence<Attribute> {
-        return group.attributes().let(::source).attributes()
+        return group.attributes()
+            .let(::source)
+            .attributes()
+            .filter(::acceptAttr)
     }
 
     fun subContainer(name: String): NetCdfContainer? {
