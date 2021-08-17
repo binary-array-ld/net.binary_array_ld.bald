@@ -57,6 +57,7 @@ class ModelBinaryArrayBuilderTest {
         ModelVerifier(model).apply {
             prefix("bald", BALD.prefix)
             prefix("skos", SKOS.uri)
+            prefix("this", "http://test.binary-array-ld.net/example/")
         }
     }
 

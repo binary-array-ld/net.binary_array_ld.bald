@@ -50,6 +50,9 @@
                         <link>
                             <url>https://www.unidata.ucar.edu/software/netcdf-java/v4.5/javadoc/</url>
                         </link>
+                        <link>
+                            <url>http://kotlin.binary-array-ld.net/javadoc/binary-array-ld-lib</url>
+                        </link>
                     </externalDocumentationLinks>
                 </configuration>
             </plugin>

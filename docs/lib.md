@@ -1,6 +1,6 @@
 # Library
 
-Javadocs are available [here](todo).
+Javadocs are available [here](http://kotlin.binary-array-ld.net/javadoc).
 You can find Java examples [here](https://github.com/binary-array-ld/net.binary_array_ld.bald/tree/master/binary-array-ld-demo/src/main/java/net/bald).
 
 To use the BALD core library in your Maven project, add the following dependency:
