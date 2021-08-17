@@ -1,9 +1,11 @@
 package net.bald.netcdf
 
+import net.bald.Attribute
 import ucar.nc2.Group
 import ucar.nc2.Variable
 import net.bald.Container
 import net.bald.alias.AliasDefinition
+import net.bald.vocab.BALD
 
 /**
  * NetCDF implementation of [Container] based on the root group.
@@ -29,6 +31,10 @@ class NetCdfRootContainer(
 
     override fun acceptVar(v: Variable): Boolean {
         return prefixSrc != v.shortName
+    }
+
+    override fun acceptAttr(attr: Attribute): Boolean {
+        return BALD.isPrefixedBy.hasURI(attr.uri).not()
     }
 
     override fun childUri(name: String): String {

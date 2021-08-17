@@ -44,6 +44,15 @@
         </dependency>
     </dependencies>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.dokka</groupId>
+                <artifactId>dokka-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
     <repositories>
         <repository>
             <id>unidata-all</id>

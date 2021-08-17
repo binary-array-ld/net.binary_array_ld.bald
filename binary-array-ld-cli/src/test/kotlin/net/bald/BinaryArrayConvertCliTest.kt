@@ -54,6 +54,7 @@ class BinaryArrayConvertCliTest {
 
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
+            prefix("this", "$inputFileUri/")
             // A-1
             resource("$inputFileUri/") {
                 format()
@@ -81,6 +82,7 @@ class BinaryArrayConvertCliTest {
 
         val model = createDefaultModel().read(outputFile.toURI().toString(), "ttl")
         ModelVerifier(model).apply {
+            prefix("this", "http://test.binary-array-ld.net/example/")
             // A-1
             resource("http://test.binary-array-ld.net/example/") {
                 format()
@@ -163,6 +165,7 @@ class BinaryArrayConvertCliTest {
         ModelVerifier(model).apply {
             prefix("bald", BALD.prefix)
             prefix("skos", SKOS.uri)
+            prefix("this", "http://test.binary-array-ld.net/example/")
             resource("http://test.binary-array-ld.net/example/") {
                 format()
                 statement(RDF.type, BALD.Container)
@@ -173,7 +176,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -273,7 +275,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -316,7 +317,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -361,7 +361,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, model.createResource("http://test.binary-array-ld.net/example/var1")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -432,7 +431,6 @@ class BinaryArrayConvertCliTest {
                 statement(BALD.contains, createResource("http://test.binary-array-ld.net/example/var0")) {
                     statement(RDF.type, BALD.Resource)
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
@@ -576,7 +574,6 @@ class BinaryArrayConvertCliTest {
                         list(15)
                     }
                 }
-                statement(BALD.isPrefixedBy, createPlainLiteral("prefix_list"))
             }
         }
     }
