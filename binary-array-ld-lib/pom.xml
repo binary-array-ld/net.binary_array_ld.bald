@@ -52,6 +52,13 @@
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
+                <configuration>
+                    <externalDocumentationLinks>
+                        <link>
+                            <url>http://kotlin.binary-array-ld.net/javadoc/binary-array-ld-api</url>
+                        </link>
+                    </externalDocumentationLinks>
+                </configuration>
             </plugin>
         </plugins>
     </build>
