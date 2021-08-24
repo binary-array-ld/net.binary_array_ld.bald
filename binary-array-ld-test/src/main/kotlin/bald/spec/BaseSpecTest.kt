@@ -15,9 +15,9 @@ import kotlin.test.fail
  * Tests are defined in [JsonTestSpec] and [JsonSpecRequirement] format.
  * To add or modify tests, update /spec/spec.yaml.
  */
-open class BaseSpecTest(
-    private val converter: Converter
-) {
+abstract class BaseSpecTest {
+    protected abstract val converter: Converter
+
     @ParameterizedTest
     @ArgumentsSource(TestScenarioProvider::class)
     fun test(test: SpecRequirement) {

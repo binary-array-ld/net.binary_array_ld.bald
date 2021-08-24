@@ -9,7 +9,21 @@ import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
 import java.net.URI
 
-object NetCdfLdConverter: Converter {
+/**
+ * NetCDF to LD converter API.
+ * Use [getInstance] to obtain an instance.
+ */
+class NetCdfLdConverter: Converter {
+    companion object {
+        /**
+         * Factory method for obtaining [NetCdfLdConverter].
+         * @return The converter.
+         */
+        fun getInstance(): Converter {
+            return NetCdfLdConverter()
+        }
+    }
+
     override fun convert(input: URI, uri: String?, contexts: List<URI>?, aliases: List<URI>?, downloadUrl: String?): Model {
         val fileLoc = input.toString()
         val context = context(contexts)

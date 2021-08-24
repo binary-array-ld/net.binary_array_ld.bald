@@ -44,7 +44,7 @@ class BinaryArrayConvertCli {
         val alias = opts.aliasLocs.map(::URI)
         val downloadUrl = opts.downloadUrl
 
-        val model = NetCdfLdConverter.convert(input, uri, context, alias, downloadUrl)
+        val model = NetCdfLdConverter.getInstance().convert(input, uri, context, alias, downloadUrl)
         val outputFormat = opts.outputFormat ?: "ttl"
 
         modelOutput(opts.outputLoc).use { output ->

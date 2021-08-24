@@ -38,6 +38,7 @@ The `NetCdfLd.convert` method accepts the following parameters:
 | uri       | String | The URI that identifies the binary array. Optional. |
 | contexts  | List\<URI> | The locations of files containing [JSON-LD contexts](#context). Optional. |
 | aliases   | List\<URI> | The locations of files containing [alias definitions](#aliases). Optional. |
+| downloadUrl | String | The URL from which the NetCDF file can be [downloaded](#download-url). Optional. |
 
 Optional parameters are optional in Kotlin or nullable in Java. 
 
