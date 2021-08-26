@@ -2,7 +2,6 @@ package net.bald.netcdf
 
 import net.bald.CoordinateRange
 import net.bald.Var
-import net.bald.vocab.BALD
 import ucar.nc2.AttributeContainer
 import ucar.nc2.Variable
 
@@ -74,6 +73,7 @@ class NetCdfVar(
             .flatten()
             .mapNotNull(parent::parseReferences)
             .flatMap(ReferenceCollection::asVars)
+            .filter { v -> v.dimensions().iterator().hasNext() }
     }
 
     override fun toString(): String {

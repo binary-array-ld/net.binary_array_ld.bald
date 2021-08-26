@@ -19,6 +19,11 @@
     <dependencies>
         <!-- LIB -->
         <dependency>
+            <groupId>net.binary-array-ld</groupId>
+            <artifactId>binary-array-ld-api</artifactId>
+            <version>${project.parent.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-core</artifactId>
             <version>${jena.version}</version>
@@ -47,6 +52,13 @@
             <plugin>
                 <groupId>org.jetbrains.dokka</groupId>
                 <artifactId>dokka-maven-plugin</artifactId>
+                <configuration>
+                    <externalDocumentationLinks>
+                        <link>
+                            <url>http://kotlin.binary-array-ld.net/javadoc/binary-array-ld-api</url>
+                        </link>
+                    </externalDocumentationLinks>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -53,6 +53,9 @@
                         <link>
                             <url>http://kotlin.binary-array-ld.net/javadoc/binary-array-ld-lib</url>
                         </link>
+                        <link>
+                            <url>http://kotlin.binary-array-ld.net/javadoc/binary-array-ld-api</url>
+                        </link>
                     </externalDocumentationLinks>
                 </configuration>
             </plugin>

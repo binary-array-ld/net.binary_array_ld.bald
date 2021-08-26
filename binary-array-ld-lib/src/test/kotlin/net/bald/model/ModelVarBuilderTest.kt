@@ -17,7 +17,7 @@ import org.apache.jena.rdf.model.ResourceFactory.createResource
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.RDFS
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Test
 
 class ModelVarBuilderTest {
     private val model = ModelFactory.createDefaultModel()
@@ -117,9 +117,9 @@ class ModelVarBuilderTest {
                 statement(RDF.type, BALD.Array)
                 statement(BALD.shape) {
                     list(
-                        createTypedLiteral(10),
-                        createTypedLiteral(30),
-                        createTypedLiteral(1000)
+                        createTypedLiteral("10", XSDDatatype.XSDinteger),
+                        createTypedLiteral("30", XSDDatatype.XSDinteger),
+                        createTypedLiteral("1000", XSDDatatype.XSDinteger)
                     )
                 }
             }
@@ -200,25 +200,25 @@ class ModelVarBuilderTest {
                 statement(BALD.references) {
                     statement(RDF.type, BALD.Reference)
                     statement(BALD.sourceRefShape) {
-                        list(createTypedLiteral(10), createTypedLiteral(90))
+                        list(createTypedLiteral("10", XSDDatatype.XSDinteger), createTypedLiteral("90", XSDDatatype.XSDinteger))
                     }
                     statement(BALD.target, createResource("http://test.binary-array-ld.net/example/bar"))
                     statement(BALD.targetRefShape) {
-                        list(createTypedLiteral(10), createTypedLiteral(1))
+                        list(createTypedLiteral("10", XSDDatatype.XSDinteger), createTypedLiteral("1", XSDDatatype.XSDinteger))
                     }
                 }
                 statement(BALD.references) {
                     statement(RDF.type, BALD.Reference)
                     statement(BALD.sourceRefShape) {
-                        list(createTypedLiteral(10), createTypedLiteral(90))
+                        list(createTypedLiteral("10", XSDDatatype.XSDinteger), createTypedLiteral("90", XSDDatatype.XSDinteger))
                     }
                     statement(BALD.target, createResource("http://test.binary-array-ld.net/example/baz"))
                     statement(BALD.targetRefShape) {
-                        list(createTypedLiteral(1), createTypedLiteral(90))
+                        list(createTypedLiteral("1", XSDDatatype.XSDinteger), createTypedLiteral("90", XSDDatatype.XSDinteger))
                     }
                 }
                 statement(BALD.shape) {
-                    list(createTypedLiteral(10), createTypedLiteral(90))
+                    list(createTypedLiteral("10", XSDDatatype.XSDinteger), createTypedLiteral("90", XSDDatatype.XSDinteger))
                 }
             }
         }

@@ -1,5 +1,6 @@
 package bald.model
 
+import org.apache.jena.datatypes.xsd.XSDDatatype
 import org.apache.jena.rdf.model.*
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 import org.apache.jena.vocabulary.RDF
@@ -74,7 +75,7 @@ class StatementsVerifier(
     }
 
     fun list(vararg values: Int) {
-        values.map(::createTypedLiteral).let(::list)
+        values.map { value -> createTypedLiteral(value.toString(), XSDDatatype.XSDinteger) }.let(::list)
     }
 
     fun list(values: List<RDFNode>) {

@@ -1,5 +1,6 @@
-package net.bald.alias
+package net.bald.model
 
+import net.bald.alias.AliasDefinition
 import net.bald.vocab.BALD
 import org.apache.jena.rdf.model.*
 import org.apache.jena.riot.RDFLanguages

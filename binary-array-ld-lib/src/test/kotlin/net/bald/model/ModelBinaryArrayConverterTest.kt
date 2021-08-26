@@ -11,7 +11,7 @@ import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.RDF
 import org.apache.jena.vocabulary.SKOS
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Test
 
 /**
  * Test the full Binary Array -> Linked Data conversion process using a mock binary array.

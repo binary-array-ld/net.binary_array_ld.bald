@@ -1,0 +1,38 @@
+tests:
+  - name: "Conformance Class A: URIs"
+    comment: |
+      Verify that the identity of a file is always present within the RDF graph parsed from that file.
+      Verify that the identity of variables and groups within a file are defined relative to the defined file identity.
+    root: "/spec/test/a-identity"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/identity.nc"
+    output: "output.ttl"
+  - name: "Conformance Class B: Prefixing"
+    comment: |
+      Verify that defined prefixes within a file are recognised and used to expand prefix notation attribute names and values.
+    root: "/spec/test/b-prefixing"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/prefix.nc"
+    output: "output.ttl"
+  - name: "Conformance Class C: Aliasing"
+    root: "/spec/test/c-aliasing"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/alias.nc"
+      alias: "/turtle/netcdf.ttl"
+    output: "output.ttl"
+  - name: "Conformance Class D: Attribute Names"
+    root: "/spec/test/d-attributes"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/attributes.nc"
+      alias: "/turtle/netcdf.ttl"
+    output: "output.ttl"
+  - name: "Conformance Class E: Variable-to-variable Referencing; Class F: Coordinate Variables"
+    root: "/spec/test/ef-variables"
+    input:
+      file: "input.cdl"
+      uri: "http://secret.binary-array-ld.net/reference.nc"
+    output: "output.ttl"

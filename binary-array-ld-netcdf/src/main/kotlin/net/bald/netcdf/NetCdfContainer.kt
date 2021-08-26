@@ -2,7 +2,6 @@ package net.bald.netcdf
 
 import net.bald.Attribute
 import net.bald.Container
-import net.bald.Var
 import net.bald.alias.AliasDefinition
 import org.apache.jena.rdf.model.Property
 import org.apache.jena.rdf.model.RDFNode

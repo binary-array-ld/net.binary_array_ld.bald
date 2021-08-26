@@ -25,7 +25,9 @@ See [here](https://docs.oracle.com/javase/8/docs/technotes/guides/net/proxies.ht
 
 ## Library
 
-You can provide aliases as an Apache Jena [model](https://jena.apache.org/documentation/javadoc/jena/org/apache/jena/rdf/model/Model.html).
+For simple usage, use the `NetCdfLd.convert` method as described [here](lib.md#simple-usage).
+
+Alternatively, you can provide aliases as an Apache Jena [model](https://jena.apache.org/documentation/javadoc/jena/org/apache/jena/rdf/model/Model.html).
 You can create a `Model` instance programmatically, or by reading in an RDF file.
 See the [Jena docs](https://jena.apache.org/tutorials/rdf_api.html) for more information.
 

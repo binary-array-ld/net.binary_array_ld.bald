@@ -1,15 +1,13 @@
 package net.bald
 
-import net.bald.alias.AliasDefinition
-import net.bald.context.ModelContext
-import net.bald.alias.ModelAliasDefinition
-import net.bald.model.ModelBinaryArrayConverter
-import net.bald.netcdf.NetCdfBinaryArray
+import net.bald.netcdf.NetCdfLdConverter
 import org.apache.commons.cli.DefaultParser
 import org.apache.commons.cli.HelpFormatter
 import org.apache.commons.cli.Options
-import org.apache.jena.rdf.model.ModelFactory
-import java.io.*
+import java.io.File
+import java.io.FilterOutputStream
+import java.io.OutputStream
+import java.net.URI
 import kotlin.system.exitProcess
 
 /**
@@ -40,30 +38,18 @@ class BinaryArrayConvertCli {
     }
 
     private fun doRun(opts: CommandLineOptions) {
-        val context = context(opts.contextLocs)
-        val alias = alias(opts.aliasLocs)
-        val inputLoc = opts.inputLoc ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
-        val ba = NetCdfBinaryArray.create(inputLoc, opts.uri, context, alias, opts.downloadUrl)
-        val model = ba.use(ModelBinaryArrayConverter::convert)
+        val input = opts.inputLoc?.let(::URI) ?: throw IllegalArgumentException("First argument is required: NetCDF file to convert.")
+        val uri = opts.uri
+        val context = opts.contextLocs.map(::URI)
+        val alias = opts.aliasLocs.map(::URI)
+        val downloadUrl = opts.downloadUrl
+
+        val model = NetCdfLdConverter.getInstance().convert(input, uri, context, alias, downloadUrl)
         val outputFormat = opts.outputFormat ?: "ttl"
 
         modelOutput(opts.outputLoc).use { output ->
             model.write(output, outputFormat)
         }
-    }
-
-    private fun context(contextLocs: List<String>): ModelContext {
-        val prefixes = contextLocs.map { contextLoc ->
-            ModelFactory.createDefaultModel().read(contextLoc, "json-ld")
-        }
-
-        return ModelContext.create(prefixes)
-    }
-
-    private fun alias(aliasLocs: List<String>): AliasDefinition {
-        return ModelFactory.createDefaultModel().apply {
-            aliasLocs.forEach(::read)
-        }.let(ModelAliasDefinition::create)
     }
 
     private fun options(opts: Options, vararg args: String): CommandLineOptions {
