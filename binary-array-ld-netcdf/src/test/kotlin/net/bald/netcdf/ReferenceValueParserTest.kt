@@ -2,7 +2,7 @@ package net.bald.netcdf
 
 import bald.netcdf.CdlConverter
 import org.apache.jena.rdf.model.RDFList
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull

@@ -3,7 +3,6 @@ package net.bald.model
 import net.bald.BinaryArray
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
-import org.apache.jena.shared.PrefixMapping
 
 /**
  * API for converting a [BinaryArray] to a linked data [Model].

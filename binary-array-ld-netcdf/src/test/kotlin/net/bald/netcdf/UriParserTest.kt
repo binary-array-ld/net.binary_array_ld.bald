@@ -4,7 +4,7 @@ import net.bald.vocab.BALD
 import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.DCTerms
 import org.apache.jena.vocabulary.SKOS
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 

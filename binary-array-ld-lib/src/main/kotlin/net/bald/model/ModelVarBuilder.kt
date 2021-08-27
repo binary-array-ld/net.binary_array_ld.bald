@@ -4,7 +4,9 @@ import net.bald.AttributeSource
 import net.bald.Dimension
 import net.bald.Var
 import net.bald.vocab.BALD
-import org.apache.jena.rdf.model.*
+import org.apache.jena.datatypes.xsd.XSDDatatype
+import org.apache.jena.rdf.model.RDFNode
+import org.apache.jena.rdf.model.Resource
 import org.apache.jena.rdf.model.ResourceFactory.createTypedLiteral
 
 open class ModelVarBuilder(
@@ -24,9 +26,7 @@ open class ModelVarBuilder(
 
     private fun addAttributes(source: AttributeSource, resource: Resource) {
         val builder = attrFct.forResource(resource)
-        source.attributes().filterNot { attr ->
-            BALD.references.hasURI(attr.uri)
-        }.forEach(builder::addAttribute)
+        source.attributes().forEach(builder::addAttribute)
     }
 
     private fun addCoordinateRange(v: Var, resource: Resource) {
@@ -79,7 +79,7 @@ open class ModelVarBuilder(
         }
 
         private fun size(dim: Dimension): RDFNode {
-            return createTypedLiteral(dim.size)
+            return createTypedLiteral(dim.size.toString(), XSDDatatype.XSDinteger)
         }
 
         override fun addReferences(resource: Resource) {

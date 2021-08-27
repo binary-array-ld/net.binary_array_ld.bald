@@ -1,12 +1,8 @@
 package net.bald.model
 
 import net.bald.BinaryArray
-import net.bald.vocab.BALD
-import org.apache.jena.rdf.model.Literal
 import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.Resource
-import org.apache.jena.rdf.model.ResourceFactory.createResource
-import org.apache.jena.rdf.model.ResourceFactory.createStringLiteral
 import org.apache.jena.shared.PrefixMapping
 import org.apache.jena.vocabulary.DCAT
 import org.apache.jena.vocabulary.DCTerms
